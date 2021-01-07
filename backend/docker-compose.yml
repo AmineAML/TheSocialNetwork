@@ -1,0 +1,25 @@
+version: '3.8'
+
+services: 
+    db:
+        container_name: microServicesDBs
+        image: mongo
+        ports:
+            - '${MONGO_ACCOUNT_PORT}:${MONGO_ACCOUNT_PORT}'
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            #MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ACCOUNT_PASSWORD}
+            MONGO_INITDB_ROOT_PASSWORD: pw
+            #MONGO_INITDB_DATABASE: ${MONGO_ACCOUNT_DATABASE}
+            MONGO_INITDB_DATABASE: root-db
+            #MONGO_USERNAME: ${MONGO_ACCOUNT_USERNAME}
+            #MONGO_PASSWORD: ${MONGO_ACCOUNT_PASSWORD}
+        volumes:
+            - ./data/db
+            #- mongo-data:/data/db
+            #- ./mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+            - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    redis:
+        image: redis
+        ports: 
+            - '${REDIS_ACCOUNT_SERVICE_PORT}:${REDIS_ACCOUNT_SERVICE_PORT}'

@@ -1,0 +1,66 @@
+{
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/gateway/src",
+  "monorepo": true,
+  "root": "apps/gateway",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/gateway/tsconfig.app.json"
+  },
+  "projects": {
+    "backend": {
+      "type": "application",
+      "root": "apps/gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/gateway/tsconfig.app.json"
+      }
+    },
+    "service-account": {
+      "type": "application",
+      "root": "apps/service-account",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-account/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-account/tsconfig.app.json"
+      }
+    },
+    "service-vehicule": {
+      "type": "application",
+      "root": "apps/service-vehicule",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-vehicule/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-vehicule/tsconfig.app.json"
+      }
+    },
+    "service-image": {
+      "type": "application",
+      "root": "apps/service-image",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-image/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-image/tsconfig.app.json"
+      }
+    },
+    "service-auth": {
+      "type": "application",
+      "root": "apps/service-auth",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-auth/tsconfig.app.json"
+      }
+    },
+    "service-reports": {
+      "type": "application",
+      "root": "apps/service-reports",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-reports/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-reports/tsconfig.app.json"
+      }
+    }
+  }
+}
