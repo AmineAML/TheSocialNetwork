@@ -1,18 +1,16 @@
 import { CanActivate, ExecutionContext, Inject, Injectable, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ClientProxy } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
 
 const logger = new Logger('Gateway')
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(@Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy,
-    private reflector: Reflector) { }
+  constructor(private reflector: Reflector) { }
 
   async canActivate(
     context: ExecutionContext,
-  ): Promise<boolean /*| Promise<boolean> | Observable<boolean>*/> /*| Promise<boolean> | Observable<boolean>*/ {
+  ): Promise<boolean> | Promise<boolean> {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
 
     console.log(roles)
@@ -25,18 +23,6 @@ export class RolesGuard implements CanActivate {
     }
 
     try {
-      /*console.log('ree' + req.headers['authorization']?.split(' ')[1])
-
-      const res: any = await this.authServiceClient.send(
-        'token_validate', { access_token: req.headers['authorization']?.split(' ')[1] })
-        //.pipe(timeout(5000))
-        .toPromise<boolean>();
-
-      console.log(res)
-
-      const user_role = res.data.role
-      */
-
       const req = context.switchToHttp().getRequest();
 
       const user = req.user
@@ -50,10 +36,6 @@ export class RolesGuard implements CanActivate {
       logger.error(err);
       return false;
     }
-    /*const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    return matchRoles(roles, user.roles);
-    */
   }
 
   matchRoles(requiredRoles: string[], userRole: string) {

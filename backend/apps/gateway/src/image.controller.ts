@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Query, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { FileFieldsInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { hasRoles } from './decorators/roles.decorator';
 import { Role } from './enums/role.enum';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { IAuthorizedRequest } from './interfaces/common/authorized-request.interface';
 import { DeleteImageResponseDto } from './interfaces/image/dto/delete-image-response.dto';
 import { GetImagesByUserIdResponseDto } from './interfaces/image/dto/get-image-by-use-id.dto';
 import { UploadImageResponseDto } from './interfaces/image/dto/upload-image-response.dto';
@@ -19,7 +20,7 @@ export class ImageController {
     constructor(@Inject('IMAGE_SERVICE') private readonly imageServiceClient: ClientProxy) { }
 
     //Upload avatar, background images
-    @hasRoles(Role.User)
+    @hasRoles(Role.User, Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('image/upload')
     @UseInterceptors(FileFieldsInterceptor([
@@ -58,6 +59,7 @@ export class ImageController {
     }
 
     //Images by user id
+    @UseGuards(AuthGuard)
     @Get('image/:user_id')
     public async getImagesByUserOrVehiculeId(@Param() image: IImage): Promise<GetImagesByUserIdResponseDto> {
         //console.log(request)
@@ -78,11 +80,25 @@ export class ImageController {
     }
 
     //Delete image by id
+    @hasRoles(Role.User, Role.Admin)
+    @UseGuards(AuthGuard, RolesGuard)
     @Delete('image/:id')
     //@Authorization(true)
     //@Permission('task_delete_by_id')
-    public async deleteTask(@Param() image: IImage ): Promise<DeleteImageResponseDto> {
+    public async deleteTask(@Param() image: IImage, @Req() request: IAuthorizedRequest): Promise<DeleteImageResponseDto> {
         const userInfo = image;
+
+        //Don't allow user even authenticated to modify another's images
+        if (!(image.user_id == request.user.id)) {
+            throw new HttpException(
+                {
+                    message: null,
+                    data: null,
+                    errors: null,
+                },
+                HttpStatus.UNAUTHORIZED,
+            );
+        }
 
         const deleteImageResponse: IServiceImageDeleteResponse = await this.imageServiceClient
             .send('image_delete', { imageId: userInfo.id })

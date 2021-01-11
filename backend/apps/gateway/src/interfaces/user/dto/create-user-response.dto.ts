@@ -5,6 +5,7 @@ export class CreateUserResponseDto {
   data: {
     user: IUser;
     access_token: string;
+    refresh_token: string;
   };
   errors: { [key: string]: any };
 }

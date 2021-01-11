@@ -14,9 +14,9 @@ import { TokenService } from './services/token.service';
     }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => (console.log(new ConfigService().get('JWT_SECRET')),{
-        secret: new ConfigService().get('JWT_SECRET'),
-        signOptions: {expiresIn: '900s'}
+      useFactory: async (configService: ConfigService) => ({
+        //secret: new ConfigService().get('JWT_SECRET'),
+        //signOptions: {expiresIn: '900s'}
       }),
       inject: [ConfigService],
     }),
@@ -25,7 +25,8 @@ import { TokenService } from './services/token.service';
       useFactory: async (configService: ConfigService) => ({
         uri: `mongodb://${configService.get('MONGO_AUTH_USERNAME')}:${encodeURIComponent(configService.get('MONGO_AUTH_PASSWORD'))}@${configService.get('MONGO_AUTH_HOST')}:${configService.get('MONGO_AUTH_PORT')}/${configService.get('MONGO_AUTH_DATABASE')}`,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
       }),
       inject: [ConfigService],
     }),

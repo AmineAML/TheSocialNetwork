@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-
-//import { ConfigService } from './config/config.service';
+import { ConfigService } from '@nestjs/config';
 import { IUser } from '../interfaces/user.interface';
 import { IUserLink } from '../interfaces/user-link.interface';
 
@@ -11,7 +10,7 @@ export class UserService {
     constructor(
         @InjectModel('User') private readonly userModel: Model<IUser>,
         @InjectModel('UserLink') private readonly userLinkModel: Model<IUserLink>,
-        //private readonly configService: ConfigService,
+        private readonly configService: ConfigService,
     ) { }
 
     public async createUser(user: IUser): Promise<IUser> {
@@ -22,12 +21,24 @@ export class UserService {
         return userModel
     }
 
-    public async searchUser(params: { email: string }): Promise<IUser[]> {
+    public async searchUserByEmail(params: { email: string }): Promise<IUser[]> {
+        return this.userModel.find(params).exec();
+    }
+
+    public async searchUserByUserName(params: { username: string }): Promise<IUser[]> {
         return this.userModel.find(params).exec();
     }
 
     public async searchUserById(id: string): Promise<IUser> {
         const userModel = await this.userModel.findById(id).exec();
+
+        delete userModel.password
+
+        return userModel
+    }
+
+    public async searchUserByUsername(username: string): Promise<IUser> {
+        const userModel = await this.userModel.findOne({ username: username }).exec();
 
         delete userModel.password
 
@@ -88,10 +99,19 @@ export class UserService {
         return this.userLinkModel.updateOne({ _id: id }, linkParams);
     }
 
-    /*public getConfirmationLink(link: string): string {
-        return `${this.configService.get('baseUri')}:${this.configService.get(
-            'gatewayPort',
-        )}/users/confirm/${link}`;
+    public getConfirmationLink(link: string): string {
+        const emailConfirmationLink = `${this.configService.get('BASE_URL')}/users/confirm/${link}`
+
+        console.log(emailConfirmationLink)
+        
+        return emailConfirmationLink;
     }
-    */
+
+    public getAppEmail(): string {
+        return `${this.configService.get('APP_EMAIL')}`;
+    }
+    
+    public getAppName(): string {
+        return `${this.configService.get('APP_NAME')}`;
+    }
 }

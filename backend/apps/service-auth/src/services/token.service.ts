@@ -3,71 +3,48 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Query } from 'mongoose';
 import { IToken } from '../interfaces/token.interface';
+import { ConfigService } from '@nestjs/config';
+import * as bcrypt from 'bcrypt'
 
 const logger = new Logger('Auth')
 
 @Injectable()
 export class TokenService {
+    public jwt_access_token_secret: string
+
+    public jwt_refresh_token_secret: string
+
+    public SALT_ROUNDS: number
+
     constructor(
         private readonly jwtService: JwtService,
         @InjectModel('Token') private readonly tokenModel: Model<IToken>,
-    ) { }
+        private readonly configService: ConfigService
+    ) {
+        this.jwt_access_token_secret = this.configService.get('JWT_ACCESS_TOKEN_SECRET')
 
-    public createToken(data: { userId: string, role: string }): Promise<IToken> {
-        const token = this.jwtService.sign(
-            {
-                sub: data.userId,
-                role: data.role,
-            },
-            /*{
-                expiresIn: 30 * 24 * 60 * 60,
-            },
-            */
-        );
+        this.jwt_refresh_token_secret = this.configService.get('JWT_REFRESH_TOKEN_SECRET')
 
-        return new this.tokenModel({
-            user_id: data.userId,
-            token,
-        }).save();
+        this.SALT_ROUNDS = Number(this.configService.get('BCRYPT_SALT_ROUNDS'))
     }
 
-    public deleteTokenForUserId(userId: string): Query<any, any> {
-        return this.tokenModel.remove({
-            user_id: userId,
-        });
-    }
+    public async createToken(data: { userId: string, role: string }): Promise<IToken> {
+        const access_token = await this.signToken(data.userId, data.role, '900s', this.jwt_access_token_secret)
 
-    //This is more useful with verifying the refresh token is valid, not storing the token meaning the access_token
-    public async decodeToken(token: string) {
-        let result = null;
+        const refresh_token = await this.signToken(data.userId, data.role, '1h', this.jwt_refresh_token_secret)
 
-        console.log(token)
+        //Assign the refresh token to the user, if the user already has a refresh token then overwrite it, else create a new document with the user's id and refresh token
+        const hashed_refresh_token = await bcrypt.hash(refresh_token, this.SALT_ROUNDS);
 
-        try {
-            const tokenData = this.jwtService.decode(token) as {
-                exp: number,
-                sub: string,
-                role: string
-            }
+        await this.tokenModel.findOneAndUpdate({ 'user_id': data.userId }, { refresh_token: hashed_refresh_token }, { new: true, upsert: true })
 
-            console.log(tokenData)
+        let newToken: any = {}
 
-            if (!tokenData || tokenData.exp <= Math.floor(+new Date() / 1000)) {
-                result = null;
+        newToken.access_token = access_token
 
-                console.log(`null ${result}`)
-            } else {
-                result = {
-                    userId: tokenData.sub,
-                    role: tokenData.role
-                };
+        newToken.refresh_token = refresh_token
 
-                console.log(`Not null ${result}`)
-            }
-        } catch (e) {
-            result = null;
-        }
-        return result;
+        return newToken
     }
 
     //Verify the token meaning the access_token is valid
@@ -77,7 +54,9 @@ export class TokenService {
         let result = null
 
         try {
-            const verifyJWT = this.jwtService.verify(access_token)
+            const verifyJWT = this.jwtService.verify(access_token, {
+                secret: this.jwt_access_token_secret
+            })
 
             console.log(verifyJWT)
 
@@ -91,32 +70,70 @@ export class TokenService {
         return result
     }
 
-    //This is more useful with verifying the refresh token is valid, not storing the token meaning the access_token
-    /*public async decodeToken(token: string) {
-        const tokenModel = await this.tokenModel.find({
-            token,
-        });
+    public async refreshToken(refresh_token: string) {
         let result = null;
 
-        if (tokenModel && tokenModel[0]) {
-            try {
-                const tokenData = this.jwtService.decode(tokenModel[0].token) as {
-                    exp: number;
-                    //userId: any;
-                    sub: any
-                };
-                if (!tokenData || tokenData.exp <= Math.floor(+new Date() / 1000)) {
-                    result = null;
-                } else {
+        console.log(refresh_token)
+
+        try {
+            //This throws an error if it's expired, else it continues
+            const verifyJWT = this.jwtService.verify(refresh_token, {
+                secret: this.jwt_refresh_token_secret
+            })
+
+            console.log(verifyJWT)
+
+            const tokenModel = await this.tokenModel.findOne({
+                user_id: verifyJWT.sub
+            });
+
+            console.log(tokenModel)
+
+            if (tokenModel) {
+                const isRefreshTokenMatching = await bcrypt.compare(refresh_token, tokenModel.refresh_token)
+
+                if (isRefreshTokenMatching) {
+                    const data = {
+                        userId: verifyJWT.sub,
+                        role: verifyJWT.role
+                    }
+
+                    const access_token = await this.signToken(data.userId, data.role, '900s', this.jwt_access_token_secret)
+
                     result = {
-                        userId: tokenData.sub//.userId,
+                        access_token
                     };
+                } else {
+                    result = null
                 }
-            } catch (e) {
-                result = null;
+            } else {
+                result = null
             }
+        } catch (e) {
+            logger.error(e)
+
+            result = null
         }
         return result;
     }
-    */
+
+    //Remove the document of user'id and refresh token
+    public deleteTokenForUserId(userId: string): Query<any, any> {
+        return this.tokenModel.remove({
+            user_id: userId,
+        });
+    }
+
+    private async signToken(userId: string, role: string, expiresIn: string, secret: string): Promise<string> {
+        return this.jwtService.sign(
+            {
+                sub: userId,
+                role: role,
+            },
+            {
+                expiresIn,
+                secret
+            },
+        );
+    }
 }

@@ -5,6 +5,7 @@
   * Account
     - Create user (POST) IMPROVING
     - Get user by id (GET) IMPROVING
+    - Get user by username (GET) IMPROVING
     - Get users by query of interests meaning hobbies (stored exactly the same as user write them) IMPROVING
     - Update user by id (PUT) IMPROVING
     - Get example of protected route allowed with authentication and authorization (GET) IMPROVING
@@ -53,7 +54,12 @@
 * Service
   - Create image IMPROVING
   - Search image by user id or vehicule id and type IMPROVING
-  - Delete image by image id
+  - Delete image by image id IMPROVING
+
+## Service-mailer
+* Controller
+  - Send email confirmation
+  - Send greetings and steps tutorials
 
 ## Roles
 * Admin

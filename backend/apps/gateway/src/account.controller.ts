@@ -17,13 +17,14 @@ import { IServiceUserGetByIdResponse } from './interfaces/user/service-account-g
 import { IServiceUsersGetByQueryResponse } from './interfaces/user/service-account-get-by-query-response.interface';
 import { IServiceUserSearchResponse } from './interfaces/user/service-account-search-response.interface';
 import { IUser } from './interfaces/user/user.interface';
-//import { IServiceVehiculeGetByQueryResponse } from './interfaces/vehicule/service-report-get-by-id.interface';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { hasRoles } from './decorators/roles.decorator';
 import { Role } from './enums/role.enum';
+import { ConfirmUserDto } from './interfaces/user/dto/confirm-user.dto';
+import { ConfirmUserResponseDto } from './interfaces/user/dto/confirm-user-response.dto';
+import { IServiceUserConfirmResponse } from './interfaces/user/service-account-confirm-response.interface';
 
-@UseGuards(RolesGuard)
 @Controller('users')
 export class AccountsController {
   constructor(@Inject('ACCOUNT_SERVICE') private readonly accountServiceClient: ClientProxy,
@@ -58,12 +59,15 @@ export class AccountsController {
       data: {
         user: createUserResponse.user,
         access_token: createTokenResponse.access_token,
+        refresh_token: createTokenResponse.refresh_token
       },
       errors: null,
     };
   }
 
-  //User profile by id
+  //Protected get user's profile by id
+  @hasRoles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Get('user/:id')
   public async getUserById(@Param() user: IUser): Promise<GetUserByTokenResponseDto> {
     //console.log(request)
@@ -83,11 +87,65 @@ export class AccountsController {
     };
   }
 
-  //User update by id
-  //@UseGuards(AuthGuard)
-  @Put('user/:id')
-  public async updateUserById(@Param('id') user_id: string, @Body() user_update: UpdateUserDto): Promise<UpdateUserResponseDto> {
+  //Public get user profile by username
+  @Get('user/:username')
+  public async getUserByUsername(@Param() user: IUser): Promise<GetUserByTokenResponseDto> {
     //console.log(request)
+    const userInfo = user;
+
+    //Improve this by returning data based on user's role as Livreur, client(meaning normal user), entreprise, moderator and admin
+    const userResponse: IServiceUserGetByIdResponse = await this.accountServiceClient
+      .send('user_get_by_username', userInfo.username)
+      .toPromise();
+
+    return {
+      message: userResponse.message,
+      data: {
+        user: userResponse.user,
+      },
+      errors: null,
+    };
+  }
+
+  //Authenticated user data from JWT token
+  @Get('user')
+  @UseGuards(AuthGuard)
+  public async getUserByToken(@Req() request: IAuthorizedRequest): Promise<GetUserByTokenResponseDto> {
+    //console.log(request)
+    const userInfo = request.user;
+
+    const userResponse: IServiceUserGetByIdResponse = await this.accountServiceClient
+      .send('user_get_by_id', userInfo.id)
+      .toPromise();
+
+    return {
+      message: userResponse.message,
+      data: {
+        user: userResponse.user,
+      },
+      errors: null,
+    };
+  }
+
+  //User update by id
+  @hasRoles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Put('user/:id')
+  public async updateUserById(@Param('id') user_id: string, @Body() user_update: UpdateUserDto, @Req() request: IAuthorizedRequest): Promise<UpdateUserResponseDto> {
+    //console.log(request)
+    
+    //Don't allow user even authenticated to modify another's profile
+    if (!(user_id == request.user.id)) {
+      throw new HttpException(
+        {
+          message: null,
+          data: null,
+          errors: null,
+        },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     let userInfo: any = {}
 
     console.log(user_update)
@@ -112,6 +170,8 @@ export class AccountsController {
 
   //Users by query search of interests
   @Get('query')
+  @hasRoles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   public async getUsersByQuery(@Query('search_term') search_term: string): Promise<GetUsersByQueryResponseDto> {
     let match: any = {}
 
@@ -136,8 +196,8 @@ export class AccountsController {
   }
 
   //Protected that authenticated users have access to it
-  @UseGuards(AuthGuard)
-  @hasRoles(Role.User)
+  @hasRoles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   @Get('ree')
   //@Authorization(true)
   public async ree(): Promise<any> {
@@ -179,33 +239,33 @@ export class AccountsController {
       message: createTokenResponse.message,
       data: {
         access_token: createTokenResponse.access_token,
+        refresh_token: createTokenResponse.refresh_token
       },
       errors: null,
     };
   }
 
-  //Authenticated user data from JWT token
-  //@Get('user')
-  //@Authorization(true)
-  /*public async getUserByToken(@Req() request: IAuthorizedRequest): Promise<GetUserByTokenResponseDto> {
-    //console.log(request)
-    const userInfo = request.user;
+  //Refresh token
+  @UseGuards(AuthGuard)
+  @Post('/refresh_token')
+  public async refreshToken(@Req() req: Request): Promise<any> {
+    const refresh_token = req.headers['authorization']?.split(' ')[1]
 
-    const userResponse: IServiceUserGetByIdResponse = await this.accountServiceClient
-      .send('user_get_by_id', userInfo.id)
+    const refreshTokenResponse: any = await this.authServiceClient
+      .send('token_refresh', refresh_token)
       .toPromise();
 
     return {
-      message: userResponse.message,
+      message: refreshTokenResponse.message,
       data: {
-        user: userResponse.user,
+        access_token: refreshTokenResponse.access_token,
       },
       errors: null,
     };
   }
-  */
 
   //Logout authenticated user
+  @UseGuards(AuthGuard)
   @Put('/logout')
   public async logoutUser(@Req() request: IAuthorizedRequest): Promise<LogoutUserResponseDto> {
     const userInfo = request.user;
@@ -235,8 +295,8 @@ export class AccountsController {
   }
 
   //Confirm the verification of user's email
-  //@Get('/confirm/:link')
-  /*public async confirmUser(@Param() params: ConfirmUserDto): Promise<ConfirmUserResponseDto> {
+  @Get('/confirm/:link')
+  public async confirmUser(@Param() params: ConfirmUserDto): Promise<ConfirmUserResponseDto> {
     const confirmUserResponse: IServiceUserConfirmResponse = await this.accountServiceClient
       .send('user_confirm', {
         link: params.link,
@@ -260,5 +320,4 @@ export class AccountsController {
       data: null,
     };
   }
-  */
 }

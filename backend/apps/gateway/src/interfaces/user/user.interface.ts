@@ -3,4 +3,5 @@ export interface IUser {
     email: string;
     //This is better as default to user
     role: string;
+    username: string;
 }

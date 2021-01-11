@@ -21,25 +21,30 @@
     "test:e2e": "jest --config ./apps/gateway/test/jest-e2e.json",
     "docker:up": "docker-compose --env-file ./.env up -d",
     "docker:stop": "docker-compose stop",
-    "docker:down": "docker-compose down"
+    "docker:down": "docker-compose down",
+    "start:dev:all": "start cmd.exe @cmd /k npm run start:dev service-account && start cmd.exe @cmd /k npm run start:dev service-auth && start cmd.exe @cmd /k npm run start:dev service-image && start cmd.exe @cmd /k npm run start:dev service-mailer && start cmd.exe @cmd /k npm run start:dev service-reports  && start cmd.exe @cmd /k npm run start:dev"
   },
   "dependencies": {
-    "@nestjs/common": "^7.0.0",
+    "@anchan828/nest-sendgrid": "^0.4.1",
+    "@nestjs/common": "^7.6.5",
     "@nestjs/config": "^0.6.1",
     "@nestjs/core": "^7.0.0",
     "@nestjs/jwt": "^7.2.0",
     "@nestjs/microservices": "^7.6.4",
     "@nestjs/mongoose": "^7.2.0",
     "@nestjs/platform-express": "^7.0.0",
+    "@nestjs/typeorm": "^7.1.5",
     "bcrypt": "^5.0.0",
     "imagekit": "^3.1.1",
     "mongoose": "^5.11.8",
+    "mysql": "^2.18.1",
     "passport-jwt": "^4.0.0",
     "redis": "^3.0.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.5.4",
-    "string-similarity": "^4.0.3"
+    "string-similarity": "^4.0.3",
+    "typeorm": "^0.2.29"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.0.0",

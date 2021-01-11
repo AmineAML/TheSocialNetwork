@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { Observable } from 'rxjs';
 
 const logger = new Logger('Gateway')
 
@@ -10,7 +9,7 @@ export class AuthGuard implements CanActivate {
   
   async canActivate(
     context: ExecutionContext,
-  ): Promise<boolean /*| Promise<boolean> | Observable<boolean>*/> {
+  ): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
 
     try{
@@ -18,7 +17,6 @@ export class AuthGuard implements CanActivate {
 
       const res: any = await this.authServiceClient.send(
         'token_validate', { access_token: req.headers['authorization']?.split(' ')[1]})
-        //.pipe(timeout(5000))
         .toPromise<boolean>();
 
       console.log(res)

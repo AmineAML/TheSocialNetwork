@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { IReportCreateResponse } from './interfaces/report-create-response.interface';
 import { IReportsAllResponse } from './interfaces/report-get-all-response.interface';

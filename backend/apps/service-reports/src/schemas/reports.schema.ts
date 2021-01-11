@@ -8,8 +8,7 @@ export const ReportSchema = new mongoose.Schema(
     {
         by_user_id: {
             type: String,
-            //User id is not required as also non authenticated user can report other others
-            required: [false/*, 'User id can not be empty'*/]
+            required: [true, 'User id can not be empty']
         },
         reported_user_id: {
             type: String,

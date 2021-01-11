@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ClientOptions, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserLinkSchema } from './schemas/user-link.schema';
 import { UserSchema } from './schemas/user.schema';
@@ -32,11 +33,25 @@ import { UserService } from './services/user.service';
         schema: UserLinkSchema,
         collection: 'user_links',
       },
-    ]),
+    ])
   ],
   controllers: [ServiceAccountController],
   providers: [
-    UserService
+    UserService,
+    {
+      provide: 'MAILER_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        const mailerServiceOptions: ClientOptions = {
+          options: {
+            url: configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+          },
+          transport: Transport.REDIS
+        }
+        console.log(mailerServiceOptions)
+        return ClientProxyFactory.create(mailerServiceOptions)
+      },
+      inject: [ConfigService]
+    },
   ],
 })
 export class ServiceAccountModule {}

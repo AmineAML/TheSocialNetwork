@@ -61,6 +61,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/service-reports/tsconfig.app.json"
       }
+    },
+    "service-mailer": {
+      "type": "application",
+      "root": "apps/service-mailer",
+      "entryFile": "main",
+      "sourceRoot": "apps/service-mailer/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/service-mailer/tsconfig.app.json"
+      }
     }
   }
 }
