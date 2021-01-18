@@ -27,6 +27,6 @@ export class ReportService {
 
     //Load a single report
     public async getReportById(report_id: string): Promise<IReport> {
-        return this.reportModel.findById({ _id: report_id }).exec();
+        return this.reportModel.findById(report_id).exec();
     }
 }

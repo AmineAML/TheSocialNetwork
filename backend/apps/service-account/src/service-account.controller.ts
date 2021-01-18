@@ -11,7 +11,7 @@ import { IUserUpdateResponse } from './interfaces/user-update-response.interface
 @Controller()
 export class ServiceAccountController {
   constructor(private readonly userService: UserService,
-              @Inject('MAILER_SERVICE') private readonly mailerServiceClient: ClientProxy) { }
+    @Inject('MAILER_SERVICE') private readonly mailerServiceClient: ClientProxy) { }
 
   //Create a new user account
   @MessagePattern('user_create')
@@ -21,10 +21,6 @@ export class ServiceAccountController {
     if (userParams) {
       const usersWithEmail = await this.userService.searchUserByEmail({
         email: userParams.email,
-      });
-
-      const usersWithUsername = await this.userService.searchUserByUserName({
-        username: userParams.username
       });
 
       if (usersWithEmail && usersWithEmail.length > 0) {
@@ -39,53 +35,59 @@ export class ServiceAccountController {
             },
           },
         };
-      } else if (usersWithUsername && usersWithUsername.length > 0) {
-        result = {
-          status: HttpStatus.CONFLICT,
-          message: 'user_create_conflict',
-          user: null,
-          errors: {
-            email: {
-              message: 'Username already exists',
-              path: 'username',
-            },
-          },
-        };
       } else {
-        try {
-          userParams.is_confirmed = false;
+        const usersWithUsername = await this.userService.searchUserByUserName({
+          username: userParams.username
+        });
 
-          const createdUser = await this.userService.createUser(userParams);
-          const userLink = await this.userService.createUserLink(createdUser.id);
-
-          delete createdUser.password;
+        if (usersWithUsername && usersWithUsername.length > 0) {
           result = {
-            status: HttpStatus.CREATED,
-            message: 'user_create_success',
-            user: createdUser,
-            errors: null,
-          };
-          this.mailerServiceClient
-            .send('mail_send_confirm_email', {
-              to: createdUser.email,
-              from: this.userService.getAppEmail(),
-              subject: 'Email confirmation',
-              text: "and easy to do anywhere, even with Node.js",
-              html: `<center>
-              <b>Hi there, please confirm your email to unlock the full features of The Social Network.</b><br>
-              Use the following link for this.<br>
-              <a href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
-              If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
-              </center>`,
-            })
-            .toPromise();
-        } catch (e) {
-          result = {
-            status: HttpStatus.PRECONDITION_FAILED,
-            message: 'user_create_precondition_failed',
+            status: HttpStatus.CONFLICT,
+            message: 'user_create_conflict',
             user: null,
-            errors: e.errors,
+            errors: {
+              email: {
+                message: 'Username already exists',
+                path: 'username',
+              },
+            },
           };
+        } else {
+          try {
+            userParams.is_confirmed = false;
+
+            const createdUser = await this.userService.createUser(userParams);
+            const userLink = await this.userService.createUserLink(createdUser.id);
+
+            delete createdUser.password;
+            result = {
+              status: HttpStatus.CREATED,
+              message: 'user_create_success',
+              user: createdUser,
+              errors: null,
+            };
+            this.mailerServiceClient
+              .send('mail_send_confirm_email', {
+                to: createdUser.email,
+                from: this.userService.getAppEmail(),
+                subject: 'Email confirmation',
+                text: "and easy to do anywhere, even with Node.js",
+                html: `<center>
+                <b>Hi there, please confirm your email to unlock the full features of The Social Network.</b><br>
+                Use the following link for this.<br>
+                <a href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
+                If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
+                </center>`,
+              })
+              .toPromise();
+          } catch (e) {
+            result = {
+              status: HttpStatus.PRECONDITION_FAILED,
+              message: 'user_create_precondition_failed',
+              user: null,
+              errors: e.errors,
+            };
+          }
         }
       }
     } else {
@@ -106,8 +108,10 @@ export class ServiceAccountController {
     let result: IUserSearchResponse;
 
     if (username) {
-      const user = await this.userService.searchUserById(username);
+      const user = await this.userService.searchUserByUsername(username);
       if (user) {
+        delete user.password
+
         result = {
           status: HttpStatus.OK,
           message: 'user_get_by_username_success',
@@ -139,6 +143,8 @@ export class ServiceAccountController {
     if (id) {
       const user = await this.userService.searchUserById(id);
       if (user) {
+        delete user.password
+
         result = {
           status: HttpStatus.OK,
           message: 'user_get_by_id_success',
@@ -251,12 +257,12 @@ export class ServiceAccountController {
   public async getUsersByCategory(match: any): Promise<IUserSearchQueryResponse> {
     let result: IUserSearchQueryResponse;
 
-    if (match.interest) {
+    if (match.search_term) {
       console.log('Any of is there')
 
       let queries: any = {}
 
-      queries.interest = match.interest
+      queries.interest = match.search_term
 
       const users = await this.userService.searchUsers(queries);
 
@@ -306,18 +312,18 @@ export class ServiceAccountController {
 
         //Send a welcome and platform tutorial mail
         this.mailerServiceClient
-        .send('mail_send_welcome_tutorial', {
-          to: updatedUser.email,
-          from: this.userService.getAppEmail(),
-          subject: `Welcome to ${this.userService.getAppName}`,
-          html: `<center>
+          .send('mail_send_welcome_tutorial', {
+            to: updatedUser.email,
+            from: this.userService.getAppEmail(),
+            subject: `Welcome to ${this.userService.getAppName}`,
+            html: `<center>
           Dear ${updatedUser.first_name} ${updatedUser.last_name},
           <b>Thank you for joining ${this.userService.getAppName}, we are happy to have you!<br>
           With us you can make new friends, chat and add people to your network<br>
           ${this.userService.getAppName} team
           </center>`,
-        })
-        .toPromise();
+          })
+          .toPromise();
 
         result = {
           status: HttpStatus.OK,

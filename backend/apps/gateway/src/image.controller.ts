@@ -1,6 +1,7 @@
 import { Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { Request, request } from 'express';
 import { hasRoles } from './decorators/roles.decorator';
 import { Role } from './enums/role.enum';
 import { AuthGuard } from './guards/auth.guard';
@@ -27,7 +28,9 @@ export class ImageController {
         { name: 'avatar', maxCount: 1 },
         { name: 'background', maxCount: 1 }
     ]))
-    public async uploadImage(@Query() imageRequest: UploadImageDto, @UploadedFiles() files): Promise<UploadImageResponseDto> {
+    public async uploadImage(@Query() imageRequest: UploadImageDto, @UploadedFiles() files, @Req() request: IAuthorizedRequest): Promise<UploadImageResponseDto> {
+        imageRequest.user_id = request.user.id
+        
         const images = {
             file: files,
             image: imageRequest
@@ -59,7 +62,6 @@ export class ImageController {
     }
 
     //Images by user id
-    @UseGuards(AuthGuard)
     @Get('image/:user_id')
     public async getImagesByUserOrVehiculeId(@Param() image: IImage): Promise<GetImagesByUserIdResponseDto> {
         //console.log(request)
@@ -86,22 +88,13 @@ export class ImageController {
     //@Authorization(true)
     //@Permission('task_delete_by_id')
     public async deleteTask(@Param() image: IImage, @Req() request: IAuthorizedRequest): Promise<DeleteImageResponseDto> {
-        const userInfo = image;
-
-        //Don't allow user even authenticated to modify another's images
-        if (!(image.user_id == request.user.id)) {
-            throw new HttpException(
-                {
-                    message: null,
-                    data: null,
-                    errors: null,
-                },
-                HttpStatus.UNAUTHORIZED,
-            );
+        const imageData: any = {
+            user_id: request.user.id,
+            image_id: image.id
         }
 
         const deleteImageResponse: IServiceImageDeleteResponse = await this.imageServiceClient
-            .send('image_delete', { imageId: userInfo.id })
+            .send('image_delete', imageData)
             .toPromise();
 
         if (deleteImageResponse.status !== HttpStatus.OK) {

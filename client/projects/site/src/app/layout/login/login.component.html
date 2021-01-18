@@ -1,0 +1,64 @@
+<div class="md:flex h-screen bg-gray-300 text-indigo-100">
+
+    <div class="m-auto border-8 border-solid rounded shadow">
+        <form class="flex flex-col gap-3 p-5 text-amethyst bg-bedrock" [formGroup]="loginForm" name="login" id='login-form' method="post" (ngSubmit)="onSubmit()">
+            <div class="m-auto">
+                <h3 class="py-3 px-6">Login</h3>
+            </div>
+            <label>Email</label>
+            <input type="email" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" [formControl]="emailFormControl" name="email" formControlName="email">
+            <label>Password</label>
+            <input type="password" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" id="password" name="password" formControlName="password">
+            <div class="m-auto">
+                <button type="submit" class="bg-red-300 hover:bg-red-400 text-red-800 rounded py-3 px-6">Login</button>
+            </div>
+            <h2 class="text-lg md:text-2xl lg:text-3xl mb-6">Don't have an account? <a href="#">Sign Up</a></h2>
+        </form>
+    </div>
+
+</div>
+
+<!-- <div class="flex h-screen w-screen">
+    <mat-card class="flex w-3/4 h-3/4">
+        <mat-card-content>
+            <form [formGroup]="contactForm" name="contact" id='contact-form' method="post" (ngSubmit)="onSubmit()"
+                class="flex flex-col gap-3">
+                <h3>Login</h3>
+                <mat-form-field class="example-full-width">
+                    <mat-label>Email</mat-label>
+                    <input matInput [formControl]="emailFormControl" type="email" name="email" formControlName="email"
+                        [required]="isRequired ? 'required' : null">
+                    <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl2.hasError('required')">
+                        Please enter a valid email address
+                    </mat-error>
+                    <mat-error
+                        *ngIf="!emailFormControl.hasError('email') && emailFormControl.hasError('required') && submitFormPressedNotifyErrors">
+                        Please enter your email address
+                    </mat-error>
+                </mat-form-field>
+                <br>
+
+                <mat-form-field class="example-full-width">
+                    <mat-label>Password</mat-label>
+                    <input matInput id="password" name="password" formControlName="password"
+                        [required]="isRequired ? 'required' : null">
+                    <mat-error *ngIf="passwordFormControl.hasError('required') && submitFormPressedNotifyErrors">Please
+                        provide a valid password</mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="full-width-input">
+                    <input matInput [type]="hide ? 'password' : 'text'" placeholder="Enter your password">
+                    <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                        [attr.aria-pressed]="hide">
+                        <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                    </button>
+                    <mat-error>
+                        Please provide a valid password
+                    </mat-error>
+                </mat-form-field>
+
+                <button mat-button type="submit">Login</button>
+            </form>
+        </mat-card-content>
+    </mat-card>
+</div> -->

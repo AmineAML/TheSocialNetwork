@@ -31,16 +31,19 @@ export class ImageService {
         return imageModel
     }
 
-    public async searchImagesByUserOrVehiculeId(user_id: string): Promise<IImage | IImage[]> {
-        const imageModel = await this.imageModel.find().where('user_id').equals(user_id).exec();
+    //Example a user cannot insert another avatar without removing the previous avatar
+    public async searchImageByTypeAndUserId(params: { type: string, user_id: string }): Promise<IImage[]> {
+        return this.imageModel.find(params).exec();
+    }
 
-        imageModel.forEach(function (v) { delete v.imagekit_file_id })
+    public async searchImagesByUserId(user_id: string): Promise<IImage[]> {
+        const imageModel = await this.imageModel.find({ user_id })/*.where('user_id').equals(user_id)*/.select('-imagekit_file_id').exec();
 
         return imageModel
     }
 
     public async searchImageById(image_id: string): Promise<IImage> {
-        return this.imageModel.findById({ image_id }).exec();
+        return this.imageModel.findById(image_id).exec();
     }
 
     public async deleteImageById(image_id: string, imagekit_file_id: string): Promise<IImage> {

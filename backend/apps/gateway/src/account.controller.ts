@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Param, Post, Put, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Header, HttpException, HttpStatus, Inject, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { IAuthorizedRequest } from './interfaces/common/authorized-request.interface';
 import { IServiceAuthCreateResponse } from './interfaces/token/service-auth-create-response.interface';
@@ -24,16 +24,19 @@ import { Role } from './enums/role.enum';
 import { ConfirmUserDto } from './interfaces/user/dto/confirm-user.dto';
 import { ConfirmUserResponseDto } from './interfaces/user/dto/confirm-user-response.dto';
 import { IServiceUserConfirmResponse } from './interfaces/user/service-account-confirm-response.interface';
+import { request, Response } from 'express';
 
 @Controller('users')
 export class AccountsController {
   constructor(@Inject('ACCOUNT_SERVICE') private readonly accountServiceClient: ClientProxy,
-    @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy
+              @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy
   ) { }
 
   //New user
   @Post('user')
   public async createUser(@Body() userRequest: CreateUserDto): Promise<CreateUserResponseDto> {
+    userRequest.role = 'user'
+    
     const createUserResponse: IServiceUserCreateResponse = await this.accountServiceClient
       .send('user_create', userRequest)
       .toPromise();
@@ -68,7 +71,7 @@ export class AccountsController {
   //Protected get user's profile by id
   @hasRoles(Role.User, Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
-  @Get('user/:id')
+  @Get('user/id/:id')
   public async getUserById(@Param() user: IUser): Promise<GetUserByTokenResponseDto> {
     //console.log(request)
     const userInfo = user;
@@ -88,7 +91,7 @@ export class AccountsController {
   }
 
   //Public get user profile by username
-  @Get('user/:username')
+  @Get('user/username/:username')
   public async getUserByUsername(@Param() user: IUser): Promise<GetUserByTokenResponseDto> {
     //console.log(request)
     const userInfo = user;
@@ -173,6 +176,8 @@ export class AccountsController {
   @hasRoles(Role.User, Role.Admin)
   @UseGuards(AuthGuard, RolesGuard)
   public async getUsersByQuery(@Query('search_term') search_term: string): Promise<GetUsersByQueryResponseDto> {
+    console.log(search_term)
+    
     let match: any = {}
 
     //search_term means interests
@@ -212,6 +217,7 @@ export class AccountsController {
 
   //Login user
   @Post('/login')
+  //@Header('Set-Cookie', 'ree=coooooookie')
   public async loginUser(@Body() loginRequest: LoginUserDto): Promise<LoginUserResponseDto> {
     const getUserResponse: IServiceUserSearchResponse = await this.accountServiceClient
       .send('user_search_by_credentials', loginRequest)

@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientOptions, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { AccountsController } from './account.controller';
-import { config } from './services/config/config';
-import { Configs } from './services/config/config.service';
 import { ReportController } from './report.controller';
 import { ImageController } from './image.controller';
 import { AuthGuard } from './guards/auth.guard';
@@ -13,7 +11,7 @@ import { RolesGuard } from './guards/roles.guard';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [config]
+      //load: [config]
     })
   ],
   controllers: [

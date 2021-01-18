@@ -39,6 +39,16 @@ export class RolesGuard implements CanActivate {
   }
 
   matchRoles(requiredRoles: string[], userRole: string) {
-    return requiredRoles.every(role => userRole.includes(role))
+    let isMatchedRole = false
+
+    requiredRoles.forEach(role => {
+      if (userRole.includes(role)) {
+        isMatchedRole = true
+      }
+    })
+
+    return isMatchedRole
+    
+    //return requiredRoles.every(role => userRole.includes(role))
   }
 }

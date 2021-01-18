@@ -2,10 +2,18 @@ export class UpdateUserDto {
     first_name: string;
     last_name: string;
     description: string;
-    address: string;
-    delivery_region: string[];
-    phone_number: string;
-    category: number[];
-    gender: string[];
+    intersts: string[];
+    gender: string;
     role: string;
+    social_media: SocialMedia;
+}
+
+interface SocialMedia {
+    facebook: string;
+    linkedin: string;
+    twitter: string;
+    tiktok: string;
+    discord: string;
+    instagram: string;
+    youtube: string;
 }

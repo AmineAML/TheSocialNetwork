@@ -1,0 +1,715 @@
+{
+	"info": {
+		"_postman_id": "44a56e86-1e51-4c88-9ea2-e0b61422ea45",
+		"name": "TheSocialNetworkApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Add new user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "email",
+									"value": "joey@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "superpowerfulpw",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "joeyyyy",
+									"type": "text"
+								},
+								{
+									"key": "first_name",
+									"value": "Joey",
+									"type": "text"
+								},
+								{
+									"key": "last_name",
+									"value": "Jo",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "I love drawing, it's a hobby and profession for me",
+									"type": "text"
+								},
+								{
+									"key": "interest[0]",
+									"value": "Drawing",
+									"type": "text"
+								},
+								{
+									"key": "interest[1]",
+									"value": "Hiking",
+									"type": "text"
+								},
+								{
+									"key": "interest[2]",
+									"value": "chess",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "male",
+									"type": "text"
+								},
+								{
+									"key": "role",
+									"value": "user",
+									"type": "text"
+								},
+								{
+									"key": "social_media.facebook",
+									"value": "facebook.com/joey",
+									"type": "text"
+								},
+								{
+									"key": "social_media.linkedin",
+									"value": "linkedin.com/joey-jo",
+									"type": "text"
+								},
+								{
+									"key": "social_media.twitter",
+									"value": "twitter.com/joey",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQwNzE5NCwiZXhwIjoxNjEwNDA4MDk0fQ.uUbYWLeQcUiRu9ljP-iUY6DaIh5UNhfnlT_gDQE6PYs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user/id/5fedc6250b5f8f122c8dd90d",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user",
+								"id",
+								"5fedc6250b5f8f122c8dd90d"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by username",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQwNzE5NCwiZXhwIjoxNjEwNDA4MDk0fQ.uUbYWLeQcUiRu9ljP-iUY6DaIh5UNhfnlT_gDQE6PYs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user/username/joeyyyy",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user",
+								"username",
+								"joeyyyy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get authenticated user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxNDkwNCwiZXhwIjoxNjEwNDE1ODA0fQ.3x4eB6BBPwTU7bqS5ZZ8xQKczf_2nmDcQXb_-dx99AM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxNjI5NCwiZXhwIjoxNjEwNDE3MTk0fQ.k4P1EFq-O1jxarAf_XbkyCeumzfhQgiO4tF7FHwSWBY",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\": \"Reeeeee\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user/5ffcc281a9d5d2436829b0f1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user",
+								"5ffcc281a9d5d2436829b0f1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search query",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxNzczNiwiZXhwIjoxNjEwNDE4NjM2fQ.FjGSVxAxyMms9oJcKvU044gHMFns8n7EadHRDNqPUNE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/query?search_term=Drawing",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"query"
+							],
+							"query": [
+								{
+									"key": "search_term",
+									"value": "Drawing"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get example of auth and role",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxODYzMCwiZXhwIjoxNjEwNDE5NTMwfQ.ujqTAqU_7RG1ULu5nW0hU9fEcv7fUrl1LnC3GQAbnR8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer jndfndjfefdfe.fdfsee.dfsdfdfef.",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/ree",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"ree"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"joey@email.com\",\r\n    \"password\": \"superpowerfulpw\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxODc2NiwiZXhwIjoxNjEwNDIyMzY2fQ.3uvzfZKvMo1fqWkh_drbb7uLSThLG7zMphXvXXGRBDA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/refresh_token",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"refresh_token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxODgwOCwiZXhwIjoxNjEwNDE5NzA4fQ.GrfHc_87Raw1JA6lLZhodxjKxAaICSWO5Lf6kUpq31w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/confirm/hcm3hfiam6a",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"confirm",
+								"hcm3hfiam6a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "Upload images",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ4Mjk5MiwiZXhwIjoxNjEwNDgzODkyfQ.1FPtUCHkJbkkEmukYEx7H2aOdFZnBLe0tZ6n2Ma8GSc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmY1MWMyMjQ5YzI0MjQxOThmNWVkNmEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYwOTkwMjg5MSwiZXhwIjoxNjA5OTAzNzkxfQ.DeIHYOY9vB_-kD5dsHYoPuRYDjjn8Kxx-pFW6fXEOEM",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "/C:/Users/HP/Pictures/08_Zoom_W3_Wallpapers_Template_1920x1080_8j8xehqh1ri1ftr1.jpg"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/images/image/upload?type=background",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"images",
+								"image",
+								"upload"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "background"
+								},
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Images by user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/images/image/5ffcc281a9d5d2436829b0f1",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"images",
+								"image",
+								"5ffcc281a9d5d2436829b0f1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ4ODQ2OCwiZXhwIjoxNjEwNDg5MzY4fQ.ILf7zg0AV4e4h9-yM3qZpPCx8UklCMbwFW4yip3RuC4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/images/image/5ffdff35413e6e52fc1f7512",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"images",
+								"image",
+								"5ffdff35413e6e52fc1f7512"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Report",
+			"item": [
+				{
+					"name": "Report user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ5MDA1NywiZXhwIjoxNjEwNDkwOTU3fQ.aGCTQ_5UEla8Pqq5Hon_Z--XzotmwyCxQx5vex0a1W8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"reported_user_id\": \"fjsnfsjfdqdnfneofn\",\r\n    \"description\": \"Ree\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/reports/report",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reports",
+								"report"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get report by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ5MDA1NywiZXhwIjoxNjEwNDkwOTU3fQ.aGCTQ_5UEla8Pqq5Hon_Z--XzotmwyCxQx5vex0a1W8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/reports/report/5ffe20f62fe4c31294ea330f",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reports",
+								"report",
+								"5ffe20f62fe4c31294ea330f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all reports",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ5MDY2NSwiZXhwIjoxNjEwNDkxNTY1fQ.XCmrFCBCrU9LfP91UGLLI-6uxhn32xnPnJU2vMYbUtc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/reports",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify report",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ5MDgzOCwiZXhwIjoxNjEwNDkxNzM4fQ.pKojiaHtvkvl_3uwg7rQU-IB-WyvWtnpJLOg1AobI9o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"closed\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/reports/report/5ffe20f62fe4c31294ea330f",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"reports",
+								"report",
+								"5ffe20f62fe4c31294ea330f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -53,7 +53,7 @@ export const UserSchema = new mongoose.Schema(
         },
         gender: {
             type: String,
-            enum: ['male', 'female']
+            enum: ['male', 'female', 'other']
         },
         role: {
             type: String,
@@ -64,7 +64,11 @@ export const UserSchema = new mongoose.Schema(
             type: {
                 facebook: String,
                 linkedin: String,
-                twitter: String
+                twitter: String,
+                tiktok: String,
+                discord: String,
+                instagram: String,
+                youtube: String
             },
             required: [false],
         },

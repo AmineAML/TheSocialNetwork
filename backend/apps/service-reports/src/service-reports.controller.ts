@@ -18,6 +18,9 @@ export class ServiceReportsController {
 
     if (reportParams) {
       try {
+        //Delete status, as it should default to 'opened'
+        delete reportParams.status
+
         const createdVehicule = await this.reportService.createReport(reportParams);
         result = {
           status: HttpStatus.CREATED,
@@ -51,13 +54,13 @@ export class ServiceReportsController {
     let result: IReportUpdateByIdResponse;
 
     if (modifyParams) {
-      const vehicule = await this.reportService.getReportById(modifyParams.id);
+      const report = await this.reportService.getReportById(modifyParams.id);
 
-      if (vehicule && vehicule[0]) {
-        const vehiculeId = vehicule[0].id;
-        const vehiculeData = modifyParams.report_update
-        const modifiedReport = await this.reportService.updateReportById(vehiculeId, {
-          vehiculeData
+      if (report) {
+        const reportId = report.id;
+        const reportData = modifyParams.report_update
+        const modifiedReport = await this.reportService.updateReportById(reportId, {
+          reportData
         });
         result = {
           status: HttpStatus.OK,
@@ -111,11 +114,11 @@ export class ServiceReportsController {
 
   //Load repord by id
   @MessagePattern('report_by_id')
-  public async LoadSingleReport(report_id: string): Promise<IReportSearchByIdResponse> {
+  public async LoadSingleReport(id: string): Promise<IReportSearchByIdResponse> {
     let result: IReportSearchByIdResponse;
 
-    if (report_id) {
-      const report = await this.reportService.getReportById(report_id);
+    if (id) {
+      const report = await this.reportService.getReportById(id);
 
       if (report) {
         result = {

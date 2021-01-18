@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, HttpStatus, Inject, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Inject, Param, Post, Put, Req, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
@@ -14,18 +14,20 @@ import { IServiceReportGetByIdResponse } from './interfaces/report/service-repor
 import { IServiceReportUpdatedByIdResponse } from './interfaces/report/service-report-update-by-id.interface';
 import { GetAllReportsResponseDto } from './interfaces/report/dto/get-all-reports-response.dto';
 import { IServiceGetAllReportsResponse } from './interfaces/report/service-report-get-all-reports-response.interface';
+import { IAuthorizedRequest } from './interfaces/common/authorized-request.interface';
+import { IReport } from './interfaces/report/report.interface';
 
-@UseGuards(RolesGuard)
 @Controller('reports')
 export class ReportController {
-    constructor(@Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy,
-        @Inject('REPORT_SERVICE') private readonly reportServiceClient: ClientProxy) { }
+    constructor(@Inject('REPORT_SERVICE') private readonly reportServiceClient: ClientProxy) { }
 
     //New report
     @hasRoles(Role.User, Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     @Post('report')
-    public async createReport(@Body() reportRequest: CreateReportDto): Promise<CreateReportResponseDto> {
+    public async createReport(@Body() reportRequest: CreateReportDto, @Req() request: IAuthorizedRequest): Promise<CreateReportResponseDto> {
+        reportRequest.by_user_id = request.user.id
+
         const createVehiculeResponse: IServiceReportCreateResponse = await this.reportServiceClient
             .send('report_create', reportRequest)
             .toPromise();
@@ -52,12 +54,12 @@ export class ReportController {
     //Report by id
     @hasRoles(Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
-    @Get(':id')
-    public async getReportById(@Param() id: string): Promise<GetReportByIdResponseDto> {
+    @Get('report/:id')
+    public async getReportById(@Param() report: IReport): Promise<GetReportByIdResponseDto> {
         //console.log(request)
 
         const ReportResponse: IServiceReportGetByIdResponse = await this.reportServiceClient
-            .send('report_by_id', id)
+            .send('report_by_id', report.id)
             .toPromise();
 
         return {
@@ -90,21 +92,21 @@ export class ReportController {
     }
 
     //Report update by id
-    @hasRoles(Role.Admin)
+    //@hasRoles(Role.Admin)
     @UseGuards(AuthGuard, RolesGuard)
     @Put('report/:id')
     public async updateUserById(@Param('id') report_id: string, @Body() report_update: UpdateReportDto): Promise<UpdateReportResponseDto> {
         //console.log(request)
         let reportInfo: any = {}
 
-        console.log(report_update)
+        //console.log(report_update)
 
         reportInfo.report_update = report_update
 
         reportInfo.id = report_id
 
         const ReportResponse: IServiceReportUpdatedByIdResponse = await this.reportServiceClient
-            .send('vehicule_modify', reportInfo)
+            .send('report_modify', reportInfo)
             .toPromise();
 
         return {

@@ -32,15 +32,11 @@ export class UserService {
     public async searchUserById(id: string): Promise<IUser> {
         const userModel = await this.userModel.findById(id).exec();
 
-        delete userModel.password
-
         return userModel
     }
 
     public async searchUserByUsername(username: string): Promise<IUser> {
         const userModel = await this.userModel.findOne({ username: username }).exec();
-
-        delete userModel.password
 
         return userModel
     }
@@ -79,7 +75,7 @@ export class UserService {
         //Search for users that satistfy both conditions, and if one of the conditions doesn't exists it ignores it and searches for users that satisfy one of these conditions
         const users = await this.userModel.find(q).exec()
 
-        users.forEach(function (v) { delete v.password })
+        users ? users.forEach(function (v) { delete v.password }) : users
 
         return users
     }
