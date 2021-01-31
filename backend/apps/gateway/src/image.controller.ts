@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { Request, request } from 'express';
@@ -30,7 +30,7 @@ export class ImageController {
     ]))
     public async uploadImage(@Query() imageRequest: UploadImageDto, @UploadedFiles() files, @Req() request: IAuthorizedRequest): Promise<UploadImageResponseDto> {
         imageRequest.user_id = request.user.id
-        
+
         const images = {
             file: files,
             image: imageRequest
@@ -63,13 +63,33 @@ export class ImageController {
 
     //Images by user id
     @Get('image/:user_id')
-    public async getImagesByUserOrVehiculeId(@Param() image: IImage): Promise<GetImagesByUserIdResponseDto> {
+    public async getImagesByUserId(@Param() image: IImage): Promise<GetImagesByUserIdResponseDto> {
         //console.log(request)
         const imageInfo = image;
 
         //Improve this by returning data based on user's role as Livreur, client(meaning normal user), entreprise, moderator and admin
         const ImageResponse: IServiceImagesGetByUserOrVehiculeIdResponse = await this.imageServiceClient
-            .send('image_get_by_user_id', imageInfo.user_id)
+            .send('images_get_by_user_id', image.user_id)
+            .toPromise();
+
+        return {
+            message: ImageResponse.message,
+            data: {
+                images: ImageResponse.images,
+            },
+            errors: null,
+        };
+    }
+
+    //Images by users ids
+    @Post('images')
+    public async getImagesByUsersIds(@Body() users: { usersIds: string[] }): Promise<GetImagesByUserIdResponseDto> {
+        console.log(users)
+        //const imageInfo = image;
+
+        //Improve this by returning data based on user's role as Livreur, client(meaning normal user), entreprise, moderator and admin
+        const ImageResponse: IServiceImagesGetByUserOrVehiculeIdResponse = await this.imageServiceClient
+            .send('images_get_by_users_ids', users.usersIds)
             .toPromise();
 
         return {

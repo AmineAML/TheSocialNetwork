@@ -25,18 +25,21 @@ import { ConfirmUserDto } from './interfaces/user/dto/confirm-user.dto';
 import { ConfirmUserResponseDto } from './interfaces/user/dto/confirm-user-response.dto';
 import { IServiceUserConfirmResponse } from './interfaces/user/service-account-confirm-response.interface';
 import { request, Response } from 'express';
+import { GetInterestAllResponseDto } from './interfaces/interest/dto/get-interest-all-response.dto';
+import { IServiceUserGetInterestAllResponse } from './interfaces/interest/service-account-get-interest-all-response.interface';
+import { UserIsUserGuard } from './guards/user-is-user.guard';
 
 @Controller('users')
 export class AccountsController {
   constructor(@Inject('ACCOUNT_SERVICE') private readonly accountServiceClient: ClientProxy,
-              @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy
+    @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy
   ) { }
 
   //New user
   @Post('user')
   public async createUser(@Body() userRequest: CreateUserDto): Promise<CreateUserResponseDto> {
-    userRequest.role = 'user'
-    
+    userRequest.role = Role.User
+
     const createUserResponse: IServiceUserCreateResponse = await this.accountServiceClient
       .send('user_create', userRequest)
       .toPromise();
@@ -64,7 +67,10 @@ export class AccountsController {
         access_token: createTokenResponse.access_token,
         refresh_token: createTokenResponse.refresh_token
       },
-      errors: null,
+      errors: {
+        user_error: createUserResponse.errors,
+        token_error: createTokenResponse.errors
+      },
     };
   }
 
@@ -132,11 +138,11 @@ export class AccountsController {
 
   //User update by id
   @hasRoles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(AuthGuard, RolesGuard, UserIsUserGuard)
   @Put('user/:id')
   public async updateUserById(@Param('id') user_id: string, @Body() user_update: UpdateUserDto, @Req() request: IAuthorizedRequest): Promise<UpdateUserResponseDto> {
     //console.log(request)
-    
+
     //Don't allow user even authenticated to modify another's profile
     if (!(user_id == request.user.id)) {
       throw new HttpException(
@@ -152,6 +158,8 @@ export class AccountsController {
     let userInfo: any = {}
 
     console.log(user_update)
+
+    user_update.role ? delete user_update.role : ''
 
     userInfo.user_update = user_update
 
@@ -174,20 +182,33 @@ export class AccountsController {
   //Users by query search of interests
   @Get('query')
   @hasRoles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, RolesGuard)
-  public async getUsersByQuery(@Query('search_term') search_term: string): Promise<GetUsersByQueryResponseDto> {
+  @UseGuards(AuthGuard, /*RolesGuard*/)
+  public async getUsersByQuery(@Query('search_term') search_term: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<GetUsersByQueryResponseDto> {
+    //page is either a number specified by the user or default to 1, and same to limit that either specified by the user or default to 10
+    //limit is max to 100 items per page, if the user specified more than that, default to 100 else what the user specified
+    page = Number(page)
+
+    limit = Number(limit)
+
+    limit = limit > 100 ? 100 : limit
+
     console.log(search_term)
-    
+
     let match: any = {}
 
     //search_term means interests
-    search_term ? match.search_term = search_term : match
+    search_term ? match.search_term = search_term.toLowerCase() : match
 
     let usersResponse: IServiceUsersGetByQueryResponse
 
     if (match) {
       usersResponse = await this.accountServiceClient
-        .send('users_search_by_query', match)
+        .send('users_search_by_query', {
+          match,
+          page,
+          limit,
+          route: `http://localhost:3000/api/v1/users/query?search_term=${search_term}`
+        })
         .toPromise();
     }
 
@@ -195,6 +216,8 @@ export class AccountsController {
       message: usersResponse.message,
       data: {
         users: usersResponse.users,
+        meta: usersResponse.meta,
+        link: usersResponse.link
       },
       errors: null,
     };
@@ -252,10 +275,12 @@ export class AccountsController {
   }
 
   //Refresh token
-  @UseGuards(AuthGuard)
+  //@UseGuards(AuthGuard)
   @Post('/refresh_token')
-  public async refreshToken(@Req() req: Request): Promise<any> {
-    const refresh_token = req.headers['authorization']?.split(' ')[1]
+  public async refreshToken(@Req() req: Request, @Body() token: { refresh_token: string }): Promise<any> {
+    const refresh_token = token.refresh_token//req.headers['authorization']?.split(' ')[1]
+
+    console.log(refresh_token)
 
     const refreshTokenResponse: any = await this.authServiceClient
       .send('token_refresh', refresh_token)
@@ -324,6 +349,22 @@ export class AccountsController {
       message: confirmUserResponse.message,
       errors: null,
       data: null,
+    };
+  }
+
+  //Top interests/hobbies of registered users
+  @Get('interests')
+  public async getTopInterests(): Promise<GetInterestAllResponseDto> {
+    const interestResponse: IServiceUserGetInterestAllResponse = await this.accountServiceClient
+    .send('interest_get_all', {})
+    .toPromise();
+
+    return {
+      message: interestResponse.message,
+      data: {
+        interests: interestResponse.interests,
+      },
+      errors: null,
     };
   }
 }

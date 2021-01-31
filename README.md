@@ -87,3 +87,104 @@ Structure:
                         search bar of users by username (component)
                         users (component)
 ```
+
+## Production
+- Front-End:
+    - Site
+- Back-End:
+    - API Gateway
+    - Account microservice
+    - Auth microservice
+    - Image microservice
+    - Mailer microservice
+    - Reports microservice
+- Database:
+    - MongoDB (MongoDB Atlas):
+        - Account
+        - Auth
+        - Image
+        - Mailer
+        - Reports
+- Message broker
+    - Redis (Redis Labs, better container of Docker)
+- Domain name
+    - thesocialnetwork.amineamellouk.com
+- DevOps
+    - Docker
+        - Reverse proxy
+            - Nginx
+        - Https
+            - Certbot
+        - The social network site (open port)
+        - The social network API gateway (open port and linked by redis to microservices)
+        - The social netwok account (linked by redis to API gateway)
+        - The social network auth (linked by redis to API gateway)
+        - The social network image (linked by redis to API gateway)
+        - The social network mailer (linked by redis to API gateway and account microservice)
+        - The social network reports (linked by redis to API gateway)
+    - Docker compose
+
+- Dockerfile
+    - Gateway
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start
+    - Account
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start
+    - Auth
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start
+    - Image
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start
+    - Mailer
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start
+    - Reports
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start
+    - Site
+        - Copy all gateway folder
+        - Copy main package.json
+        - Copy main nest--cli.json
+        - Run npm install
+        - Run npm build
+        - Copy build of gateway
+        - Run npm install
+        - Run npm start

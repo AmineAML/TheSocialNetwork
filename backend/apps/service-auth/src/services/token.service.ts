@@ -29,7 +29,7 @@ export class TokenService {
     }
 
     public async createToken(data: { userId: string, role: string }): Promise<IToken> {
-        const access_token = await this.signToken(data.userId, data.role, '900s', this.jwt_access_token_secret)
+        const access_token = await this.signToken(data.userId, data.role, /*'900s'*/'180s', this.jwt_access_token_secret)
 
         const refresh_token = await this.signToken(data.userId, data.role, '1h', this.jwt_refresh_token_secret)
 
@@ -66,6 +66,8 @@ export class TokenService {
 
             result = null
         }
+
+        console.log(`Rslt ${result}`)
 
         return result
     }

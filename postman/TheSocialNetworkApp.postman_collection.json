@@ -25,7 +25,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "joey@email.com",
+									"value": "joeyoooooooooooooooooooooooooooooooo@email.com",
 									"type": "text"
 								},
 								{
@@ -35,7 +35,7 @@
 								},
 								{
 									"key": "username",
-									"value": "joeyyyy",
+									"value": "joeyyyyoooooooooooooooooooooooooooooooooo",
 									"type": "text"
 								},
 								{
@@ -66,7 +66,8 @@
 								{
 									"key": "interest[2]",
 									"value": "chess",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "gender",
@@ -80,17 +81,37 @@
 								},
 								{
 									"key": "social_media.facebook",
-									"value": "facebook.com/joey",
+									"value": "facebook.com",
 									"type": "text"
 								},
 								{
 									"key": "social_media.linkedin",
-									"value": "linkedin.com/joey-jo",
+									"value": "linkedin.com",
 									"type": "text"
 								},
 								{
 									"key": "social_media.twitter",
-									"value": "twitter.com/joey",
+									"value": "twitter.com",
+									"type": "text"
+								},
+								{
+									"key": "social_media.tiktok",
+									"value": "tiktok.com",
+									"type": "text"
+								},
+								{
+									"key": "social_media.discord",
+									"value": "discord.com",
+									"type": "text"
+								},
+								{
+									"key": "social_media.instagram",
+									"value": "instagram.com",
+									"type": "text"
+								},
+								{
+									"key": "social_media.youtube",
+									"value": "youtube.com",
 									"type": "text"
 								}
 							]
@@ -257,7 +278,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxNzczNiwiZXhwIjoxNjEwNDE4NjM2fQ.FjGSVxAxyMms9oJcKvU044gHMFns8n7EadHRDNqPUNE",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDA4NTk1ZWVlMDA5ZjRjOTg1YjJiMWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMTE2NDkyNiwiZXhwIjoxNjExMTY1ODI2fQ.eUzCfoBLvItyGjUcej5t6y63PIDlHGHvo8RI36jl2mg",
 									"type": "string"
 								}
 							]
@@ -331,7 +352,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"joey@email.com\",\r\n    \"password\": \"superpowerfulpw\"\r\n}",
+							"raw": "{\r\n    \"email\": \"joeyoooooooooooooooooooooooooooooooo@email.com\",\r\n    \"password\": \"superpowerfulpw\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -362,7 +383,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQxODc2NiwiZXhwIjoxNjEwNDIyMzY2fQ.3uvzfZKvMo1fqWkh_drbb7uLSThLG7zMphXvXXGRBDA",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDA4NTk1ZWVlMDA5ZjRjOTg1YjJiMWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMTE1OTkwMywiZXhwIjoxNjExMTYzNTAzfQ.A06gFn1KOFIwNT9ERuItNq0gYgFuze_-CtsZgTW-mzo",
 									"type": "string"
 								}
 							]
@@ -437,6 +458,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get all interests sorted",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/interests",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"interests"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -451,7 +493,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZmZjYzI4MWE5ZDVkMjQzNjgyOWIwZjEiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMDQ4Mjk5MiwiZXhwIjoxNjEwNDgzODkyfQ.1FPtUCHkJbkkEmukYEx7H2aOdFZnBLe0tZ6n2Ma8GSc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDA4NTk1ZWVlMDA5ZjRjOTg1YjJiMWQiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMTE2MDg1MCwiZXhwIjoxNjExMTYxNzUwfQ.0QdnqVORNQU6CtjSffAhtH89bxAcv1U-xmjrXaKmz3c",
 									"type": "string"
 								}
 							]
@@ -471,6 +513,11 @@
 									"key": "avatar",
 									"type": "file",
 									"src": "/C:/Users/HP/Pictures/08_Zoom_W3_Wallpapers_Template_1920x1080_8j8xehqh1ri1ftr1.jpg"
+								},
+								{
+									"key": "background",
+									"type": "file",
+									"src": "/C:/Users/HP/Pictures/08_Zoom_W3_Wallpapers_Template_1920x1080_8j8xehqh1ri1ftr1.jpg"
 								}
 							],
 							"options": {
@@ -480,7 +527,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/v1/images/image/upload?type=background",
+							"raw": "localhost:3000/api/v1/images/image/upload",
 							"host": [
 								"localhost"
 							],
@@ -495,7 +542,8 @@
 							"query": [
 								{
 									"key": "type",
-									"value": "background"
+									"value": "background",
+									"disabled": true
 								},
 								{
 									"key": "",

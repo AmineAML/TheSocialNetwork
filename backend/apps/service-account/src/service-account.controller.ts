@@ -7,6 +7,7 @@ import { IUserSearchResponse } from './interfaces/user-search-response.interface
 import { IUser } from './interfaces/user.interface';
 import { UserService } from './services/user.service';
 import { IUserUpdateResponse } from './interfaces/user-update-response.interface';
+import { IInterestAllResponse } from './interfaces/interest-all.interface';
 
 @Controller()
 export class ServiceAccountController {
@@ -81,6 +82,8 @@ export class ServiceAccountController {
               })
               .toPromise();
           } catch (e) {
+            console.log(e)
+            
             result = {
               status: HttpStatus.PRECONDITION_FAILED,
               message: 'user_create_precondition_failed',
@@ -254,8 +257,10 @@ export class ServiceAccountController {
 
   //Get users by search query which's category
   @MessagePattern('users_search_by_query')
-  public async getUsersByCategory(match: any): Promise<IUserSearchQueryResponse> {
+  public async getUsersByCategory(params: { match: any, page: number, limit: number, route: string }): Promise<IUserSearchQueryResponse> {
     let result: IUserSearchQueryResponse;
+
+    const { match, page, limit, route } = params
 
     if (match.search_term) {
       console.log('Any of is there')
@@ -264,28 +269,34 @@ export class ServiceAccountController {
 
       queries.interest = match.search_term
 
-      const users = await this.userService.searchUsers(queries);
+      const usersResponse = await this.userService.searchUsers(queries, page, limit, route);
 
-      console.log(users)
+      console.log(usersResponse.users)
 
-      if (users) {
+      if (usersResponse.users) {
         result = {
           status: HttpStatus.OK,
-          message: 'user_get_by_id_success',
-          users,
+          message: 'users_get_by_id_query',
+          users: usersResponse.users,
+          meta: usersResponse.meta,
+          link: usersResponse.link
         };
       } else {
         result = {
           status: HttpStatus.NOT_FOUND,
-          message: 'user_get_by_id_not_found',
+          message: 'users_get_by_query_not_found',
           users: null,
+          meta: usersResponse.meta,
+          link: usersResponse.link
         };
       }
     } else {
       result = {
         status: HttpStatus.BAD_REQUEST,
-        message: 'user_get_by_id_bad_request',
+        message: 'users_get_by_query_bad_request',
         users: null,
+        meta: null,
+        link: null
       };
     }
 
@@ -347,4 +358,28 @@ export class ServiceAccountController {
 
     return result;
   }
+
+  //Get top interests, mmeaning organized by how many users use them
+  @MessagePattern('interest_get_all')
+  public async getTopInterests(): Promise<IInterestAllResponse> {
+    let result: IInterestAllResponse;
+
+    const interests = await this.userService.getAllInterestBySorting();
+    if (interests) {
+      result = {
+        status: HttpStatus.OK,
+        message: 'interest_get_all_success',
+        interests,
+      };
+    } else {
+      result = {
+        status: HttpStatus.NOT_FOUND,
+        message: 'interest_get_all_not_found',
+        interests: null,
+      };
+    }
+
+    return result;
+  }
+
 }

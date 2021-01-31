@@ -8,7 +8,7 @@ export interface IUser extends Document {
     first_name: string;
     last_name: string;
     description: string;
-    intersts: string[];
+    interest: string[];
     gender: string;
     role: string;
     is_confirmed: boolean;

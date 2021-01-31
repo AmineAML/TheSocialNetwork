@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientOptions, ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { MongooseModule } from '@nestjs/mongoose';
+import { InterestSchema } from './schemas/interest.schema';
 import { UserLinkSchema } from './schemas/user-link.schema';
 import { UserSchema } from './schemas/user.schema';
 import { ServiceAccountController } from './service-account.controller';
@@ -18,7 +19,8 @@ import { UserService } from './services/user.service';
       useFactory: async (configService: ConfigService) => ({
         uri: `mongodb://${configService.get('MONGO_ACCOUNT_USERNAME')}:${encodeURIComponent(configService.get('MONGO_ACCOUNT_PASSWORD'))}@${configService.get('MONGO_ACCOUNT_HOST')}:${configService.get('MONGO_ACCOUNT_PORT')}/${configService.get('MONGO_ACCOUNT_DATABASE')}`,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
+        useFindAndModify: false
       }),
       inject: [ConfigService],
     }),
@@ -32,6 +34,11 @@ import { UserService } from './services/user.service';
         name: 'UserLink',
         schema: UserLinkSchema,
         collection: 'user_links',
+      },
+      {
+        name: 'Interest',
+        schema: InterestSchema,
+        collection: 'interests',
       },
     ])
   ],

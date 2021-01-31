@@ -11,6 +11,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -33,7 +34,8 @@ const Material = [
   MatChipsModule,
   MatDividerModule,
   MatPaginatorModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatProgressBarModule
 ]
 
 @NgModule({

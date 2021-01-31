@@ -21,10 +21,86 @@ export class ImageService {
         })
     }
 
-    public async createImage(imageOrImages: IImage[]): Promise<IImage[]> {
+    public async createImages(/*imageOrImages: IImage[]*/imageParams: { image: IImage, file: { avatar: any, background: any } }): Promise<IImage[]> {
         //const imageModel = new this.imageModel(imageOrImages);
         //return await imageModel.save();
-        const imageModel = await this.imageModel.insertMany(imageOrImages)
+
+        // const imageModel = await this.imageModel.insertMany(imageOrImages)
+
+        // imageModel.forEach(function (v) { delete v.imagekit_file_id })
+
+        // return imageModel
+        
+        let files = []
+
+        if (imageParams.file.background) {
+            const imageWithSameTypeAndSameUserExist = await this.searchImageByTypeAndUserId({ type: 'background', user_id: imageParams.image.user_id })
+
+            console.log(imageWithSameTypeAndSameUserExist)
+
+            if (imageWithSameTypeAndSameUserExist && imageWithSameTypeAndSameUserExist.length > 0) {
+                //Update background image
+                await this.deleteImageById(imageWithSameTypeAndSameUserExist[0].id, imageWithSameTypeAndSameUserExist[0].imagekit_file_id);
+            }
+
+            const imageBuffer = imageParams.file.background[0].buffer
+    
+            const imageBase64 = Buffer.from(imageBuffer).toString('base64')
+  
+            const imageName = imageParams.file.background[0].originalname
+
+            let file: any = {}
+            
+            file = await this.uploadSingleImage(imageName, imageBase64)
+
+            file.type = 'background'
+  
+            files.push(file)
+        }
+
+        if (imageParams.file.avatar) {
+            const imageWithSameTypeAndSameUserExist = await this.searchImageByTypeAndUserId({ type: 'avatar', user_id: imageParams.image.user_id })
+
+            console.log(imageWithSameTypeAndSameUserExist)
+
+            if (imageWithSameTypeAndSameUserExist && imageWithSameTypeAndSameUserExist.length > 0) {
+                //Update background image
+                await this.deleteImageById(imageWithSameTypeAndSameUserExist[0].id, imageWithSameTypeAndSameUserExist[0].imagekit_file_id);
+            }
+
+            const imageBuffer = imageParams.file.avatar[0].buffer
+    
+            const imageBase64 = Buffer.from(imageBuffer).toString('base64')
+  
+            const imageName = imageParams.file.avatar[0].originalname
+  
+            let file: any = {}
+            
+            file = await this.uploadSingleImage(imageName, imageBase64)
+
+            file.type = 'avatar'
+  
+            files.push(file)
+        }
+
+        let images: any = []
+
+        if (files.length > 0) {
+          files.forEach(file => {
+            images.push(
+              {
+                link: file.url,
+                imagekit_file_id: file.fileId,
+                type: file.type,
+                user_id: imageParams.image.user_id
+              }
+            )
+          })
+        }
+
+        const imgs: IImage[] = images
+
+        const imageModel = await this.imageModel.insertMany(imgs)
 
         imageModel.forEach(function (v) { delete v.imagekit_file_id })
 
@@ -37,7 +113,24 @@ export class ImageService {
     }
 
     public async searchImagesByUserId(user_id: string): Promise<IImage[]> {
-        const imageModel = await this.imageModel.find({ user_id })/*.where('user_id').equals(user_id)*/.select('-imagekit_file_id').exec();
+        const imageModel = await this.imageModel.find({ user_id: user_id })/*.where('user_id').equals(user_id)*/.select('-imagekit_file_id').exec();
+
+        console.log(imageModel)
+
+        return imageModel
+    }
+
+    public async searchImagesByUsersIds(users_ids: Array<string>): Promise<IImage[]> {
+        console.log(users_ids)
+
+        const ids = ['6008595eee009f4c985b2b1d']//users_ids
+
+        console.log(ids)
+        
+        //This works, but if doesn't find many in the database it returns empty array, others even if doesn't find some and finds many it returns an array of objects
+        const imageModel = await this.imageModel.find({ user_id: { $in: users_ids } })/*.where(user_id).in(users_ids)*/.select('-imagekit_file_id').exec();
+
+        console.log(imageModel)
 
         return imageModel
     }

@@ -18,71 +18,23 @@ export class ServiceImageController {
     if (imageParams) {
       console.log(imageParams)
 
-      const imageWithSameTypeAndSameUserExist = await this.imageService.searchImageByTypeAndUserId({
-        type: imageParams.image.type,
-        user_id: imageParams.image.user_id
-      });
-
-      if (imageWithSameTypeAndSameUserExist && imageWithSameTypeAndSameUserExist.length > 0) {
+      try {
+        const uploadedImages: any = await this.imageService.createImages(imageParams);
         result = {
-          status: HttpStatus.CONFLICT,
-          message: 'image_upload_conflict',
-          images: null,
-          errors: {
-            message: 'You\'re trying to upload an image with the same type (avatar, background) that already exist',
-            path: 'image'
-          },
+          status: HttpStatus.CREATED,
+          message: 'image_upload_success',
+          images: uploadedImages,
+          errors: null,
         };
-      } else {
-        let files = []
 
-        if (imageParams.file.avatar || imageParams.file.background) {
-          const imageBuffer = imageParams.file.avatar[0].buffer || imageParams.file.background[0].buffer
-
-          const imageBase64 = Buffer.from(imageBuffer).toString('base64')
-
-          const imageName = imageParams.file.avatar[0].originalname || imageParams.file.background[0].originalname
-
-          files.push(await this.imageService.uploadSingleImage(imageName, imageBase64))
-
-          console.log(files)
-        }
-
-        let images: any = []
-
-        if (files.length > 0) {
-          files.forEach(file => {
-            images.push(
-              {
-                link: file.url,
-                imagekit_file_id: file.fileId,
-                type: imageParams.image.type,
-                user_id: imageParams.image.user_id
-              }
-            )
-          })
-        }
-
-        console.log(images)
-
-        try {
-          const createdImage: any = await this.imageService.createImage(images);
-          result = {
-            status: HttpStatus.CREATED,
-            message: 'image_upload_success',
-            images: createdImage,
-            errors: null,
-          };
-
-          console.log(createdImage)
-        } catch (e) {
-          result = {
-            status: HttpStatus.PRECONDITION_FAILED,
-            message: 'image_upload_precondition_failed',
-            images: null,
-            errors: e.errors,
-          };
-        }
+        console.log(uploadedImages)
+      } catch (e) {
+        result = {
+          status: HttpStatus.PRECONDITION_FAILED,
+          message: 'image_upload_precondition_failed',
+          images: null,
+          errors: e.errors,
+        };
       }
     } else {
       result = {
@@ -96,14 +48,14 @@ export class ServiceImageController {
     return result;
   }
 
-  //Get imageS by user id
-  @MessagePattern('image_get_by_user_id')
-  public async getImageByuderId(user_id: string): Promise<IImageSearchResponse> {
+  //Get images by user id
+  @MessagePattern('images_get_by_user_id')
+  public async getImagesByuserId(user_id: string): Promise<IImageSearchResponse> {
     let result: IImageSearchResponse;
 
     if (user_id) {
       const images = await this.imageService.searchImagesByUserId(user_id);
-      
+
       if (images && images.length > 0) {
         result = {
           status: HttpStatus.OK,
@@ -121,6 +73,38 @@ export class ServiceImageController {
       result = {
         status: HttpStatus.BAD_REQUEST,
         message: 'image_get_by_user_id_bad_request',
+        images: null,
+      };
+    }
+
+    return result;
+  }
+
+  //Get images by users ids
+  @MessagePattern('images_get_by_users_ids')
+  public async getImagesByusersIds(users_ids: Array<string>): Promise<IImageSearchResponse> {
+    let result: IImageSearchResponse;
+
+    if (users_ids) {
+      const images = await this.imageService.searchImagesByUsersIds(users_ids);
+
+      if (images && images.length > 0) {
+        result = {
+          status: HttpStatus.OK,
+          message: 'images_get_by_users_ids_success',
+          images,
+        };
+      } else {
+        result = {
+          status: HttpStatus.NOT_FOUND,
+          message: 'images_get_by_users_ids_not_found',
+          images: null,
+        };
+      }
+    } else {
+      result = {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'images_get_by_users_ids_bad_request',
         images: null,
       };
     }
@@ -173,4 +157,93 @@ export class ServiceImageController {
 
     return result;
   }
+
+  //DEPRECATED
+  // @MessagePattern('image_upload')
+  // public async uploadImage(imageParams: { image: IImage, file: { avatar: any, background: any } }): Promise<IImageCreateResponse> {
+  //   let result: IImageCreateResponse;
+
+  //   if (imageParams) {
+  //     console.log(imageParams)
+
+  //     await this.imageService.createImage(imageParams);
+
+  //     const imageWithSameTypeAndSameUserExist = await this.imageService.searchImageByTypeAndUserId({
+  //       //This is not image type, as type from file.name
+  //       type: imageParams.image.type,
+  //       user_id: imageParams.image.user_id
+  //     });
+
+  //     if (imageWithSameTypeAndSameUserExist && imageWithSameTypeAndSameUserExist.length > 0) {
+  //       result = {
+  //         status: HttpStatus.CONFLICT,
+  //         message: 'image_upload_conflict',
+  //         images: null,
+  //         errors: {
+  //           message: 'You\'re trying to upload an image with the same type (avatar, background) that already exist',
+  //           path: 'image'
+  //         },
+  //       };
+  //     } else {
+  //       let files = []
+
+  //       if (imageParams.file.avatar || imageParams.file.background) {
+  //         const imageBuffer = imageParams.file.avatar[0].buffer || imageParams.file.background[0].buffer
+
+  //         const imageBase64 = Buffer.from(imageBuffer).toString('base64')
+
+  //         const imageName = imageParams.file.avatar[0].originalname || imageParams.file.background[0].originalname
+
+  //         files.push(await this.imageService.uploadSingleImage(imageName, imageBase64))
+
+  //         console.log(files)
+  //       }
+
+  //       let images: any = []
+
+  //       if (files.length > 0) {
+  //         files.forEach(file => {
+  //           images.push(
+  //             {
+  //               link: file.url,
+  //               imagekit_file_id: file.fileId,
+  //               type: imageParams.image.type,
+  //               user_id: imageParams.image.user_id
+  //             }
+  //           )
+  //         })
+  //       }
+
+  //       console.log(images)
+
+  //       try {
+  //         const createdImage: any = await this.imageService.createImage(images);
+  //         result = {
+  //           status: HttpStatus.CREATED,
+  //           message: 'image_upload_success',
+  //           images: createdImage,
+  //           errors: null,
+  //         };
+
+  //         console.log(createdImage)
+  //       } catch (e) {
+  //         result = {
+  //           status: HttpStatus.PRECONDITION_FAILED,
+  //           message: 'image_upload_precondition_failed',
+  //           images: null,
+  //           errors: e.errors,
+  //         };
+  //       }
+  //     }
+  //   } else {
+  //     result = {
+  //       status: HttpStatus.BAD_REQUEST,
+  //       message: 'image_upload_bad_request',
+  //       images: null,
+  //       errors: null,
+  //     };
+  //   }
+
+  //   return result;
+  // }
 }

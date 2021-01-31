@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, tap } from 'rxjs/operators';
+import { DataService, InterestData } from '../../../core/services/data.service';
 
-export interface User {
+export interface Interest {
   name: string;
 }
 
@@ -15,18 +16,18 @@ export interface User {
 })
 export class HeroComponent implements OnInit {
   myControl = new FormControl();
-  options: User[] = [
-    {name: 'Drawing'},
-    {name: 'Hiking'},
-    {name: 'Basketball'}
-  ];
-  filteredOptions: Observable<User[]>;
+  
+  options: Interest[] = [];
 
-  displayFn(user: User): string {
-    return user && user.name ? user.name : '';
+  filteredOptions: Observable<Interest[]>;
+
+  dataSource: InterestData = null
+
+  displayFn(interest: Interest): string {
+    return interest && interest.name ? interest.name : '';
   }
 
-  private _filter(name: string): User[] {
+  private _filter(name: string): Interest[] {
     const filterValue = name.toLowerCase();
 
     return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
@@ -36,9 +37,30 @@ export class HeroComponent implements OnInit {
     this.router.navigate(['search'], { queryParams: { interest: query } })
   }
 
-  constructor(private router: Router) { }
+  async getInterests() {
+    this.dataService.findAllInterestsSorted().pipe(
+      //Display data into console log
+      tap(interests => console.log('ree' + interests)),
+      map((interestData: InterestData) => {
+        this.dataSource = interestData
+        
+        this.dataSource.data.interests.forEach(interest => {
+          this.options.push(
+            { name: interest.name }
+          )
 
-  ngOnInit(): void {
+          console.log(interest)
+        })
+      })
+    ).subscribe()
+  }
+
+  constructor(private router: Router,
+              private dataService: DataService) { }
+
+  async ngOnInit(): Promise<void> {
+    await this.getInterests()
+
     this.filteredOptions = this.myControl.valueChanges
     .pipe(
       startWith(''),

@@ -1,6 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
+import { map, tap } from 'rxjs/operators';
+import { DataService, User, UserData, Image, Link, Meta } from '../../core/services/data.service';
+
+export interface Userr extends User {
+  image: Image[]
+}
+
+export interface Userss {
+  user: Userr,
+  link: Link,
+  meta: Meta
+}
+
 
 @Component({
   selector: 'app-profile',
@@ -17,9 +31,31 @@ export class ProfileComponent implements OnInit {
   faYoutube = faYoutube
   faEllipsisH = faEllipsisH
 
-  constructor() { }
+  username: string
 
-  ngOnInit(): void {
+  dataSource: Userss = null
+
+  constructor(private dataService: DataService,
+              private activatedRoute: ActivatedRoute) { }
+
+  async getUser() {
+    this.dataService.findByUsername(this.username).pipe(
+      //Display data into console log
+      tap(users => console.log('ree' + users)),
+      map((userData: Userss) => this.dataSource = userData)
+    ).subscribe()
+
+    console.log(this.dataSource)
+
+    setTimeout(() => console.log(this.dataSource), 7000)
+
+    console.log(this.username)
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.username = this.activatedRoute.snapshot.paramMap.get('username')
+
+    await this.getUser()
   }
 
 }

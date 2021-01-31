@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
+import { CanActivate, ExecutionContext, HttpException, HttpStatus, Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 const logger = new Logger('Gateway')
@@ -22,9 +22,12 @@ export class AuthGuard implements CanActivate {
       console.log(res)
 
       if (res.status !== HttpStatus.OK) {
+        console.log('UnAuthorized')
+        
         throw new HttpException(
           {
             message: res.message,
+            statusCode: res.status
           },
           res.status,
         );
@@ -40,7 +43,7 @@ export class AuthGuard implements CanActivate {
       return res;
     } catch(err) {
       logger.error(err);
-      return false;
+      throw new UnauthorizedException()
     }
   }
 }

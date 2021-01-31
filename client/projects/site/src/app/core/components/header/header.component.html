@@ -1,37 +1,57 @@
 <header class="bg-bedrock p-4 flex justify-between items-center">
 
     <div class="flex items-center">
-        <img src="./../../../../favicon.ico" width="50" alt="Logo" class="mr-2">
-        <a href="#" class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2">Home</a>
+        <a [routerLink]="['/']">
+            <img src="./../../../../favicon.ico" width="50" alt="Logo" class="mr-2">
+        </a>
+        <a href="#" class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2" [routerLink]="['/']">Home</a>
         <a href="#" class="inline-block p-2 text-amethyst hover:text-orange-700">About</a>
     </div>
 
-    <div class="hidden md:block" *ngIf="loggedIn; else notAuthenticated">
+    <div class="hidden md:block" *ngIf="username; else notAuthenticated">
         <span class="p-2 text-amethyst hover:text-orange-700 mr-2 flex-wrap content-center flex">
-            <span class="rounded-full p-1">
-                <span class="inline-block bg-yellow-500  p-1 rounded-full">
-                    <img src="./../../../../assets//img//1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
-                        alt="Logo" class="h-10 w-10 rounded-full">
+            <ng-container *ngIf="dataSource.user.image.length > 0">
+                <ng-container *ngFor="let image of dataSource.user.image">
+                    <span class="rounded-full p-1" *ngIf="image.type === 'avatar'">
+                        <span class="inline-block bg-yellow-500  p-1 rounded-full">
+                            <img [src]="image.link ? image.link : './../../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
+                                alt="Logo" class="h-10 w-10 rounded-full">
+                        </span>
+                    </span>
+                    <span class="rounded-full p-1" *ngIf="image.type !== 'avatar' && image.type !== 'background'">
+                        <span class="inline-block bg-yellow-500  p-1 rounded-full">
+                            <img src="./../../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
+                                alt="Logo" class="h-10 w-10 rounded-full">
+                        </span>
+                    </span>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="dataSource.user.image.length === 0">
+                <span class="rounded-full p-1">
+                    <span class="inline-block bg-yellow-500  p-1 rounded-full">
+                        <img src="./../../../../assets//img//1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
+                            alt="Logo" class="h-10 w-10 rounded-full">
+                    </span>
                 </span>
-            </span>
-            <a class="mr-2 m-auto">Amine</a>
+            </ng-container>
+            <a class="mr-2 m-auto">{{username}}</a>
             <button class="m-auto" [matMenuTriggerFor]="menu">
                 <fa-icon [icon]="faCaretDown"></fa-icon>
             </button>
             <mat-menu #menu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
-                <a [routerLink]="['/profile']"  mat-menu-item>Profile</a>
+                <a [routerLink]="['/profile', username]" mat-menu-item>Profile</a>
                 <a [routerLink]="['/edit-profile']" mat-menu-item>Edit profile</a>
-                <a [routerLink]="['/']" mat-menu-item>Log out</a>
+                <a mat-menu-item (click)="logout()">Log out</a>
             </mat-menu>
         </span>
     </div>
 
     <ng-template #notAuthenticated>
         <div class="hidden md:block">
-            <a href="#" class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2">Login</a>
-            <a href="#"
-                class="inline-block py-2 px-4 text-amethyst bg-yellow-400 hover:bg-yellow-300 hover:text-orange-700 rounded transition ease-in duration-150">Sign
-                Up</a>
+            <a class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2" [routerLink]="['/login']">Login</a>
+            <a class="inline-block py-2 px-4 text-amethyst bg-yellow-400 hover:bg-yellow-300 hover:text-orange-700 rounded transition ease-in duration-150"
+                [routerLink]="['/register']">Sign Up</a>
         </div>
     </ng-template>
 

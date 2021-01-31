@@ -8,7 +8,7 @@
 
             <div class="flex">
                 <input type="text" placeholder="Your interest here, eg drawing, hiking, basketball.."
-                    class="w-full rounded-l py-3 px-4 outline-none focus:bg-indigo-200" [formControl]="myControl" [matAutocomplete]="auto" #query>
+                    class="w-full rounded-l py-3 px-4 outline-none focus:bg-indigo-200" [formControl]="myControl" [matAutocomplete]="auto" #query (keyup.enter)="getUsers(query.value)">
                 <!-- Include auto complete -->
                 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option">

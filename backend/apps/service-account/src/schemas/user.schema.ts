@@ -26,7 +26,7 @@ export const UserSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, 'Password can not be empty'],
-            minlength: [6, 'Password should include at least 6 chars'],
+            minlength: [3, 'Password should include at least 6 chars'],
             //Bcrypt cannot handle a number of bytes that's why max 72 chars
             maxlength: [72, 'Password should not include more than 72 chars']
         },
@@ -37,27 +37,32 @@ export const UserSchema = new mongoose.Schema(
         },
         first_name: {
             type: String,
-            required: [true, 'First name can not be empty'],
+            //required: [true, 'First name can not be empty'],
+            required: [false, ''],
             trim: true
         },
         last_name: {
             type: String,
-            required: [true, 'Last name can not be empty'],
+            //required: [true, 'Last name can not be empty'],
+            required: [false, ''],
             trim: true
         },
         description: {
             type: String,
-            required: [true, 'Description can not be empty'],
+            //required: [true, 'Description can not be empty'],
+            required: [false, ''],
             maxlength: [1000, 'Description should not include more than 1000 chars'],
             trim: true
         },
         gender: {
             type: String,
-            enum: ['male', 'female', 'other']
+            enum: ['male', 'female', 'other'],
+            //required: [true, 'Gender can not be empty'],
+            required: [false, ''],
         },
         role: {
             type: String,
-            enum: ['admin', 'moderator', 'visitor', 'livreur', 'entreprise', 'user'],
+            enum: ['admin', 'user'],
             required: [true, 'Role can not be empty']
         },
         social_media: {
