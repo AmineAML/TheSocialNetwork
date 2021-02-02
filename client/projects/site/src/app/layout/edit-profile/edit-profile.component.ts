@@ -1,10 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {FormBuilder, FormControl, FormGroup, Validators, FormArray} from '@angular/forms';
 import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {Observable, of} from 'rxjs';
-import {catchError, map, startWith, tap} from 'rxjs/operators';
+import {Observable, of, Subject} from 'rxjs';
+import {catchError, map, startWith, takeUntil, tap} from 'rxjs/operators';
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { DataService } from '../../core/services/data.service';
@@ -23,7 +23,7 @@ export interface File {
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit {
+export class EditProfileComponent implements OnInit, OnDestroy {
   faTimes = faTimes
   faFacebook = faFacebook
   faLinkedin = faLinkedin
@@ -61,6 +61,9 @@ export class EditProfileComponent implements OnInit {
     inProgress: false,
     progress: 0
   }
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   constructor(private dataService: DataService,
               private authService: AuthService,
@@ -136,7 +139,8 @@ export class EditProfileComponent implements OnInit {
         })
 
         this.interests = this.dataSource.user.interest
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
     console.log(this.dataSource)
@@ -154,7 +158,9 @@ export class EditProfileComponent implements OnInit {
     this.interests.forEach(interest => {
       this.aliases.push(this.formBuilder.control(interest));
     })
-    this.dataService.updateUser(this.form.getRawValue()).subscribe()
+    this.dataService.updateUser(this.form.getRawValue()).pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
   }
 
   get aliases() {
@@ -220,6 +226,7 @@ export class EditProfileComponent implements OnInit {
             return event
         }
       }),
+      takeUntil(this.ngUnsubscribe),
       catchError((error: HttpErrorResponse) => {
         this.file.inProgress = false
 
@@ -269,4 +276,9 @@ export class EditProfileComponent implements OnInit {
     })
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
-import { map, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { DataService, User, UserData, Image, Link, Meta } from '../../core/services/data.service';
 
 export interface Userr extends User {
@@ -21,7 +22,7 @@ export interface Userss {
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   faFacebook = faFacebook
   faLinkedin = faLinkedin
   faTwitter = faTwitter
@@ -35,6 +36,9 @@ export class ProfileComponent implements OnInit {
 
   dataSource: Userss = null
 
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
+
   constructor(private dataService: DataService,
               private activatedRoute: ActivatedRoute) { }
 
@@ -42,7 +46,8 @@ export class ProfileComponent implements OnInit {
     this.dataService.findByUsername(this.username).pipe(
       //Display data into console log
       tap(users => console.log('ree' + users)),
-      map((userData: Userss) => this.dataSource = userData)
+      map((userData: Userss) => this.dataSource = userData),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
     console.log(this.dataSource)
@@ -58,4 +63,9 @@ export class ProfileComponent implements OnInit {
     await this.getUser()
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

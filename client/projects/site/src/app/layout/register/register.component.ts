@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators, FormGroup, FormBuilder, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 
 class CustormValidators {
@@ -36,8 +37,11 @@ class CustormValidators {
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   registerForm: FormGroup
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
@@ -85,7 +89,10 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    this.authService.register(this.registerForm.value).pipe(map(user => this.router.navigate(['edit-profile']))).subscribe()
+    this.authService.register(this.registerForm.value).pipe(
+      map(user => this.router.navigate(['edit-profile'])),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
   };
   
   // usernameFormControl = new FormControl('', [
@@ -170,4 +177,9 @@ export class RegisterComponent implements OnInit {
   //   */
   // }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

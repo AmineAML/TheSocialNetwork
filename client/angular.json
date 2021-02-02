@@ -148,6 +148,7 @@
       "architect": {
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
+          "proxyConfig": "./projects/site/src/proxy.conf.json",
           "options": {
             "outputPath": "dist/site",
             "index": "projects/site/src/index.html",
@@ -205,7 +206,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "site:build:production"
+              "browserTarget": "site:build:production",
+              "proxyConfig": "./projects/site/src/proxy.conf.json"
             }
           }
         },

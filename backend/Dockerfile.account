@@ -1,1 +1,19 @@
+FROM node:12-alpine as build
+
+WORKDIR /usr/local/account-microservice
+
+COPY dist/apps/service-account package.json ./
+
+COPY .env ./
+
+RUN npm install --production
+
 FROM node:12-alpine
+
+WORKDIR /usr/local/account-microservice
+
+COPY --from=build /usr/local/account-microservice .
+
+ENV NODE_ENV=production
+
+CMD ["node", "main.js"]

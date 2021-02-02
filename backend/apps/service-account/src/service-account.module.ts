@@ -17,7 +17,7 @@ import { UserService } from './services/user.service';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get('MONGO_ACCOUNT_USERNAME')}:${encodeURIComponent(configService.get('MONGO_ACCOUNT_PASSWORD'))}@${configService.get('MONGO_ACCOUNT_HOST')}:${configService.get('MONGO_ACCOUNT_PORT')}/${configService.get('MONGO_ACCOUNT_DATABASE')}`,
+        uri: configService.get<string>('NODE_ENV') === 'production' ? configService.get('MONGO_ACCOUNT_PROD') : `mongodb://${configService.get('MONGO_ACCOUNT_USERNAME')}:${encodeURIComponent(configService.get('MONGO_ACCOUNT_PASSWORD'))}@${configService.get('MONGO_ACCOUNT_HOST')}:${configService.get('MONGO_ACCOUNT_PORT')}/${configService.get('MONGO_ACCOUNT_DATABASE')}`,
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false
@@ -50,7 +50,7 @@ import { UserService } from './services/user.service';
       useFactory: (configService: ConfigService) => {
         const mailerServiceOptions: ClientOptions = {
           options: {
-            url: configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+            url: configService.get<string>('NODE_ENV') === 'production' ? configService.get('REDIS_PROD') : configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
           },
           transport: Transport.REDIS
         }

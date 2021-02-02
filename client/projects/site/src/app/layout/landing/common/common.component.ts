@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { map, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
 import { DataService, InterestData } from '../../../core/services/data.service';
 
 @Component({
@@ -8,8 +9,11 @@ import { DataService, InterestData } from '../../../core/services/data.service';
   templateUrl: './common.component.html',
   styleUrls: ['./common.component.scss']
 })
-export class CommonComponent implements OnInit {
+export class CommonComponent implements OnInit, OnDestroy {
   dataSource: InterestData = null
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   async getInterests() {
     this.dataService.findAllInterestsSorted().pipe(
@@ -17,7 +21,8 @@ export class CommonComponent implements OnInit {
       tap(interests => console.log('ree' + interests)),
       map((interestData: InterestData) => {
         this.dataSource = interestData
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
   }
 
@@ -32,4 +37,9 @@ export class CommonComponent implements OnInit {
     await this.getInterests()
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

@@ -14,7 +14,7 @@ import { ImageService } from './services/image.service';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get('MONGO_IMAGE_USERNAME')}:${encodeURIComponent(configService.get('MONGO_IMAGE_PASSWORD'))}@${configService.get('MONGO_IMAGE_HOST')}:${configService.get('MONGO_IMAGE_PORT')}/${configService.get('MONGO_IMAGE_DATABASE')}`,
+        uri: configService.get<string>('NODE_ENV') === 'production' ? configService.get('MONGO_IMAGE_PROD') : `mongodb://${configService.get('MONGO_IMAGE_USERNAME')}:${encodeURIComponent(configService.get('MONGO_IMAGE_PASSWORD'))}@${configService.get('MONGO_IMAGE_HOST')}:${configService.get('MONGO_IMAGE_PORT')}/${configService.get('MONGO_IMAGE_DATABASE')}`,
         useNewUrlParser: true,
         useUnifiedTopology: true
       }),

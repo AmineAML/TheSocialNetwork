@@ -1,0 +1,21 @@
+{
+  "name": "thesocialnetworkapp",
+  "version": "1.0.0",
+  "description": "Monorepo of Front-End and Back-End for a social network application allowing people of similar interests/hobbies to meet each, connect through other social media accounts and chat\r Back-End: NestJS Microservices, JWT, MongoDB, ImageKit and Docker\r Front-End: Angular, Tailwind CSS",
+  "main": "index.js",
+  "scripts": {
+    "prod": "cd backend && npm run build:all && cd .. && cd client && npm run build --prod site && cd .. && docker-compose -f docker-compose.prod.yml up -d",
+    "docker:down": "docker-compose -f docker-compose.prod.yml down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AmineAML/TheSocialNetwork.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AmineAML/TheSocialNetwork/issues"
+  },
+  "homepage": "https://github.com/AmineAML/TheSocialNetwork#readme"
+}

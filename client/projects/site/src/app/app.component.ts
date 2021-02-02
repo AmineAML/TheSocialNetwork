@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
@@ -7,8 +8,11 @@ import { AuthService } from './core/services/auth.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'site';
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   constructor(private authService: AuthService) {}
 
@@ -20,7 +24,8 @@ export class AppComponent implements OnInit {
         //this.username = username
 
         console.log('Authenticated')
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
   }
 
@@ -28,5 +33,11 @@ export class AppComponent implements OnInit {
     //this.userIsAuthenticated()
 
     this.authService.isLoggedIn()
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
   }
 }

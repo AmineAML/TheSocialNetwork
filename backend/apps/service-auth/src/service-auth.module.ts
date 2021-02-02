@@ -23,7 +23,7 @@ import { TokenService } from './services/token.service';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get('MONGO_AUTH_USERNAME')}:${encodeURIComponent(configService.get('MONGO_AUTH_PASSWORD'))}@${configService.get('MONGO_AUTH_HOST')}:${configService.get('MONGO_AUTH_PORT')}/${configService.get('MONGO_AUTH_DATABASE')}`,
+        uri: configService.get<string>('NODE_ENV') === 'production' ? configService.get('MONGO_AUTH_PROD') : `mongodb://${configService.get('MONGO_AUTH_USERNAME')}:${encodeURIComponent(configService.get('MONGO_AUTH_PASSWORD'))}@${configService.get('MONGO_AUTH_HOST')}:${configService.get('MONGO_AUTH_PORT')}/${configService.get('MONGO_AUTH_DATABASE')}`,
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false

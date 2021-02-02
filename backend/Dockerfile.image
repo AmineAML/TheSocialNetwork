@@ -1,1 +1,19 @@
+FROM node:12-alpine as build
+
+WORKDIR /usr/local/image-microservice
+
+COPY dist/apps/service-image package.json ./
+
+COPY .env ./
+
+RUN npm install --production
+
 FROM node:12-alpine
+
+WORKDIR /usr/local/image-microservice
+
+COPY --from=build /usr/local/image-microservice .
+
+COPY .env ./
+
+CMD ["node", "main.js"]

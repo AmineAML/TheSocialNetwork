@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { map } from 'rxjs/operators'
+import { map, takeUntil } from 'rxjs/operators'
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -12,6 +13,9 @@ import { map } from 'rxjs/operators'
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   constructor(private fb: FormBuilder,
               private authService: AuthService,
@@ -47,7 +51,10 @@ export class LoginComponent implements OnInit {
       return
     }
 
-    this.authService.login(this.loginForm.value).pipe(map(token => this.router.navigate(['/']))).subscribe()
+    this.authService.login(this.loginForm.value).pipe(
+      map(token => this.router.navigate(['/'])),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
   };
 
   // emailFormControl = new FormControl('', [
@@ -108,4 +115,9 @@ export class LoginComponent implements OnInit {
   //   return this.email.hasError('email') ? 'Not a valid email' : '';
   // }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

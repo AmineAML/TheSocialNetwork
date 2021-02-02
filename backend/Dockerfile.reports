@@ -1,1 +1,19 @@
+FROM node:12-alpine as build
+
+WORKDIR /usr/local/reports-microservice
+
+COPY dist/apps/service-reports package.json ./
+
+COPY .env ./
+
+RUN npm install --production
+
 FROM node:12-alpine
+
+WORKDIR /usr/local/reports-microservice
+
+COPY --from=build /usr/local/reports-microservice .
+
+ENV NODE_ENV=production
+
+CMD ["node", "main.js"]

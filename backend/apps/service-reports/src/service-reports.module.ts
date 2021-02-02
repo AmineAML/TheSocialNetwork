@@ -14,7 +14,7 @@ import { ReportService } from './services/reports.service';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb://${configService.get('MONGO_REPORTS_USERNAME')}:${encodeURIComponent(configService.get('MONGO_REPORTS_PASSWORD'))}@${configService.get('MONGO_REPORTS_HOST')}:${configService.get('MONGO_REPORTS_PORT')}/${configService.get('MONGO_REPORTS_DATABASE')}`,
+        uri: configService.get<string>('NODE_ENV') === 'production' ? configService.get('MONGO_REPORTS_PROD') : `mongodb://${configService.get('MONGO_REPORTS_USERNAME')}:${encodeURIComponent(configService.get('MONGO_REPORTS_PASSWORD'))}@${configService.get('MONGO_REPORTS_HOST')}:${configService.get('MONGO_REPORTS_PORT')}/${configService.get('MONGO_REPORTS_DATABASE')}`,
         useNewUrlParser: true,
         useUnifiedTopology: true
       }),

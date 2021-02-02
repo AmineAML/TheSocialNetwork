@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.createMicroservice(ServiceReportsModule, {
     transport: Transport.REDIS,
     options: {
-      url: new ConfigService().get('REDIS_ACCOUNT_SERVICE_URL')
+      url: new ConfigService().get<string>('NODE_ENV') === 'production' ? new ConfigService().get('REDIS_PROD') : new ConfigService().get<string>('REDIS_ACCOUNT_SERVICE_URL')
     }
   } as RedisOptions)
   await app.listen(() => logger.log('Microservice reports is listening'))

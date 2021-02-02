@@ -1,1 +1,21 @@
+FROM node:12-alpine as build
+
+WORKDIR /usr/local/gateway
+
+COPY dist/apps/gateway package.json ./
+
+COPY .env ./
+
+RUN npm install --production
+
 FROM node:12-alpine
+
+WORKDIR /usr/local/gateway
+
+COPY --from=build /usr/local/gateway .
+
+ENV NODE_ENV=production
+
+EXPOSE 3000
+
+CMD ["node", "main.js"]

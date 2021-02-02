@@ -28,7 +28,7 @@ import { RolesGuard } from './guards/roles.guard';
       useFactory: (configService: ConfigService) => {
         const accountServiceOptions: ClientOptions = {
           options: {
-            url: configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+            url: configService.get<string>('NODE_ENV') === 'production' ? configService.get('REDIS_PROD') : configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
           },
           transport: Transport.REDIS
         }
@@ -42,7 +42,7 @@ import { RolesGuard } from './guards/roles.guard';
       useFactory: (configService: ConfigService) => {
         const authServiceOptions: ClientOptions = {
           options: {
-            url: configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+            url: configService.get<string>('NODE_ENV') === 'production' ? configService.get('REDIS_PROD') : configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
           },
           transport: Transport.REDIS
         }
@@ -56,7 +56,7 @@ import { RolesGuard } from './guards/roles.guard';
       useFactory: (configService: ConfigService) => {
         const authServiceOptions: ClientOptions = {
           options: {
-            url: configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+            url: configService.get<string>('NODE_ENV') === 'production' ? configService.get('REDIS_PROD') : configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
           },
           transport: Transport.REDIS
         }
@@ -70,7 +70,7 @@ import { RolesGuard } from './guards/roles.guard';
       useFactory: (configService: ConfigService) => {
         const authServiceOptions: ClientOptions = {
           options: {
-            url: configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+            url: configService.get<string>('NODE_ENV') === 'production' ? configService.get('REDIS_PROD') : configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
           },
           transport: Transport.REDIS
         }

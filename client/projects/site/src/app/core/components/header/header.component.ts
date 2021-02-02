@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
-import { filter, map, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil, tap } from 'rxjs/operators';
 import { Userss } from '../../../layout/profile/profile.component';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
@@ -11,7 +12,7 @@ import { DataService } from '../../services/data.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   loggedIn: boolean = false
 
   faCaretDown = faCaretDown
@@ -21,6 +22,9 @@ export class HeaderComponent implements OnInit {
   username: string
 
   dataSource: Userss = null
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   constructor(private authService: AuthService,
               private router: Router,
@@ -38,7 +42,8 @@ export class HeaderComponent implements OnInit {
         this.authService.loggedUsername = this.username
 
         //this.loggedIn = true
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
     //console.log(this.username)
@@ -50,7 +55,8 @@ export class HeaderComponent implements OnInit {
     this.dataService.findByUsername(this.username).pipe(
       //Display data into console log
       tap(users => console.log('ree' + users)),
-      map((userData: Userss) => this.dataSource = userData)
+      map((userData: Userss) => this.dataSource = userData),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
     console.log(this.dataSource)
@@ -61,7 +67,9 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout().pipe().subscribe()
+    this.authService.logout().pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
 
     this.router.navigate(['/'])
 
@@ -71,7 +79,9 @@ export class HeaderComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     //await this.getUser()
 
-    this.authService.loginStatusChange().subscribe(async loggedIn => {
+    this.authService.loginStatusChange().pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe(async loggedIn => {
       // TODO: apply logic based on logged in status
       if (loggedIn) {
         await this.getUser()
@@ -91,4 +101,9 @@ export class HeaderComponent implements OnInit {
     // })
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

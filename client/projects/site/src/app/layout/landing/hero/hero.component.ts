@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { startWith, map, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { startWith, map, tap, takeUntil } from 'rxjs/operators';
 import { DataService, InterestData } from '../../../core/services/data.service';
 
 export interface Interest {
@@ -14,7 +14,7 @@ export interface Interest {
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.scss']
 })
-export class HeroComponent implements OnInit {
+export class HeroComponent implements OnInit, OnDestroy {
   myControl = new FormControl();
   
   options: Interest[] = [];
@@ -22,6 +22,9 @@ export class HeroComponent implements OnInit {
   filteredOptions: Observable<Interest[]>;
 
   dataSource: InterestData = null
+
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
   displayFn(interest: Interest): string {
     return interest && interest.name ? interest.name : '';
@@ -51,7 +54,8 @@ export class HeroComponent implements OnInit {
 
           console.log(interest)
         })
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
   }
 
@@ -69,4 +73,9 @@ export class HeroComponent implements OnInit {
     );
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

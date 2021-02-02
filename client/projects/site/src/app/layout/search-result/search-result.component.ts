@@ -3,8 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { map, startWith, takeUntil, tap } from 'rxjs/operators';
 import { DataService, UserData, ImageData, Image, User, Link, Meta, InterestData } from '../../core/services/data.service';
 
 export interface Users extends User {
@@ -45,6 +45,9 @@ export class SearchResultComponent implements OnInit {
 
   interestSource: InterestData = null
 
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
+
   constructor(private activatedRoute: ActivatedRoute,
               private dataService: DataService,
               private router: Router,
@@ -54,7 +57,8 @@ export class SearchResultComponent implements OnInit {
     this.dataService.findByQuery(this.interest, this.page, this.size).pipe(
       //Display data into console log
       tap(users => console.log('ree' + users)),
-      map((userData: Userss) => this.dataSource = userData)
+      map((userData: Userss) => this.dataSource = userData),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
     console.log(this.dataSource)
@@ -149,7 +153,8 @@ export class SearchResultComponent implements OnInit {
 
           console.log(interest)
         })
-      })
+      }),
+      takeUntil(this.ngUnsubscribe)
     ).subscribe()
   }
 
@@ -172,4 +177,9 @@ export class SearchResultComponent implements OnInit {
     );
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }
