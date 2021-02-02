@@ -25,7 +25,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Create env file
       run: |
-        touch .env
+        touch backend/.env
         echo MONGO_ACCOUNT_PROD=${{ secrets.MONGO_ACCOUNT_PROD }} >> .env
         echo MONGO_REPORTS_PROD=${{ secrets.MONGO_REPORTS_PROD }} >> .env
         echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> .env
@@ -41,7 +41,7 @@ jobs:
         echo BASE_URL=${{ secrets.BASE_URL }} >> .env
         echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> .env
         echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> .env
-        cat .env
+        cat backend/.env
     - run: npm run docker:down
     - run: docker image prune -a -f
     - run: npm run prod
