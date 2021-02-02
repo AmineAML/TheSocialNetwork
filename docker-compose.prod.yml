@@ -101,3 +101,4 @@ services:
 
 networks:
   production:
+    external: true
