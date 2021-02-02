@@ -23,12 +23,26 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd Documents/apps/TheSocialNetwork
-    - run: git pull
-    - run: cd ..
-    - run: cd ..
-    - run: cp thesocialnetwork/.env apps/TheSocialNetwork/backend
-    - run: cd apps/TheSocialNetwork
+    - name: Create env file
+      run: |
+        touch .env
+        echo API_ENDPOINT="https://xxx.execute-api.us-west-2.amazonaws.com" >> .env
+        echo API_KEY=${{ secrets.MONGO_ACCOUNT_PROD }} >> .env
+        echo API_KEY=${{ secrets.MONGO_REPORTS_PROD }} >> .env
+        echo API_KEY=${{ secrets.MONGO_IMAGE_PROD }} >> .env
+        echo API_KEY=${{ secrets.MONGO_AUTH_PROD }} >> .env
+        echo API_KEY=${{ secrets.REDIS_PROD }} >> .env
+        echo API_KEY=${{ secrets.NODE_ENV }} >> .env
+        echo API_KEY=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> .env
+        echo API_KEY=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> .env
+        echo API_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> .env
+        echo API_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }} >> .env
+        echo API_KEY=${{ secrets.IMAGEKIT_URL_ENDPOINT }} >> .env
+        echo API_KEY=${{ secrets.APP_NAME }} >> .env
+        echo API_KEY=${{ secrets.BASE_URL }} >> .env
+        echo API_KEY=${{ secrets.ENABLE_MAILER }} >> .env
+        echo API_KEY=${{ secrets.BCRYPT_SALT_ROUNDS }} >> .env
+        cat .env
     - run: npm run docker:down
     - run: docker image prune -a -f
     - run: npm run prod
