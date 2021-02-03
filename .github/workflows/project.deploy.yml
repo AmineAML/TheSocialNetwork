@@ -41,6 +41,7 @@ jobs:
         echo BASE_URL=${{ secrets.BASE_URL }} >> .env
         echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> .env
         echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> .env
+        echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> .env
         cat backend/.env
     - run: npm run docker:down
     - run: docker image prune -a -f
