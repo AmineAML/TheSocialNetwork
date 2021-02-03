@@ -9,6 +9,7 @@ Tech stack:
     - CSS framework (styling): Tailwind CSS
     - CSS component: Angular Material
     - Library: RxJs
+    - DevOps: Docker, nginx and Certbot
 
 ## Tools
 - VS Code extension: Tailwind CSS IntelliSense
