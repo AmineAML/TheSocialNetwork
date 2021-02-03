@@ -25,24 +25,24 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Create env file
       run: |
-        touch /backend/.env
-        echo MONGO_ACCOUNT_PROD=${{ secrets.MONGO_ACCOUNT_PROD }} >> /backend/.env
-        echo MONGO_REPORTS_PROD=${{ secrets.MONGO_REPORTS_PROD }} >> /backend/.env
-        echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> /backend/.env
-        echo MONGO_AUTH_PROD=${{ secrets.MONGO_AUTH_PROD }} >> /backend/.env
-        echo REDIS_PROD=${{ secrets.REDIS_PROD }} >> /backend/.env
-        echo NODE_ENV=${{ secrets.NODE_ENV }} >> /backend/.env
-        echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> /backend/.env
-        echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> /backend/.env
-        echo IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> /backend/.env
-        echo IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }} >> /backend/.env
-        echo IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }} >> /backend/.env
-        echo APP_NAME=${{ secrets.APP_NAME }} >> /backend/.env
-        echo BASE_URL=${{ secrets.BASE_URL }} >> /backend/.env
-        echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> /backend/.env
-        echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> /backend/.env
-        echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> /backend/.env
-        cat backend/.env
+        touch /TheSocialNetwork/backend/.env
+        echo MONGO_ACCOUNT_PROD=${{ secrets.MONGO_ACCOUNT_PROD }} >> /TheSocialNetwork/backend/.env
+        echo MONGO_REPORTS_PROD=${{ secrets.MONGO_REPORTS_PROD }} >> /TheSocialNetwork/backend/.env
+        echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> /TheSocialNetwork/backend/.env
+        echo MONGO_AUTH_PROD=${{ secrets.MONGO_AUTH_PROD }} >> /TheSocialNetwork/backend/.env
+        echo REDIS_PROD=${{ secrets.REDIS_PROD }} >> /TheSocialNetwork/backend/.env
+        echo NODE_ENV=${{ secrets.NODE_ENV }} >> /TheSocialNetwork/backend/.env
+        echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> /TheSocialNetwork/backend/.env
+        echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> /TheSocialNetwork/backend/.env
+        echo IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> /TheSocialNetwork/backend/.env
+        echo IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }} >> /TheSocialNetwork/backend/.env
+        echo IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }} >> /TheSocialNetwork/backend/.env
+        echo APP_NAME=${{ secrets.APP_NAME }} >> /TheSocialNetwork/backend/.env
+        echo BASE_URL=${{ secrets.BASE_URL }} >> /TheSocialNetwork/backend/.env
+        echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> /TheSocialNetwork/backend/.env
+        echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> /TheSocialNetwork/backend/.env
+        echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> /TheSocialNetwork/backend/.env
+        cat /TheSocialNetwork/backend/.env
     - run: npm run docker:down
     - run: docker image prune -a -f
     - run: npm run prod
