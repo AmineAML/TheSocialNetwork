@@ -2,9 +2,7 @@ FROM node:12-alpine as build
 
 WORKDIR /usr/local/image-microservice
 
-COPY dist/apps/service-image package.json ./
-
-COPY .env ./
+COPY dist/apps/service-image package.json .env ./
 
 RUN npm install --production
 

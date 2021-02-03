@@ -2,9 +2,7 @@ FROM node:12-alpine as build
 
 WORKDIR /usr/local/reports-microservice
 
-COPY dist/apps/service-reports package.json ./
-
-COPY .env ./
+COPY dist/apps/service-reports package.json .env ./
 
 RUN npm install --production
 

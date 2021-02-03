@@ -2,9 +2,7 @@ FROM node:12-alpine as build
 
 WORKDIR /usr/local/auth-microservice
 
-COPY dist/apps/service-auth package.json ./
-
-COPY .env ./
+COPY dist/apps/service-auth package.json .env ./
 
 RUN npm install --production
 

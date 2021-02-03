@@ -2,9 +2,7 @@ FROM node:12-alpine as build
 
 WORKDIR /usr/local/mailer-microservice
 
-COPY dist/apps/service-mailer package.json ./
-
-COPY .env ./
+COPY dist/apps/service-mailer package.json .env ./
 
 RUN npm install --production
 

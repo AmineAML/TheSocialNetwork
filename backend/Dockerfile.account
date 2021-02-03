@@ -2,9 +2,7 @@ FROM node:12-alpine as build
 
 WORKDIR /usr/local/account-microservice
 
-COPY dist/apps/service-account package.json ./
-
-COPY .env ./
+COPY dist/apps/service-account package.json .env ./
 
 RUN npm install --production
 
