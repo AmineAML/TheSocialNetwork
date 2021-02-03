@@ -25,23 +25,23 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Create env file
       run: |
-        touch backend/.env
-        echo MONGO_ACCOUNT_PROD=${{ secrets.MONGO_ACCOUNT_PROD }} >> .env
-        echo MONGO_REPORTS_PROD=${{ secrets.MONGO_REPORTS_PROD }} >> .env
-        echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> .env
-        echo MONGO_AUTH_PROD=${{ secrets.MONGO_AUTH_PROD }} >> .env
-        echo REDIS_PROD=${{ secrets.REDIS_PROD }} >> .env
-        echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
-        echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> .env
-        echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> .env
-        echo IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> .env
-        echo IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }} >> .env
-        echo IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }} >> .env
-        echo APP_NAME=${{ secrets.APP_NAME }} >> .env
-        echo BASE_URL=${{ secrets.BASE_URL }} >> .env
-        echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> .env
-        echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> .env
-        echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> .env
+        touch /backend/.env
+        echo MONGO_ACCOUNT_PROD=${{ secrets.MONGO_ACCOUNT_PROD }} >> /backend/.env
+        echo MONGO_REPORTS_PROD=${{ secrets.MONGO_REPORTS_PROD }} >> /backend/.env
+        echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> /backend/.env
+        echo MONGO_AUTH_PROD=${{ secrets.MONGO_AUTH_PROD }} >> /backend/.env
+        echo REDIS_PROD=${{ secrets.REDIS_PROD }} >> /backend/.env
+        echo NODE_ENV=${{ secrets.NODE_ENV }} >> /backend/.env
+        echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> /backend/.env
+        echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> /backend/.env
+        echo IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> /backend/.env
+        echo IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }} >> /backend/.env
+        echo IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }} >> /backend/.env
+        echo APP_NAME=${{ secrets.APP_NAME }} >> /backend/.env
+        echo BASE_URL=${{ secrets.BASE_URL }} >> /backend/.env
+        echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> /backend/.env
+        echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> /backend/.env
+        echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> /backend/.env
         cat backend/.env
     - run: npm run docker:down
     - run: docker image prune -a -f
