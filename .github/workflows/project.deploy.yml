@@ -86,7 +86,6 @@ jobs:
         echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> .env
         echo MONGO_AUTH_PROD=${{ secrets.MONGO_AUTH_PROD }} >> .env
         echo REDIS_PROD=${{ secrets.REDIS_PROD }} >> .env
-        echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
         echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> .env
         echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> .env
         echo IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> .env
