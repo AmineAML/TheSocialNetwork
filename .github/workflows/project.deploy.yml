@@ -19,13 +19,14 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: sudo npm install -g @angular/cli
     - run: npm run prod:build:client
     - name: client/dist
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: client
         path: client/dist
@@ -41,13 +42,14 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: sudo npm install -g @nestjs/cli
     - run: npm run prod:build:backend
     - name: backend/dist
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: backend
         path: backend/dist
