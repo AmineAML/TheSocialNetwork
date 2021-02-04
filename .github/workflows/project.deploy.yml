@@ -100,6 +100,12 @@ jobs:
         cat .env
     - run: npm run docker:down
     - run: docker image prune -a -f
+    - run: |
+        cd client
+        mkdir dist
+    - run: |
+        cd backend
+        mkdir dist
     - name: Download dist from build_client
       uses: actions/download-artifact@v2
       with:
