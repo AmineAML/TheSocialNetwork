@@ -19,13 +19,17 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: sudo npm install -g @angular/cli
+    - run: |
+        cd client
+        npm install
     - run: npm run prod:build:client
     - name: client/dist
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: client
         path: client/dist
@@ -41,13 +45,17 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
     - run: sudo npm install -g @nestjs/cli
+    - run: |
+        cd backend
+        npm install
     - run: npm run prod:build:backend
     - name: backend/dist
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: backend
         path: backend/dist
@@ -92,15 +100,21 @@ jobs:
         cat .env
     - run: npm run docker:down
     - run: docker image prune -a -f
+    - run: |
+        cd client
+        mkdir dist
+    - run: |
+        cd backend
+        mkdir dist
     - name: Download dist from build_client
       uses: actions/download-artifact@v2
       with:
         name: client
-        path: client
+        path: client/dist
     - name: Download dist from build_backend
       uses: actions/download-artifact@v2
       with:
         name: backend
-        path: backend
+        path: backend/dist
     - run: npm run prod
     - run: docker image prune -a -f
