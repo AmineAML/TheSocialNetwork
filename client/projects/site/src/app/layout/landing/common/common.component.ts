@@ -15,12 +15,16 @@ export class CommonComponent implements OnInit, OnDestroy {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
+  isServerRespondedWithData: Promise<boolean>
+
   async getInterests() {
     this.dataService.findAllInterestsSorted().pipe(
       //Display data into console log
       tap(interests => console.log('ree' + interests)),
       map((interestData: InterestData) => {
         this.dataSource = interestData
+
+        this.isServerRespondedWithData = Promise.resolve(true)
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()

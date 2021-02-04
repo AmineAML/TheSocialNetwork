@@ -90,7 +90,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
 
     this.authService.register(this.registerForm.value).pipe(
-      map(user => this.router.navigate(['edit-profile'])),
+      //map(user => this.router.navigate(['edit-profile'])),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
   };

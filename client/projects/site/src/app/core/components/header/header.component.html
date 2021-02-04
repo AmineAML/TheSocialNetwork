@@ -8,9 +8,9 @@
         <a href="#" class="inline-block p-2 text-amethyst hover:text-orange-700">About</a>
     </div>
 
-    <div class="hidden md:block" *ngIf="username; else notAuthenticated">
+    <div class="hidden md:block" *ngIf="isServerRespondedWithData | async; else notAuthenticated">
         <span class="p-2 text-amethyst hover:text-orange-700 mr-2 flex-wrap content-center flex">
-            <ng-container *ngIf="dataSource.user.image.length > 0">
+            <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
                 <ng-container *ngFor="let image of dataSource.user.image">
                     <span class="rounded-full p-1" *ngIf="image.type === 'avatar'">
                         <span class="inline-block bg-yellow-500  p-1 rounded-full">
@@ -27,7 +27,7 @@
                 </ng-container>
             </ng-container>
 
-            <ng-container *ngIf="dataSource.user.image.length === 0">
+            <ng-container *ngIf="dataSource.user.image === null">
                 <span class="rounded-full p-1">
                     <span class="inline-block bg-yellow-500  p-1 rounded-full">
                         <img src="./../../../../assets//img//1815212332_preview_istockphoto-590147780-612x612 (1).jpg"

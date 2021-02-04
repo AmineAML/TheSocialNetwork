@@ -48,6 +48,8 @@ export class SearchResultComponent implements OnInit {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
+  isServerRespondedWithData: Promise<boolean>
+
   constructor(private activatedRoute: ActivatedRoute,
               private dataService: DataService,
               private router: Router,
@@ -57,7 +59,11 @@ export class SearchResultComponent implements OnInit {
     this.dataService.findByQuery(this.interest, this.page, this.size).pipe(
       //Display data into console log
       tap(users => console.log('ree' + users)),
-      map((userData: Userss) => this.dataSource = userData),
+      map((userData: Userss) => {
+        this.dataSource = userData
+
+        this.isServerRespondedWithData = Promise.resolve(true)
+      }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
 

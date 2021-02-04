@@ -53,6 +53,15 @@ export class AuthInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token.data.access_token);
           return next.handle(this.addToken(request, token.data.access_token));
+        }),
+        catchError(err => {
+          if (err instanceof HttpErrorResponse && err.status === 401) {
+            console.log('Refresh token UnAuthorized')
+            this.authService.invalidRefreshToken()
+            return next.handle(request)
+          } else {
+            return throwError(err);
+          }
         }));
 
     } else {

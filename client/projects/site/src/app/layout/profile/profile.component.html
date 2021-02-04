@@ -1,7 +1,7 @@
-<div class="md:flex h-full text-amethyst bg-bedrock flex-col">
+<div class="md:flex h-full text-amethyst bg-bedrock flex-col" *ngIf="isServerRespondedWithData | async">
     <div class="m-auto md:w-4/5">
         <!-- Background image -->
-        <ng-container *ngIf="dataSource.user.image.length > 0">
+        <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
             <ng-container *ngFor="let image of dataSource.user.image">
                 <div class="relative" *ngIf="image.type === 'background'">
                     <img class="object-fit-cover" [src]="image.link ? image.link : './../../../assets/img/860x394.jpg'" alt="Background">
@@ -23,7 +23,7 @@
                 </div>
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="dataSource.user.image.length === 0">
+        <ng-container *ngIf="dataSource.user.image === null">
             <div class="relative">
                 <img class="object-fit-cover" src="./../../../assets/img/860x394.jpg" alt="Background">
                 <button class="absolute -bottom-7 md:right-16 right-7" [matMenuTriggerFor]="menu">
@@ -45,7 +45,7 @@
                         <div class="md:block">
                             <span class="p-2 text-amethyst hover:text-orange-700 mr-2 flex-wrap content-center flex">
                                 <!-- Avatar image -->
-                                <ng-container *ngIf="dataSource.user.image.length > 0">
+                                <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
                                     <ng-container *ngFor="let image of dataSource.user.image">
                                         <span class="rounded-full p-1 inline-block bg-yellow-500" *ngIf="image.type === 'avatar'">
                                             <img [src]="image.link ? image.link : './../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
@@ -58,7 +58,7 @@
                                     </ng-container>
                                 </ng-container>
 
-                                <ng-container *ngIf="dataSource.user.image.length === 0">
+                                <ng-container *ngIf="dataSource.user.image === null">
                                     <ng-container>
                                         <span class="rounded-full p-1 inline-block bg-yellow-500">
                                             <img src="./../../../assets//img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg"

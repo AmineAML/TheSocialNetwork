@@ -39,6 +39,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
+  isServerRespondedWithData: Promise<boolean>
+
   constructor(private dataService: DataService,
               private activatedRoute: ActivatedRoute) { }
 
@@ -46,7 +48,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.dataService.findByUsername(this.username).pipe(
       //Display data into console log
       tap(users => console.log('ree' + users)),
-      map((userData: Userss) => this.dataSource = userData),
+      map((userData: Userss) => {
+        this.dataSource = userData
+
+        this.isServerRespondedWithData = Promise.resolve(true)
+      }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
 

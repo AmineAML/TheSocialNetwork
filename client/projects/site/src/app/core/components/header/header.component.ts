@@ -26,6 +26,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
+  isServerRespondedWithData: Promise<boolean>
+
   constructor(private authService: AuthService,
               private router: Router,
               private dataService: DataService) {}
@@ -55,7 +57,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.dataService.findByUsername(this.username).pipe(
       //Display data into console log
       tap(users => console.log('ree' + users)),
-      map((userData: Userss) => this.dataSource = userData),
+      map((userData: Userss) => {
+        this.dataSource = userData
+
+        this.isServerRespondedWithData = Promise.resolve(true)
+      }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
@@ -71,6 +77,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
+    this.isServerRespondedWithData = Promise.resolve(false)
+
     this.router.navigate(['/'])
 
     //this.ngOnInit()
@@ -82,8 +90,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authService.loginStatusChange().pipe(
       takeUntil(this.ngUnsubscribe)
     ).subscribe(async loggedIn => {
-      // TODO: apply logic based on logged in status
       if (loggedIn) {
+        console.log(loggedIn)
+
         await this.getUser()
       } else {
         this.username = null

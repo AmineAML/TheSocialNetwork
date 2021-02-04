@@ -65,6 +65,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
+  isServerRespondedWithData: Promise<boolean>
+
   constructor(private dataService: DataService,
               private authService: AuthService,
               private formBuilder: FormBuilder) {
@@ -119,13 +121,15 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
         let avatar, background
 
-        this.dataSource.user.image.forEach(image => {
-          if (image.type === 'avatar') {
-            avatar = image.link
-          } else if (image.type === 'background') {
-            background = image.link
-          }
-        })
+        if (this.dataSource.user.image !== null) {
+          this.dataSource.user.image.forEach(image => {
+            if (image.type === 'avatar') {
+              avatar = image.link
+            } else if (image.type === 'background') {
+              background = image.link
+            }
+          })
+        }
 
         this.form.patchValue({
           id: userData.user.id,
@@ -139,6 +143,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         })
 
         this.interests = this.dataSource.user.interest
+
+        this.isServerRespondedWithData = Promise.resolve(true)
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -250,10 +256,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.username = this.authService.loggedUsername
 
-    console.log(`Edit profile ${this.username}`)
-
-    this.getUser()
-
     this.form = this.formBuilder.group({
       id: [{value: null, disabled: true}, [Validators.required]],
       first_name: [null, [Validators.required]],
@@ -272,8 +274,9 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       }),
       avatar: [null],
       background: [null]
-      //social_media: [{}, [Validators.required]]
     })
+
+    this.getUser()
   }
 
   ngOnDestroy() {

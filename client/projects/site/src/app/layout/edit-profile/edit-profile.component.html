@@ -1,9 +1,9 @@
-<div class="md:flex h-full text-amethyst bg-bedrock">
+<div class="md:flex h-full text-amethyst bg-bedrock" *ngIf="isServerRespondedWithData | async">
     <div class="m-auto w-4/5 border-red-400">
         <!-- Profile image with upload your avatar button -->
         <div class="p-10">
             <h3 class="flex text-3xl">Avatar</h3>
-            <figure class="md:flex rounded-xl p-8 w-96" *ngIf="form.get('avatar').value">
+            <figure class="md:flex rounded-xl p-8 w-96">
                 <img class="w-32 h-32 rounded-full mx-auto"
                     [src]="form.get('avatar').value ? form.get('avatar').value : './../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
                     alt="Avatar">
@@ -58,7 +58,7 @@
         <!-- Background image with upload your background image button -->
         <div class="p-10">
             <h3 class="flex text-3xl">Background</h3>
-            <ng-container *ngIf="dataSource.user.image.length > 0">
+            <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
                 <ng-container *ngFor="let image of dataSource.user.image">
                     <figure class="md:flex rounded-xl p-8 flex-col" *ngIf="image.type === 'background'">
                         <img class="mx-auto h-2/4" [src]="image.link ? image.link : './../../../assets/img/860x394.jpg'"
@@ -85,7 +85,7 @@
             <mat-divider></mat-divider>
         </div>
 
-        <ng-container *ngIf="dataSource.user.image.length === 0">
+        <ng-container *ngIf="dataSource.user.image === null">
             <figure class="md:flex rounded-xl p-8 flex-col">
                 <img class="mx-auto h-2/4" src="./../../../assets//img/860x394.jpg" alt="Background">
                 <div class="pt-6 text-center space-y-4 m-auto">

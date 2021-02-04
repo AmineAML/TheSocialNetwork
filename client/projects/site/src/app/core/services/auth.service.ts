@@ -56,7 +56,7 @@ export class AuthService {
       }),
       mapTo(true),
       catchError(error => {
-        alert(error.error);
+        //alert(error.error);
         return of(false);
       }));
   }
@@ -71,10 +71,13 @@ export class AuthService {
         this.doLoginUser(t)
 
         this.loggedIn.next(true)
+
+        this.router.navigate(['edit-profile'])
       }),
       mapTo(true),
       catchError(error => {
-        alert(error.error);
+        const err = JSON.stringify(error.error.errors)
+        alert(err);
         return of(false);
       }));
     //map(user => user)
@@ -143,6 +146,7 @@ export class AuthService {
 
   private doLogoutUser() {
     this.loggedUsername = null;
+    this.loggedIn.next(false)
     this.removeTokens();
   }
 
@@ -153,7 +157,6 @@ export class AuthService {
   }
 
   private redirectToLoginPage() {
-    this.loggedIn.next(false)
     this.router.navigate(['/login'])
   }
 
