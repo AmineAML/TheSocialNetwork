@@ -26,7 +26,7 @@ jobs:
     - run: sudo npm install -g @angular/cli
     - run: |
         cd client
-        npm run install
+        npm install
     - run: npm run prod:build:client
     - name: client/dist
       uses: actions/upload-artifact@v2
@@ -52,7 +52,7 @@ jobs:
     - run: sudo npm install -g @nestjs/cli
     - run: |
         cd backend
-        npm run install
+        npm install
     - run: npm run prod:build:backend
     - name: backend/dist
       uses: actions/upload-artifact@v2
