@@ -49,7 +49,7 @@ services:
     image: "reports-microservice:prod"
     build:
       context: "./backend"
-      dockerfile: "Dockerfile.auth"
+      dockerfile: "Dockerfile.reports"
     networks:
       - "production"
     depends_on:

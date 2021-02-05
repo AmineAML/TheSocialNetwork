@@ -12,6 +12,6 @@ WORKDIR /usr/local/image-microservice
 
 COPY --from=build /usr/local/image-microservice .
 
-COPY .env ./
+ENV NODE_ENV=production
 
 CMD ["node", "main.js"]
