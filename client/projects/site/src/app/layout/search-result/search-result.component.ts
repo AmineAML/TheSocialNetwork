@@ -63,6 +63,8 @@ export class SearchResultComponent implements OnInit {
         this.dataSource = userData
 
         this.isServerRespondedWithData = Promise.resolve(true)
+
+        this.filterInterests()
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -164,6 +166,15 @@ export class SearchResultComponent implements OnInit {
     ).subscribe()
   }
 
+  filterInterests() {
+    this.filteredOptions = this.myControl.valueChanges
+    .pipe(
+      startWith(''),
+      map(value => typeof value === 'string' ? value : value.name),
+      map(name => name ? this._filter(name) : this.options.slice())
+    );
+  }
+
   async ngOnInit(): Promise<void> {
     this.activatedRoute.queryParams.subscribe(params => {
       this.interest = params.interest
@@ -174,13 +185,6 @@ export class SearchResultComponent implements OnInit {
     await this.getUsers()
 
     await this.getInterests()
-
-    this.filteredOptions = this.myControl.valueChanges
-    .pipe(
-      startWith(''),
-      map(value => typeof value === 'string' ? value : value.name),
-      map(name => name ? this._filter(name) : this.options.slice())
-    );
   }
 
   ngOnDestroy() {

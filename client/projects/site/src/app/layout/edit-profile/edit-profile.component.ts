@@ -14,7 +14,8 @@ import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/htt
 
 export interface File {
   data: any
-  progress: number
+  avatar_progress: number
+  background_progress: number
   inProgress: boolean
 }
 
@@ -59,7 +60,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   file: File = {
     data: null,
     inProgress: false,
-    progress: 0
+    avatar_progress: 0,
+    background_progress: 0
   }
 
   //Handle unsubscriptions
@@ -186,7 +188,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       this.file = {
         data: fileInput.files[0],
         inProgress: false,
-        progress: 0
+        avatar_progress: 0,
+        background_progress: 0
       }
       this.fileUploadAvatar.nativeElement.value = ''
 
@@ -205,7 +208,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       this.file = {
         data: fileInput.files[0],
         inProgress: false,
-        progress: 0
+        avatar_progress: 0,
+        background_progress: 0
       }
       this.fileUploadBackground.nativeElement.value = ''
 
@@ -228,21 +232,26 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     this.dataService.uploadProfileAvatar(formData).pipe(
       map((event) => {
-        console.log(event)
         switch (event.type) {
           case HttpEventType.UploadProgress:
-            console.log(`Uploaded ${event.loaded}`)
-            this.file.progress = Math.round(event.loaded * 100 / event.total)
             if (event.loaded === event.total && type === 'avatar') {
               this.showAvatarSpinner = true
+              this.file.avatar_progress = Math.round(event.loaded * 100 / event.total)
             }
             if (event.loaded === event.total && type === 'background') {
               this.showBackgroundSpinner = true
+              this.file.background_progress = Math.round(event.loaded * 100 / event.total)
             }
             break;
           case HttpEventType.Response:
-            this.file.progress = 0
-            return event
+            if (type === 'avatar') {
+              this.file.avatar_progress = 0
+              return event
+            }
+            if (type === 'background') {
+              this.file.background_progress = 0
+              return event
+            }
         }
       }),
       takeUntil(this.ngUnsubscribe),

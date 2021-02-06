@@ -16,7 +16,7 @@
                 <input type="file" #fileUploadAvatar id="fileUploadAvatar" name="fileUploadAvatar" accept="image/*"
                     style="display:none">
             </figure>
-            <mat-progress-bar mode="determinate" [value]="file.progress"></mat-progress-bar>
+            <mat-progress-bar mode="determinate" [value]="file.avatar_progress"></mat-progress-bar>
 
             <mat-divider></mat-divider>
         </div>
@@ -26,10 +26,10 @@
         <div class="p-10">
             <h3 class="flex text-3xl">Background</h3>
             <figure class="md:flex rounded-xl p-8 flex-col">
-                <img class="mx-auto max-h-10"
+                <img class="mx-auto max-h-32"
                     [src]="form.get('background').value ? form.get('background').value : './../../../assets/img/860x394.jpg'"
                     alt="Background" *ngIf="!showBackgroundSpinner">
-                <mat-spinner *ngIf="showBackgroundSpinner"></mat-spinner>
+                <mat-spinner *ngIf="showBackgroundSpinner" class="mx-auto"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
                     <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
                         (click)="uploadProfileBackground()">Upload
@@ -38,7 +38,7 @@
             </figure>
             <input type="file" #fileUploadBackground id="fileUploadBackground" name="fileUploadBackground" accept="image/*"
                 style="display:none">
-            <mat-progress-bar mode="determinate" [value]="file.progress"></mat-progress-bar>
+            <mat-progress-bar mode="determinate" [value]="file.background_progress"></mat-progress-bar>
 
             <mat-divider></mat-divider>
         </div>
