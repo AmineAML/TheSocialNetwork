@@ -20,7 +20,7 @@ export class CommonComponent implements OnInit, OnDestroy {
   async getInterests() {
     this.dataService.findAllInterestsSorted().pipe(
       //Display data into console log
-      tap(interests => console.log('ree' + interests)),
+      //tap(interests => console.log('ree' + interests)),
       map((interestData: InterestData) => {
         this.dataSource = interestData
 

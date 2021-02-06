@@ -43,7 +43,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   async getInterests() {
     this.dataService.findAllInterestsSorted().pipe(
       //Display data into console log
-      tap(interests => console.log('ree' + interests)),
+      //tap(interests => console.log('ree' + interests)),
       map((interestData: InterestData) => {
         this.dataSource = interestData
         
@@ -52,7 +52,7 @@ export class HeroComponent implements OnInit, OnDestroy {
             { name: interest.name }
           )
 
-          console.log(interest)
+          //console.log(interest)
         })
       }),
       takeUntil(this.ngUnsubscribe)

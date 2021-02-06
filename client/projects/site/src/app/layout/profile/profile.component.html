@@ -83,7 +83,7 @@
                         </div>
                     </div>
                     <div class="flex flex-col w-1/2 md:mb-40 mb-7">
-                        <div class="mx-auto">
+                        <div class="mx-auto" *ngIf="dataSource.user.social_media">
                             <div class="flex gap-x-3" *ngIf="dataSource.user.social_media.facebook">
                                 <span class="text-blue-500 w-7">
                                     <fa-icon [icon]="faFacebook"></fa-icon>
@@ -141,12 +141,12 @@
                 <div class="md:w-2/3 flex flex-col">
                     <div class="mb-7">
                         <h3 class="text-xl">About</h3>
-                        <p *ngIf="dataSource.user.description.length; else defaultDescription">{{dataSource.user.description}}</p>
+                        <p *ngIf="dataSource.user.description && dataSource.user.description.length > 0; else defaultDescription">{{dataSource.user.description}}</p>
                         <ng-template #defaultDescription>
                             <p>Whatever, however, this user is mysterious</p>
                         </ng-template>
                     </div>
-                    <div>
+                    <div *ngIf="dataSource.user.interest; else noHobbies">
                         <h3 class="text-xl">Hobbies</h3>
                         <mat-chip-list>
                             <ng-container *ngFor="let interest of dataSource.user.interest">
@@ -154,6 +154,9 @@
                             </ng-container>
                         </mat-chip-list>
                     </div>
+                    <ng-template #noHobbies>
+                        <p>Haven't shared any hobbies</p>
+                    </ng-template>
                 </div>
             </div>
 

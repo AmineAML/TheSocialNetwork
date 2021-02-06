@@ -1,10 +1,10 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {FormBuilder, FormControl, FormGroup, Validators, FormArray} from '@angular/forms';
-import {MatAutocompleteSelectedEvent, MatAutocomplete} from '@angular/material/autocomplete';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {Observable, of, Subject} from 'rxjs';
-import {catchError, map, startWith, takeUntil, tap} from 'rxjs/operators';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable, of, Subject } from 'rxjs';
+import { catchError, map, startWith, takeUntil, tap } from 'rxjs/operators';
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { DataService } from '../../core/services/data.service';
@@ -68,11 +68,11 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   isServerRespondedWithData: Promise<boolean>
 
   constructor(private dataService: DataService,
-              private authService: AuthService,
-              private formBuilder: FormBuilder) {
+    private authService: AuthService,
+    private formBuilder: FormBuilder) {
     this.filteredInterests = this.interestCtrl.valueChanges.pipe(
-        startWith(null),
-        map((fruit: string | null) => fruit ? this._filter(fruit) : this.allInterests.slice()));
+      startWith(null),
+      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allInterests.slice()));
   }
 
   add(event: MatChipInputEvent): void {
@@ -137,7 +137,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
           last_name: userData.user.last_name,
           description: userData.user.description,
           gender: userData.user.gender,
-          social_media: userData.user.social_media,
+          social_media: userData.user.social_media || {},
           avatar: avatar,
           background: background
         })
@@ -210,10 +210,14 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       this.fileUploadBackground.nativeElement.value = ''
 
       let type = 'background'
-      
+
       this.uploadFile(type)
     }
   }
+
+  showAvatarSpinner = false
+
+  showBackgroundSpinner = false
 
   uploadFile(type: string) {
     const formData = new FormData()
@@ -224,11 +228,20 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
     this.dataService.uploadProfileAvatar(formData).pipe(
       map((event) => {
+        console.log(event)
         switch (event.type) {
           case HttpEventType.UploadProgress:
+            console.log(`Uploaded ${event.loaded}`)
             this.file.progress = Math.round(event.loaded * 100 / event.total)
+            if (event.loaded === event.total && type === 'avatar') {
+              this.showAvatarSpinner = true
+            }
+            if (event.loaded === event.total && type === 'background') {
+              this.showBackgroundSpinner = true
+            }
             break;
           case HttpEventType.Response:
+            this.file.progress = 0
             return event
         }
       }),
@@ -238,16 +251,20 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
         return of('Upload failed')
       })
-    ).subscribe((event: any) => {
+    ).subscribe(async (event: any) => {
+      console.log(event)
       if (typeof event === 'object') {
         if (type === 'avatar') {
           this.form.patchValue({
-            avatar: event.body.avatar.data.images[0].link
+            avatar: event.body.data.images[0].link
           })
+          this.showAvatarSpinner = false
+          this.authService.setAvatarLink(true);
         } else {
           this.form.patchValue({
-            avatar: event.body.background.data.images[0].link
+            background: event.body.data.images[0].link
           })
+          this.showBackgroundSpinner = false
         }
       }
     })
@@ -257,7 +274,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.username = this.authService.loggedUsername
 
     this.form = this.formBuilder.group({
-      id: [{value: null, disabled: true}, [Validators.required]],
+      id: [{ value: null, disabled: true }, [Validators.required]],
       first_name: [null, [Validators.required]],
       last_name: [null, [Validators.required]],
       description: [null, [Validators.required]],

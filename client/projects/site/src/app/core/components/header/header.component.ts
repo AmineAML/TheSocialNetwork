@@ -29,8 +29,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isServerRespondedWithData: Promise<boolean>
 
   constructor(private authService: AuthService,
-              private router: Router,
-              private dataService: DataService) {}
+    private router: Router,
+    private dataService: DataService) { }
 
   async getUser() {
     this.authService.authenticatedUser().pipe(
@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         await this.getUserProfile()
 
-        console.log(`Logged in ${this.username}`)
+        //console.log(`Logged in ${this.username}`)
 
         this.authService.loggedUsername = this.username
 
@@ -56,7 +56,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   async getUserProfile() {
     this.dataService.findByUsername(this.username).pipe(
       //Display data into console log
-      tap(users => console.log('ree' + users)),
+      //tap(users => console.log('ree' + users)),
       map((userData: Userss) => {
         this.dataSource = userData
 
@@ -65,28 +65,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
-    console.log(this.dataSource)
+    //console.log(this.dataSource)
 
-    setTimeout(() => console.log(this.dataSource), 7000)
+    //setTimeout(() => console.log(this.dataSource), 7000)
 
-    console.log(this.username)
+    //console.log(this.username)
   }
 
-  logout() {
-    this.authService.logout().pipe(
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-
-    this.isServerRespondedWithData = Promise.resolve(false)
-
-    this.router.navigate(['/'])
-
-    //this.ngOnInit()
-  }
-
-  async ngOnInit(): Promise<void> {
-    //await this.getUser()
-
+  isAuthenicated() {
     this.authService.loginStatusChange().pipe(
       takeUntil(this.ngUnsubscribe)
     ).subscribe(async loggedIn => {
@@ -100,14 +86,32 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.dataSource = null
       }
     });
+  }
 
-    // this.router.events.pipe(
-    //   filter(event => event instanceof NavigationEnd)
-    // ).subscribe(async (event: NavigationEnd) => {
-    //   if (event.url === '/') {
-    //     await this.getUser()
-    //   }
-    // })
+  editedAvatarLink() {
+    this.authService.getAvatarLink().pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe((value: boolean) => {
+      if (value) {
+        this.getUserProfile()
+      }
+    })
+  }
+
+  logout() {
+    this.authService.logout().pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
+
+    this.isServerRespondedWithData = Promise.resolve(false)
+
+    this.router.navigate(['/'])
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.isAuthenicated()
+
+    this.editedAvatarLink()
   }
 
   ngOnDestroy() {

@@ -47,7 +47,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   async getUser() {
     this.dataService.findByUsername(this.username).pipe(
       //Display data into console log
-      tap(users => console.log('ree' + users)),
+      //tap(users => console.log('ree' + users)),
       map((userData: Userss) => {
         this.dataSource = userData
 
@@ -56,11 +56,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
 
-    console.log(this.dataSource)
+    //console.log(this.dataSource)
 
-    setTimeout(() => console.log(this.dataSource), 7000)
+    //setTimeout(() => console.log(this.dataSource), 7000)
 
-    console.log(this.username)
+    //console.log(this.username)
   }
 
   async ngOnInit(): Promise<void> {

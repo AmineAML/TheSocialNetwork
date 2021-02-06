@@ -6,7 +6,8 @@
             <figure class="md:flex rounded-xl p-8 w-96">
                 <img class="w-32 h-32 rounded-full mx-auto"
                     [src]="form.get('avatar').value ? form.get('avatar').value : './../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
-                    alt="Avatar">
+                    alt="Avatar" *ngIf="!showAvatarSpinner">
+                <mat-spinner *ngIf="showAvatarSpinner"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
                     <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
                         (click)="uploadProfileAvatar()">Upload
@@ -16,40 +17,6 @@
                     style="display:none">
             </figure>
             <mat-progress-bar mode="determinate" [value]="file.progress"></mat-progress-bar>
-            <!-- <ng-container *ngIf="dataSource.user.image.length > 0">
-                <ng-container *ngFor="let image of dataSource.user.image">
-                    <figure class="md:flex rounded-xl p-8 w-96" *ngIf="image.type === 'avatar'">
-                        <img class="w-32 h-32 rounded-full mx-auto"
-                            [src]="image.link ? image.link : './../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
-                            alt="Avatar">
-                        <div class="pt-6 text-center space-y-4 m-auto">
-                            <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3">Upload
-                                picture</button>
-                        </div>
-                    </figure>
-                    <figure class="md:flex rounded-xl p-8 w-96"
-                        *ngIf="image.type !== 'avatar' && image.type !== 'background'">
-                        <img class="w-32 h-32 rounded-full mx-auto"
-                            src="./../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
-                            alt="Avatar">
-                        <div class="pt-6 text-center space-y-4 m-auto">
-                            <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3">Upload
-                                picture</button>
-                        </div>
-                    </figure>
-                </ng-container>
-            </ng-container>
-
-            <ng-container *ngIf="dataSource.user.image.length === 0">
-                <figure class="md:flex rounded-xl p-8 w-96">
-                    <img class="w-32 h-32 rounded-full mx-auto"
-                        src="./../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg" alt="Avatar">
-                    <div class="pt-6 text-center space-y-4 m-auto">
-                        <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3">Upload
-                            picture</button>
-                    </div>
-                </figure>
-            </ng-container> -->
 
             <mat-divider></mat-divider>
         </div>
@@ -58,42 +25,23 @@
         <!-- Background image with upload your background image button -->
         <div class="p-10">
             <h3 class="flex text-3xl">Background</h3>
-            <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
-                <ng-container *ngFor="let image of dataSource.user.image">
-                    <figure class="md:flex rounded-xl p-8 flex-col" *ngIf="image.type === 'background'">
-                        <img class="mx-auto h-2/4" [src]="image.link ? image.link : './../../../assets/img/860x394.jpg'"
-                            alt="Background">
-                        <div class="pt-6 text-center space-y-4 m-auto">
-                            <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3" (click)="uploadProfileBackground()">Upload
-                                picture</button>
-                        </div>
-                    </figure>
-                    <figure class="md:flex rounded-xl p-8 flex-col"
-                        *ngIf="image.type !== 'avatar' && image.type !== 'background'">
-                        <img class="mx-auto h-2/4" src="./../../../assets//img/860x394.jpg" alt="Background">
-                        <div class="pt-6 text-center space-y-4 m-auto">
-                            <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3">Upload
-                                picture</button>
-                        </div>
-                    </figure>
-                    <input type="file" #fileUploadAvatar id="fileUploadBackground" name="fileUploadBackground" accept="image/*"
-                    style="display:none">
-                </ng-container>
-            </ng-container>
+            <figure class="md:flex rounded-xl p-8 flex-col">
+                <img class="mx-auto max-h-10"
+                    [src]="form.get('background').value ? form.get('background').value : './../../../assets/img/860x394.jpg'"
+                    alt="Background" *ngIf="!showBackgroundSpinner">
+                <mat-spinner *ngIf="showBackgroundSpinner"></mat-spinner>
+                <div class="pt-6 text-center space-y-4 m-auto">
+                    <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
+                        (click)="uploadProfileBackground()">Upload
+                        picture</button>
+                </div>
+            </figure>
+            <input type="file" #fileUploadBackground id="fileUploadBackground" name="fileUploadBackground" accept="image/*"
+                style="display:none">
             <mat-progress-bar mode="determinate" [value]="file.progress"></mat-progress-bar>
 
             <mat-divider></mat-divider>
         </div>
-
-        <ng-container *ngIf="dataSource.user.image === null">
-            <figure class="md:flex rounded-xl p-8 flex-col">
-                <img class="mx-auto h-2/4" src="./../../../assets//img/860x394.jpg" alt="Background">
-                <div class="pt-6 text-center space-y-4 m-auto">
-                    <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3">Upload
-                        picture</button>
-                </div>
-            </figure>
-        </ng-container>
 
         <div>
             <h3 class="flex text-3xl p-10">General Info</h3>

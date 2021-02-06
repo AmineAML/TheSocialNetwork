@@ -32,6 +32,8 @@ export class AuthService {
 
   private loggedIn: Subject<boolean> = new ReplaySubject<boolean>(1);
 
+  private ModifyAvatarLink: Subject<boolean> = new ReplaySubject<boolean>(1);
+
   constructor(private http: HttpClient,
     private router: Router) { }
 
@@ -87,6 +89,16 @@ export class AuthService {
     return this.loggedIn.asObservable();
   }
 
+  public getAvatarLink(): Observable<boolean> {
+
+    return this.ModifyAvatarLink.asObservable();
+  }
+
+  public setAvatarLink(value: boolean): void {
+
+    this.ModifyAvatarLink.next(value);
+  }
+
   authenticatedUser() {
     if (this.isLoggedIn) {
       return this.http.get<any>('/api/v1/users/user', { headers: { 'authorization': this.getAccessToken() } }).pipe(
@@ -112,7 +124,7 @@ export class AuthService {
         this.invalidRefreshToken()
 
         throwError(error)
-        
+
         return of(error)
       })
     );

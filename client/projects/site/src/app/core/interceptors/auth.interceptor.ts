@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
       request = this.addToken(request, this.authService.getAccessToken());
     }
 
-    console.log('Access token')
+    //console.log('Access token')
 
     return next.handle(request).pipe(catchError(error => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
