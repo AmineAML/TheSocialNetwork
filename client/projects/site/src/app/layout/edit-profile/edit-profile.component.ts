@@ -144,18 +144,12 @@ export class EditProfileComponent implements OnInit, OnDestroy {
           background: background
         })
 
-        this.interests = this.dataSource.user.interest
+        this.interests = userData.user.interest
 
         this.isServerRespondedWithData = Promise.resolve(true)
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
-
-    console.log(this.dataSource)
-
-    setTimeout(() => console.log(this.dataSource), 7000)
-
-    console.log(this.username)
   }
 
   update() {
@@ -169,6 +163,9 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.dataService.updateUser(this.form.getRawValue()).pipe(
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
+    this.aliases.clear()
+    this.interests = this.interests
+    console.log(this.interests)
   }
 
   get aliases() {
@@ -234,13 +231,17 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       map((event) => {
         switch (event.type) {
           case HttpEventType.UploadProgress:
+            if (type === 'avatar') {
+              this.file.avatar_progress = Math.round(event.loaded * 100 / event.total)
+            }
+            if (type === 'background') {
+              this.file.background_progress = Math.round(event.loaded * 100 / event.total)
+            }
             if (event.loaded === event.total && type === 'avatar') {
               this.showAvatarSpinner = true
-              this.file.avatar_progress = Math.round(event.loaded * 100 / event.total)
             }
             if (event.loaded === event.total && type === 'background') {
               this.showBackgroundSpinner = true
-              this.file.background_progress = Math.round(event.loaded * 100 / event.total)
             }
             break;
           case HttpEventType.Response:

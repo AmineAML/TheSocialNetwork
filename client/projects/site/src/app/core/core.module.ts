@@ -10,13 +10,15 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthGuard } from './guards/auth.guard';
 import { MemberGuard } from './guards/member.guard';
 import { AuthService } from './services/auth.service';
+import { EmailNotConfirmedComponent } from './components/email-not-confirmed/email-not-confirmed.component';
 
 
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    EmailNotConfirmedComponent
   ],
   imports: [
     CommonModule,
@@ -26,7 +28,8 @@ import { AuthService } from './services/auth.service';
   ],
   exports: [
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    EmailNotConfirmedComponent
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

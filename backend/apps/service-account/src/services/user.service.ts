@@ -24,7 +24,9 @@ export class UserService {
 
         delete userModel.password
 
-        await this.insertOrIncrementInterest(userModel)
+        //await this.insertOrIncrementInterest(userModel)
+        
+        await this.insertOrIncrementInterest(userModel.interest)
 
         return userModel
     }
@@ -62,9 +64,39 @@ export class UserService {
     public async updateUserProfileById(id: string, userParams: IUser): Promise<IUser> {
         delete userParams.password
         delete userParams.email
-        const userModel = await this.userModel.updateOne({ _id: id }, userParams).exec();
+        const userModel = await this.userModel.findOneAndUpdate({ _id: id }, userParams).exec();
 
-        await this.insertOrIncrementInterest(userModel)
+        let addedInterests = []
+        let deletedInterests = []
+
+        if (userParams.interest) {
+            userParams.interest.forEach(interest => {
+                // Meaning this hobby was before and not added
+                if (userModel.interest.includes(interest)) {
+
+                }
+
+                // Meaning this hobby wasn't before and it's newly added
+                if (!userModel.interest.includes(interest)) {
+                    addedInterests.push(interest)
+                }
+            })
+
+            userModel.interest.forEach(interest => {
+                // Meaning this hobby was before and it's removed
+                if (userParams.interest.includes(interest)) {
+                    deletedInterests.push(interest)
+                }
+            })
+        }
+
+        //console.log(userParams)
+
+        //await this.insertOrIncrementInterest(userModel)
+        
+        await this.insertOrIncrementInterest(addedInterests)
+        
+        await this.DecrementInterest(deletedInterests)
 
         return userModel
     }
@@ -145,26 +177,49 @@ export class UserService {
     }
 
     public async getAllInterestBySorting(): Promise<IInterest[]> {
-        return this.interestModel.find({}).sort({ byNumberOfUsers: 'desc' }).exec();
+        return this.interestModel.find({}).where('byNumberOfUsers').gte(0).sort({ byNumberOfUsers: 'desc' }).exec();
     }
 
-    public async insertOrIncrementInterest(userModel: IUser)/*: Promise<IInterest[]>*/ {
-        if (userModel.interest && userModel.interest.length > 0) {
-            const { interest } = userModel
+    public async insertOrIncrementInterest(newHobbies: Array<string>/*userModel: IUser*/)/*: Promise<IInterest[]>*/ {
+        // console.log(userModel)
+        // if (userModel.interest && userModel.interest.length > 0) {
+        //     const { interest } = userModel
 
-            // interest.forEach(async interest => {
-            //     await this.interestModel.findOneAndUpdate({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
-            // })
+        //     // interest.forEach(async interest => {
+        //     //     await this.interestModel.findOneAndUpdate({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
+        //     // })
 
-            let query = []
+        //     let query = []
 
-            interest.forEach(async interest => {
+        //     interest.forEach(async interest => {
+        //         //query.push({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
+
+        //         await this.interestModel.findOneAndUpdate({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
+        //     })
+
+        //     console.log('Improved hobbies')
+        // }
+
+        if (newHobbies && newHobbies.length > 0) {
+            newHobbies.forEach(async interest => {
                 //query.push({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
 
                 await this.interestModel.findOneAndUpdate({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
             })
 
-            console.log('Improved hobbies')
+            console.log('Added hobbies')
+        }
+    }
+
+    public async DecrementInterest(deleteHobbies: Array<string>/*userModel: IUser*/)/*: Promise<IInterest[]>*/ {
+        if (deleteHobbies && deleteHobbies.length > 0) {
+            deleteHobbies.forEach(async interest => {
+                //query.push({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
+
+                await this.interestModel.findOneAndUpdate({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: -1 } }, { new: true, upsert: true })
+            })
+
+            console.log('Removed hobbies')
         }
     }
 }
