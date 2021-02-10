@@ -2,14 +2,18 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { MemberGuard } from './core/guards/member.guard';
+import { CustomPreloadingStrategyService } from './core/services/custom-preloading-strategy.service';
 
 const routes: Routes = [
   { path: '', 
-    loadChildren: () => import('./layout/landing/landing.module').then(m => m.LandingModule) 
+    loadChildren: () => import('./layout/landing/landing.module').then(m => m.LandingModule),
+    data: {
+      preload: true
+    }
   },
   { path: 'login', 
     loadChildren: () => import('./layout/login/login.module').then(m => m.LoginModule), 
-    canActivate: [AuthGuard] 
+    canActivate: [AuthGuard]
   },
   { path: 'register', 
     loadChildren: () => import('./layout/register/register.module').then(m => m.RegisterModule), 
@@ -36,7 +40,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {
+    preloadingStrategy: CustomPreloadingStrategyService
+  })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

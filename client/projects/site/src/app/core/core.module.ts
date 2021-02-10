@@ -12,6 +12,7 @@ import { MemberGuard } from './guards/member.guard';
 import { AuthService } from './services/auth.service';
 import { EmailNotConfirmedComponent } from './components/email-not-confirmed/email-not-confirmed.component';
 import { DialogReportComponent } from './components/dialog-report/dialog-report.component';
+import { CustomPreloadingStrategyService } from './services/custom-preloading-strategy.service';
 
 
 
@@ -37,7 +38,8 @@ import { DialogReportComponent } from './components/dialog-report/dialog-report.
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthGuard,
     MemberGuard,
-    AuthService
+    AuthService,
+    CustomPreloadingStrategyService
   ]
 })
 export class CoreModule { }
