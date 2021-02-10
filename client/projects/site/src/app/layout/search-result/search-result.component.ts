@@ -64,8 +64,6 @@ export class SearchResultComponent implements OnInit {
         this.dataSource = userData
 
         this.isServerRespondedWithData = Promise.resolve(true)
-
-        this.filterInterests()
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -138,6 +136,8 @@ export class SearchResultComponent implements OnInit {
             { name: interest.name }
           )
         })
+
+        this.filterInterests()
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()

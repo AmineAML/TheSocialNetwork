@@ -70,8 +70,6 @@ export class DataService {
   }
 
   findAllImagesByUsersIds(users: User | User[]): Observable<ImageData> {
-    console.log(`Images by users ids profiles: ${users}`)
-
     if (users) {
       let payload = new HttpParams()
 

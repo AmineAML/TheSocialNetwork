@@ -14,13 +14,13 @@
                 <ng-container *ngFor="let image of dataSource.user.image">
                     <span class="rounded-full p-1" *ngIf="image.type === 'avatar'">
                         <span class="inline-block bg-yellow-500  p-1 rounded-full">
-                            <img [src]="image.link ? image.link : './../../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
+                            <img [src]="image.link ? image.link : './../../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'"
                                 alt="Logo" class="h-10 w-10 rounded-full">
                         </span>
                     </span>
                     <span class="rounded-full p-1" *ngIf="image.type !== 'avatar' && image.type !== 'background'">
                         <span class="inline-block bg-yellow-500  p-1 rounded-full">
-                            <img src="./../../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
+                            <img src="./../../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
                                 alt="Logo" class="h-10 w-10 rounded-full">
                         </span>
                     </span>
@@ -30,7 +30,7 @@
             <ng-container *ngIf="dataSource.user.image === null">
                 <span class="rounded-full p-1">
                     <span class="inline-block bg-yellow-500  p-1 rounded-full">
-                        <img src="./../../../../assets//img//1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
+                        <img src="./../../../../assets//img//united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
                             alt="Logo" class="h-10 w-10 rounded-full">
                     </span>
                 </span>
