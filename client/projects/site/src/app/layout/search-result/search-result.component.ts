@@ -150,12 +150,14 @@ export class SearchResultComponent implements OnInit {
   private _filter(name: string): Interest[] {
     const filterValue = name.toLowerCase();
 
+    console.log(this.options)
+
     // Production important verifying this has values
-    if (this.options && this.options.length > 0) {
-      return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
+    if (this.options === null) {
+      return null
     }
 
-    return this.options
+    return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0);
   }
 
   filterInterests() {
