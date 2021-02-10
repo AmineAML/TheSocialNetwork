@@ -256,7 +256,7 @@ export class AccountsController {
           data: null,
           errors: null,
         },
-        HttpStatus.UNAUTHORIZED,
+        getUserResponse.status,
       );
     }
 

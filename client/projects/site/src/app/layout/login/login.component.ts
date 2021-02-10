@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-import { map, takeUntil } from 'rxjs/operators'
-import { Subject } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators'
+import { of, Subject } from 'rxjs';
+import { Tokens } from '../../shared/types';
 
 @Component({
   selector: 'app-login',
@@ -16,8 +17,9 @@ export class LoginComponent implements OnInit {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
-  constructor(private fb: FormBuilder,
-              private authService: AuthService,
+  unauthorizedCredentialsError: boolean
+
+  constructor(private authService: AuthService,
               private router: Router) { }
 
   onSubmit() {
@@ -26,7 +28,16 @@ export class LoginComponent implements OnInit {
     }
 
     this.authService.login(this.loginForm.value).pipe(
-      map(token => this.router.navigate(['/'])),
+      map(tokens => {
+        if (tokens) {
+          this.router.navigate(['/'])
+        } else {
+          this.unauthorizedCredentialsError = true
+        }
+      }),
+      catchError(error => {
+        return of(false);
+      }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
   };

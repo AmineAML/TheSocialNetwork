@@ -60,10 +60,10 @@ export class SearchResultComponent implements OnInit {
     this.dataService.findByQuery(this.interest, this.page, this.size).pipe(
       //Display data into console log
       //tap(users => console.log(users)),
-      map((userData: Userss) => {
+      map(async (userData: Userss) => {
         this.dataSource = userData
 
-        this.isServerRespondedWithData = Promise.resolve(true)
+        await this.getInterests()
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -138,6 +138,8 @@ export class SearchResultComponent implements OnInit {
         })
 
         this.filterInterests()
+
+        this.isServerRespondedWithData = Promise.resolve(true)
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -177,8 +179,6 @@ export class SearchResultComponent implements OnInit {
     })
 
     await this.getUsers()
-
-    await this.getInterests()
   }
 
   ngOnDestroy() {

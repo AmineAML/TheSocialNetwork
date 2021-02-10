@@ -31,7 +31,7 @@ export class AuthService {
       }),
       mapTo(true),
       catchError(error => {
-        alert(error.error);
+        //alert(error.error);
         return of(false);
       }));
   }

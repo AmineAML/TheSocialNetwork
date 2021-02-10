@@ -204,8 +204,8 @@ export class ServiceAccountController {
       }
     } else {
       result = {
-        status: HttpStatus.NOT_FOUND,
-        message: 'user_search_by_credentials_not_found',
+        status: HttpStatus.BAD_REQUEST,
+        message: 'user_search_by_credentials_bad_request',
         user: null,
       };
     }
