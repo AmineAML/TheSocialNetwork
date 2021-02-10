@@ -97,6 +97,8 @@ jobs:
         echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> .env
         echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> .env
         echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
+        echo CONTACT_EMAIL=${{ secrets.CONTACT_EMAIL }} >> .env
+        echo APP_EMAIL=${{ secrets.APP_EMAIL }} >> .env
         cat .env
     - run: npm run docker:down
     - run: docker image prune -a -f
