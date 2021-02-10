@@ -9,15 +9,10 @@ import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { DataService } from '../../core/services/data.service';
 import { AuthService } from '../../core/services/auth.service';
-import { Userss } from '../profile/profile.component';
-import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
-
-export interface File {
-  data: any
-  avatar_progress: number
-  background_progress: number
-  inProgress: boolean
-}
+import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageSnackBarComponent } from '../../shared/components/message-snack-bar/message-snack-bar.component';
+import { File, User, Userss } from '../../shared/types';
 
 @Component({
   selector: 'app-edit-profile',
@@ -40,7 +35,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   interestCtrl = new FormControl();
   filteredInterests: Observable<string[]>;
-  //fruits: string[] = ['Lemon'];
   interests: string[] = [];
   allInterests: string[] = [];
   addOnBlur = true;
@@ -69,111 +63,17 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   isServerRespondedWithData: Promise<boolean>
 
+  showAvatarSpinner = false
+
+  showBackgroundSpinner = false
+
   constructor(private dataService: DataService,
     private authService: AuthService,
-    private formBuilder: FormBuilder) {
+    private formBuilder: FormBuilder,
+    private snackBar: MatSnackBar) {
     this.filteredInterests = this.interestCtrl.valueChanges.pipe(
       startWith(null),
       map((fruit: string | null) => fruit ? this._filter(fruit) : this.allInterests.slice()));
-  }
-
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    // Add our fruit
-    if ((value || '').trim()) {
-      this.interests.push(value.trim());
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
-
-    this.interestCtrl.setValue(null);
-  }
-
-  remove(interest: string): void {
-    const index = this.interests.indexOf(interest);
-
-    if (index >= 0) {
-      this.interests.splice(index, 1);
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.interests.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.interestCtrl.setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.allInterests.filter(interest => interest.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  async getUser() {
-    this.dataService.findByUsername(this.username).pipe(
-      //Display data into console log
-      tap(users => console.log('ree' + users)),
-      map((userData: Userss) => {
-        this.dataSource = userData
-
-        let avatar, background
-
-        if (this.dataSource.user.image !== null) {
-          this.dataSource.user.image.forEach(image => {
-            if (image.type === 'avatar') {
-              avatar = image.link
-            } else if (image.type === 'background') {
-              background = image.link
-            }
-          })
-        }
-
-        this.form.patchValue({
-          id: userData.user.id,
-          first_name: userData.user.first_name,
-          last_name: userData.user.last_name,
-          description: userData.user.description,
-          gender: userData.user.gender,
-          social_media: userData.user.social_media || {},
-          avatar: avatar,
-          background: background
-        })
-
-        this.interests = userData.user.interest
-
-        this.isServerRespondedWithData = Promise.resolve(true)
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-  }
-
-  update() {
-    // this.form.patchValue({
-    //   interest: this.interests
-    // })
-
-    this.interests.forEach(interest => {
-      this.aliases.push(this.formBuilder.control(interest));
-    })
-    this.dataService.updateUser(this.form.getRawValue()).pipe(
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-    this.aliases.clear()
-    this.interests = this.interests
-    console.log(this.interests)
-  }
-
-  get aliases() {
-    return this.form.get('interest') as FormArray;
-  }
-
-  addAlias() {
-    this.aliases.push(this.formBuilder.control(''));
   }
 
   uploadProfileAvatar() {
@@ -215,10 +115,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       this.uploadFile(type)
     }
   }
-
-  showAvatarSpinner = false
-
-  showBackgroundSpinner = false
 
   uploadFile(type: string) {
     const formData = new FormData()
@@ -262,7 +158,7 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         return of('Upload failed')
       })
     ).subscribe(async (event: any) => {
-      console.log(event)
+      //console.log(event)
       if (typeof event === 'object') {
         if (type === 'avatar') {
           this.form.patchValue({
@@ -278,6 +174,145 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         }
       }
     })
+  }
+
+  async getUser() {
+    this.dataService.findByUsername(this.username).pipe(
+      //Display data into console log
+      //tap(users => console.log('ree' + users)),
+      map((userData: Userss) => {
+        this.dataSource = userData
+
+        let avatar, background
+
+        if (this.dataSource.user.image !== null) {
+          this.dataSource.user.image.forEach(image => {
+            if (image.type === 'avatar') {
+              avatar = image.link
+            } else if (image.type === 'background') {
+              background = image.link
+            }
+          })
+        }
+
+        this.form.patchValue({
+          id: userData.user.id,
+          first_name: userData.user.first_name,
+          last_name: userData.user.last_name,
+          description: userData.user.description,
+          gender: userData.user.gender,
+          social_media: userData.user.social_media || {},
+          avatar: avatar,
+          background: background
+        })
+
+        if (userData.user.interest && userData.user.interest.length > 0) {
+          userData.user.interest.forEach(interest => {
+            this.aliases.push(this.formBuilder.control(interest))
+          })
+        }
+
+        this.interests = userData.user.interest
+
+        this.isServerRespondedWithData = Promise.resolve(true)
+      }),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
+  }
+
+  update() {
+    this.dataService.updateUser(this.form.getRawValue()).pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
+
+    this.snackBar.openFromComponent(MessageSnackBarComponent, {
+      duration: 7000,
+      data: {
+        message: "Saved modifications",
+        hasError: false
+      }
+    })
+
+    // Set form values as not changed
+    this.form.markAsPristine()
+  }
+
+  // Resend email confirmation link
+  resend() {
+    this.dataService.resendEmailConfirmationLink().pipe(
+      map((user: User) => {
+        if (user) {
+          console.log('Email confirmation link sent')
+
+          this.snackBar.openFromComponent(MessageSnackBarComponent, {
+            duration: 7000,
+            data: {
+              message: "Email confirmation link sent",
+              hasError: false
+            }
+          })
+        }
+      }),
+      catchError(async (err) => {
+        console.log(err)
+
+        console.log("Email confirmation not sent")
+
+        this.snackBar.openFromComponent(MessageSnackBarComponent, {
+          duration: 7000,
+          data: {
+            message: "We couldn't send your email confirmation",
+            hasError: true
+          }
+        })
+      }),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
+  }
+
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.aliases.push(this.formBuilder.control(value.trim()));
+
+      this.aliases.markAsDirty()
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.interestCtrl.setValue(null);
+  }
+
+  remove(i: number): void {
+    this.aliases.removeAt(i)
+
+    this.aliases.markAsDirty()
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.interests.push(event.option.viewValue);
+    this.fruitInput.nativeElement.value = '';
+    this.interestCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allInterests.filter(interest => interest.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  get aliases() {
+    return this.form.get('interest') as FormArray;
+  }
+
+  addAlias() {
+    this.aliases.push(this.formBuilder.control(''));
   }
 
   ngOnInit(): void {

@@ -16,8 +16,6 @@ export class AuthInterceptor implements HttpInterceptor {
       request = this.addToken(request, this.authService.getAccessToken());
     }
 
-    //console.log('Access token')
-
     return next.handle(request).pipe(catchError(error => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
         console.log('UnAuthorized')
@@ -26,13 +24,6 @@ export class AuthInterceptor implements HttpInterceptor {
         return throwError(error);
       }
     }));
-    // const access_token = 'nfnfnenejlfel'
-
-    // const newRequest = request.clone({
-    //   headers: request.headers.set('Authorization', `Bearer ${access_token}`)
-    // })
-
-    // return next.handle(newRequest);
   }
 
   private addToken(request: HttpRequest<any>, token: string) {

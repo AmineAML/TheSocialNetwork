@@ -4,8 +4,12 @@ function transformValue(doc, ret: { [key: string]: any }) {
     delete ret._id;
 }
 
-function generateLink() {
-    return Math.random().toString(36).replace('0.', '');
+export function generateLink() {
+    let link: string = ''
+
+    for (let i = 0; i < 9; i++) link += Math.random().toString(36).substr(2)
+
+    return link
 }
 
 export const UserLinkSchema = new mongoose.Schema(

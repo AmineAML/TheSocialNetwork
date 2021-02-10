@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
 
 @Component({
@@ -9,8 +8,6 @@ import { AuthService } from './core/services/auth.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-  title = 'site';
-
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
@@ -18,20 +15,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   username: string
 
-  userIsAuthenticated() {
-    this.authService.authenticatedUser().pipe(
-      map(async (username: string | null) => {
-        //this.username = username
+  emailNotConfirmedComponentRemove: boolean = true
 
-        console.log('Authenticated')
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
+  close(action: string) {
+    if (action === 'close') {
+      this.emailNotConfirmedComponentRemove = false
+    }
   }
 
   ngOnInit() {
-    //this.userIsAuthenticated()
-
     this.authService.isLoggedIn()
   }
 

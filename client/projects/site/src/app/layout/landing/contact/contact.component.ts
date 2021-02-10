@@ -1,100 +1,79 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
+import { catchError, map, takeUntil } from 'rxjs/operators';
+import { DataService } from '../../../core/services/data.service';
+import { MessageSnackBarComponent } from '../../../shared/components/message-snack-bar/message-snack-bar.component';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent implements OnInit {
-  nameFormControl = new FormControl('', [
-    //Validators.required,
-    Validators.required,
-  ]);
+export class ContactComponent implements OnInit, OnDestroy {
+  contactForm: FormGroup
 
-  emailFormControl = new FormControl('', [
-    //Validators.required,
-    Validators.email,
-  ]);
+  //Handle unsubscriptions
+  private ngUnsubscribe = new Subject()
 
-  subjectFormControl = new FormControl('', [
-    //Validators.required,
-    Validators.required,
-  ]);
+  isContactUsEmailSent: boolean
 
-  messageFormControl = new FormControl('', [
-    //Validators.required,
-    Validators.required,
-  ]);
-  
-  contactForm = new FormGroup({
-    name: new FormControl(''),
-    email: this.emailFormControl,
-    subject: new FormControl(''),
-    message: new FormControl(''),
-  });
+  constructor(private formBuilder: FormBuilder,
+              private dataService: DataService,
+              private snackBar: MatSnackBar) { }
 
-  submitFormPressedNotifyErrors = false;
+  submitContactEmail() {
+    this.dataService.sendContactEmail(this.contactForm.getRawValue()).pipe(
+      map((value) => {
+        console.log(value)
+        
+        if (value) {
+          this.isContactUsEmailSent = true
 
-  isRequired = false;
+          this.snackBar.openFromComponent(MessageSnackBarComponent, {
+            duration: 7000,
+            data: {
+              message: "You message is sent",
+              hasError: false
+            }
+          })
 
-  //Check if the input are fieled, don't submit if any of the inputs aren't filled
-  onSubmit() {
-    if (!this.contactForm.value.name ||!this.contactForm.value.email || !this.contactForm.value.subject || !this.contactForm.value.message) {
-      //Display an error popup about submission
-      this.nameFormControl;
-      this.emailFormControl;
-      this.subjectFormControl;
-      this.messageFormControl;
-      this.submitFormPressedNotifyErrors = true;
-      this.isRequired = true
-    }
-    else {
-      const name = this.contactForm.value.username;
-      const email = this.contactForm.value.email;
-      const subject = this.contactForm.value.username;
-      const message = this.contactForm.value.username;
-      console.log(name)
-      console.log(email)
-      console.log(subject)
-      console.log(message)
-      // this.authService.contact(name, email, subject, message).subscribe(data => console.log(data))
-    }
-  };
+          this.contactForm.reset()
+        }
+      }),
+      catchError(async (err) => {
+        // console.log(err)
 
-  email = new FormControl('', [Validators.required, Validators.email]);
+        this.isContactUsEmailSent = false
 
-  hide = true;
-
-  form: FormGroup;
-  public loginInvalid: boolean;
-  private formSubmitAttempt: boolean;
-  private returnUrl: string;
-
-  constructor(private fb: FormBuilder,
-    private authService: AuthService
-              /*private route: ActivatedRoute,
-              private router: Router,*/) { }
-
-  getErrorMessage() {
-    if (this.email.hasError('required')) {
-      return 'You must enter a value';
-    }
-
-    return this.email.hasError('email') ? 'Not a valid email' : '';
+        this.snackBar.openFromComponent(MessageSnackBarComponent, {
+          duration: 7000,
+          data: {
+            message: "We couldn't send your message",
+            hasError: true
+          }
+        })
+      }),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
   }
 
   ngOnInit(): void {
-    this.form = this.fb.group({
-      username: ['', Validators.email],
-      password: ['', Validators.required]
-    });
-
-    /*if (await this.authService.checkAuthenticated()) {
-      await this.router.navigate([this.returnUrl]);
-    }
-    */
+    this.contactForm = this.formBuilder.group({
+      name: [null, [Validators.required]],
+      email: [null, [
+        Validators.required,
+        Validators.email
+      ]],
+      subject: [null, [Validators.required]],
+      message: [null, [Validators.required]]
+    })
   }
 
+  ngOnDestroy() {
+    this.ngUnsubscribe.next()
+
+    this.ngUnsubscribe.complete()
+  }
 }

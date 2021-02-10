@@ -1,101 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { combineLatest, Observable, throwError } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, mapTo, mergeMap, tap } from 'rxjs/operators';
+import { ContactForm, ImageData, InterestData, ReportForm, User, UserData, UserProfileData } from '../../shared/types';
 
-export interface UserData {
-  message: string,
-  data: {
-    users: User[],
-    meta: Meta,
-    link: Link
-  },
-  errors: any
-}
-
-export interface UserProfileData {
-  message: string,
-  data: {
-    user: User,
-    meta: Meta,
-    link: Link
-  },
-  errors: any
-}
-
-export interface ImageData {
-  message: string,
-  data: {
-    images: Image[]
-  },
-  errors: any
-}
-
-export interface InterestData {
-  message: string,
-  data: {
-    interests: Interest[]
-  },
-  errors: any
-}
-
-export interface Interest {
-  name: string,
-  byNumberOfUsers: number,
-  createdAt: Date,
-  updatedAt: Date,
-  id: string
-}
-
-export interface Image {
-  link: string,
-  type: string,
-  user_id: string,
-  createdAt: Date,
-  updatedAt: Date,
-  id: string
-}
-
-export interface User {
-  username?: string
-  email?: string
-  interest?: Array<string>
-  first_name?: string
-  last_name?: string
-  description?: string
-  gender?: string
-  role?: string
-  social_media?: SocialMedia
-  is_confirmed?: boolean
-  createdAt?: Date
-  updatedAt?: Date
-  id?: string
-}
-
-export interface SocialMedia {
-  facebook: string
-  linkedin: string
-  twitter: string
-  tiktok: string
-  discord: string
-  instagram: string
-  youtube: string
-}
-
-export interface Meta {
-  itemCount: number
-  totalItems: number
-  itemsPerPage: number
-  totalPages: number
-  currentPage: number
-}
-
-export interface Link {
-  first: string
-  previous: string
-  next: string
-  last: string
-}
 
 @Injectable({
   providedIn: 'root'
@@ -104,19 +12,18 @@ export class DataService {
 
   constructor(private http: HttpClient) { }
 
-  findByQuery(query: string, page: number, size: number): Observable</*UserData*/any> {
+  findByQuery(query: string, page: number, size: number): Observable<any> {
     let params = new HttpParams()
 
     params = params.append('search_term', String(query))
 
     params = params.append('page', String(page))
-    
+
     params = params.append('limit', String(size))
 
-    return /*const ree = */this.http.get('/api/v1/users/query', { params }).pipe(
+    return this.http.get('/api/v1/users/query', { params }).pipe(
       //tap(users => console.log(users)),
       mergeMap((resultFromRequest1: UserData) => this.findAllImagesByUsersIds(resultFromRequest1.data.users).pipe(
-        tap(imgs => console.log(`Avatars and backgrounds: ${imgs}`)),
         map((resultFromRequest2: ImageData) => {
           // use resultFromRequest1 or 2
           const users = resultFromRequest1.data.users.map(user => ({
@@ -131,40 +38,19 @@ export class DataService {
             link: resultFromRequest1.data.link,
             meta: resultFromRequest1.data.meta
           }
-          
-          /*&& resultFromRequest1.data.meta && resultFromRequest1.data.link*/
-
-          /*const mergeById = ([t, s]) => t.map(p => Object.assign({}, p, s.find(q => p.id === q.id)));
-
-          const all$ = combineLatest(resultFromRequest1.data.users, resultFromRequest2.data.images).pipe(
-            map(mergeById)
-          );
-          */
         }))
       ),
       catchError(err => throwError(err))
     );
-
-    //console.log(`Multiple observables: ${ree}`)
-
-    //return ree
-
-    /*return this.http.get('/api/v1/users/query', { params }).pipe(
-      map((userData: UserData) => userData),
-      catchError(err => throwError(err))
-    )
-    */
   }
 
-  findByUsername(username: string): Observable</*UserData*/any> {
+  findByUsername(username: string): Observable<any> {
     return this.http.get(`/api/v1/users/user/username/${username}`).pipe(
       //tap(users => console.log(users)),
       mergeMap((resultFromRequest1: UserProfileData) => this.findAllImagesByUsersIds(resultFromRequest1.data.user).pipe(
-        tap(imgs => {
-          console.log(`Avatars and backgrounds: ${imgs}`)
-
-          console.log(imgs)
-        }),
+        // tap(imgs => {
+        //   console.log(imgs)
+        // }),
         map((resultFromRequest2: ImageData) => {
           // use resultFromRequest1 or 2
           const user = {
@@ -177,47 +63,34 @@ export class DataService {
             link: resultFromRequest1.data.link,
             meta: resultFromRequest1.data.meta
           }
-          
-          /*&& resultFromRequest1.data.meta && resultFromRequest1.data.link*/
-
-          /*const mergeById = ([t, s]) => t.map(p => Object.assign({}, p, s.find(q => p.id === q.id)));
-
-          const all$ = combineLatest(resultFromRequest1.data.users, resultFromRequest2.data.images).pipe(
-            map(mergeById)
-          );
-          */
         }))
       ),
       catchError(err => throwError(err))
     );
-
-    // return this.http.get(`/api/v1/users/user/username/${username}`).pipe(
-    //   map((userData: UserData) => userData),
-    //   catchError(err => throwError(err))
-    // )
   }
 
   findAllImagesByUsersIds(users: User | User[]): Observable<ImageData> {
     console.log(`Images by users ids profiles: ${users}`)
 
-    let payload = new HttpParams()
+    if (users) {
+      let payload = new HttpParams()
 
-    if (Array.isArray(users)) {
-      users.forEach(user => {
-        payload = payload.append('usersIds', user.id)
-  
-        console.log(user.id)
-      })
+      if (Array.isArray(users)) {
+        users.forEach(user => {
+          payload = payload.append('usersIds', user.id)
+        })
+      } else {
+        payload = payload.append('usersIds', users.id)
+      }
+
+      return this.http.post(`/api/v1/images/images`, payload).pipe(
+        map((imageData: ImageData) => imageData),
+        catchError(err => throwError(err))
+      )
     } else {
-      payload = payload.append('usersIds', users.id)
+      let noneImageData: ImageData
+      return of(noneImageData)
     }
-
-    console.log(`Payload: ${payload}`)
-    
-    return this.http.post(`/api/v1/images/images`, payload).pipe(
-      map((imageData: ImageData) => imageData),
-      catchError(err => throwError(err))
-    )
   }
 
   findImagesByUsersIds(users_ids: Array<string>): Observable<ImageData> {
@@ -255,5 +128,61 @@ export class DataService {
       reportProgress: true,
       observe: 'events'
     })
+  }
+
+  confirmEmailByLink(link: string): Observable<any> {
+    return this.http.get(`/api/v1/users/confirm/${link}`).pipe(
+      map((isEmailConfirmed) => {
+        // Email confirmed
+        console.log(isEmailConfirmed)
+        return true
+      }),
+      // Email not confirmed
+      catchError(err => {
+        if (err instanceof HttpErrorResponse && err.status === 404) {
+          //console.log("Email not confirmed")
+          return throwError(err)
+        } else {
+          return throwError(err)
+        }
+      })
+    );
+  }
+
+  resendEmailConfirmationLink(): Observable<User> {
+    return this.http.put('/api/v1/users/user/confirm/email', {}).pipe(
+      tap(confirmationEmailSent => {
+        console.log(confirmationEmailSent)
+
+        return true
+      }),
+      catchError(error => {
+        return throwError(error)
+      }));
+  }
+
+  reportUserProfile(reportForm: ReportForm) {
+    return this.http.post<any>('/api/v1/reports/report', reportForm).pipe(
+      tap(reporting => {
+        console.log(reporting)
+      }),
+      mapTo(true),
+      catchError(error => {
+        const err = JSON.stringify(error.error.errors)
+        alert(err);
+        return of(false);
+      }));
+  }
+
+  sendContactEmail(contactForm: ContactForm) {
+    return this.http.post<any>('/api/v1/mailer/contact', contactForm).pipe(
+      tap(contactEmailSent => {
+        console.log(contactEmailSent)
+
+        return true
+      }),
+      catchError(error => {
+        return throwError(error)
+      }));
   }
 }

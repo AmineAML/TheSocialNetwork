@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
-import { DataService, InterestData } from '../../../core/services/data.service';
+import { DataService } from '../../../core/services/data.service';
+import { InterestData } from '../../../shared/types';
 
 @Component({
   selector: 'app-common',
@@ -20,7 +21,7 @@ export class CommonComponent implements OnInit, OnDestroy {
   async getInterests() {
     this.dataService.findAllInterestsSorted().pipe(
       //Display data into console log
-      //tap(interests => console.log('ree' + interests)),
+      //tap(interests => console.log(interests)),
       map((interestData: InterestData) => {
         this.dataSource = interestData
 

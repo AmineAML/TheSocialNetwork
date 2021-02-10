@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
 import { Subject } from 'rxjs';
-import { filter, map, takeUntil, tap } from 'rxjs/operators';
-import { Userss } from '../../../layout/profile/profile.component';
+import { map, takeUntil } from 'rxjs/operators';
+import { MessageSnackBarComponent } from '../../../shared/components/message-snack-bar/message-snack-bar.component';
+import { Userss } from '../../../shared/types';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
 
@@ -30,7 +32,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(private authService: AuthService,
     private router: Router,
-    private dataService: DataService) { }
+    private dataService: DataService,
+    private snackBar: MatSnackBar) { }
 
   async getUser() {
     this.authService.authenticatedUser().pipe(
@@ -39,24 +42,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         await this.getUserProfile()
 
-        //console.log(`Logged in ${this.username}`)
-
         this.authService.loggedUsername = this.username
-
-        //this.loggedIn = true
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
-
-    //console.log(this.username)
-
-    //setTimeout(() => console.log(this.username), 7000)
   }
 
   async getUserProfile() {
     this.dataService.findByUsername(this.username).pipe(
-      //Display data into console log
-      //tap(users => console.log('ree' + users)),
       map((userData: Userss) => {
         this.dataSource = userData
 
@@ -64,12 +57,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
-
-    //console.log(this.dataSource)
-
-    //setTimeout(() => console.log(this.dataSource), 7000)
-
-    //console.log(this.username)
   }
 
   isAuthenicated() {
@@ -77,8 +64,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       takeUntil(this.ngUnsubscribe)
     ).subscribe(async loggedIn => {
       if (loggedIn) {
-        console.log(loggedIn)
-
         await this.getUser()
       } else {
         this.username = null
@@ -106,6 +91,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.isServerRespondedWithData = Promise.resolve(false)
 
     this.router.navigate(['/'])
+
+    this.snackBar.openFromComponent(MessageSnackBarComponent, {
+      duration: 7000,
+      data: {
+        message: "You've been logged out",
+        hasError: false
+      },
+      horizontalPosition: "end",
+      verticalPosition: "top"
+    })
   }
 
   async ngOnInit(): Promise<void> {

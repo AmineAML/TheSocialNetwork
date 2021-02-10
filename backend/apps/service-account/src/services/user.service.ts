@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { IUser } from '../interfaces/user.interface';
 import { IUserLink } from '../interfaces/user-link.interface';
 import { IInterest } from '../interfaces/interest.interface';
+import { generateLink } from '../schemas/user-link.schema';
 
 @Injectable()
 export class UserService {
@@ -102,7 +103,9 @@ export class UserService {
     }
 
     public async updateUserById(id: string, userParams: { is_confirmed: boolean }): Promise<IUser> {
-        return this.userModel.updateOne({ _id: id }, userParams).exec();
+        //return this.userModel.updateOne({ _id: id }, userParams).exec();
+        
+        return this.userModel.findOneAndUpdate({ _id: id }, { is_confirmed: userParams.is_confirmed }, { new: true, upsert: true })
     }
 
     /*public async searchUsersByCategory(category: number[]): Promise<IUser[]> {
@@ -152,6 +155,10 @@ export class UserService {
         return await userLinkModel.save();
     }
 
+    public async regenerateUserLink(id: string): Promise<IUserLink> {
+       return this.userLinkModel.findOneAndUpdate({ user_id: id }, { link: generateLink() }, { new: true, upsert: true })
+    }
+
     public async getUserLink(link: string): Promise<IUserLink[]> {
         return this.userLinkModel.find({ link, is_used: false }).exec();
     }
@@ -161,7 +168,7 @@ export class UserService {
     }
 
     public getConfirmationLink(link: string): string {
-        const emailConfirmationLink = `${this.configService.get('BASE_URL')}/users/confirm/${link}`
+        const emailConfirmationLink = `${this.configService.get('BASE_URL')}/confirm_email/${link}`
 
         console.log(emailConfirmationLink)
         

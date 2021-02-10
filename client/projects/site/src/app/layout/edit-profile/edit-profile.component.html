@@ -5,7 +5,7 @@
             <h3 class="flex text-3xl">Avatar</h3>
             <figure class="md:flex rounded-xl p-8 w-96">
                 <img class="w-32 h-32 rounded-full mx-auto"
-                    [src]="form.get('avatar').value ? form.get('avatar').value : './../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
+                    [src]="form.get('avatar').value ? form.get('avatar').value : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpgg'"
                     alt="Avatar" *ngIf="!showAvatarSpinner">
                 <mat-spinner *ngIf="showAvatarSpinner"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
@@ -78,11 +78,13 @@
                         <mat-chip-list #chipList>
                         </mat-chip-list>
                     </div>
-                    <mat-chip *ngFor="let interest of interests" [selectable]="selectable" [removable]="removable"
-                        (removed)="remove(interest)" class="mt-3">
-                        {{interest}}
+                    <ng-container formArrayName="interest">
+                        <mat-chip *ngFor="let interest of form.get('interest')['controls']; let i = index" [selectable]="selectable" [removable]="removable"
+                        (removed)="remove(i)" class="mt-3">
+                        {{interest.value}}
                         <fa-icon [icon]="faTimes" *ngIf="removable" matChipRemove></fa-icon>
                     </mat-chip>
+                    </ng-container>
                     <p>Social media</p>
                     <div class="mb-7" formGroupName="social_media">
                         <div class="flex">
@@ -152,7 +154,7 @@
                     <div class="flex">
                         <button
                             class="py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded m-auto"
-                            type="submit">Save</button>
+                            type="submit" [disabled]="!form.dirty">Save</button>
                     </div>
                 </form>
 
@@ -183,9 +185,7 @@
         <div class="p-10">
             <h3 class="flex text-2xl">Email confirmation</h3>
             <p>Haven't you received your confirmation link, click this button to resend a new one</p>
-            <a href="#"
-                class="inline-block py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded mb-7">Resend
-                link</a>
+            <button class="inline-block py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded mb-7" (click)="resend()">Resend link</button>
 
             <mat-divider></mat-divider>
         </div>
@@ -195,10 +195,7 @@
             <h3 class="flex text-2xl">Request your data</h3>
             <p>You have the right to a copy of your data with us, click below and we'll prepare and email them to your
                 inbox</p>
-            <a href="#"
-                class="inline-block py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded mb-7">Send
-                me
-                a copy of my data in this platform</a>
+            <button class="inline-block py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded mb-7">Send me a copy of my data in this platform</button>
 
             <mat-divider></mat-divider>
         </div>
@@ -207,9 +204,7 @@
         <div class="p-10">
             <h3 class="flex text-2xl">Delete your account</h3>
             <p>Once you delete your account, <strong>there's no going back. Please be certain.</strong></p>
-            <a href="#"
-                class="inline-block py-3 px-6 text-lg bg-red-700 text-red-100 hover:bg-red-300 hover:text-red-700 rounded">Delete
-                account</a>
+            <button class="inline-block py-3 px-6 text-lg bg-red-700 text-red-100 hover:bg-red-300 hover:text-red-700 rounded">Delete account</button>
         </div>
     </div>
 </div>

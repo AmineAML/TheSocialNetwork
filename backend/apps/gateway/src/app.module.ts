@@ -6,6 +6,7 @@ import { ReportController } from './report.controller';
 import { ImageController } from './image.controller';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
+import { MailerController } from './mailer.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { RolesGuard } from './guards/roles.guard';
   controllers: [
     AccountsController, 
     ReportController, 
-    ImageController
+    ImageController,
+    MailerController
   ],
   providers: [
     ConfigService,
@@ -76,6 +78,20 @@ import { RolesGuard } from './guards/roles.guard';
         }
         console.log(authServiceOptions)
         return ClientProxyFactory.create(authServiceOptions)
+      },
+      inject: [ConfigService]
+    },
+    {
+      provide: 'MAILER_SERVICE',
+      useFactory: (configService: ConfigService) => {
+        const mailerServiceOptions: ClientOptions = {
+          options: {
+            url: configService.get<string>('NODE_ENV') === 'production' ? configService.get('REDIS_PROD') : configService.get<string>('REDIS_ACCOUNT_SERVICE_URL')
+          },
+          transport: Transport.REDIS
+        }
+        console.log(mailerServiceOptions)
+        return ClientProxyFactory.create(mailerServiceOptions)
       },
       inject: [ConfigService]
     }

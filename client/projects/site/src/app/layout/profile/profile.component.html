@@ -9,7 +9,7 @@
                         <fa-icon [icon]="faEllipsisH"></fa-icon>
                     </button>
                     <mat-menu #menu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
-                        <button mat-menu-item>Report</button>
+                        <button mat-menu-item (click)="reportByDialog()">Report</button>
                     </mat-menu>
                 </div>
                 <div class="relative" *ngIf="image.type !== 'avatar' && image.type !== 'background'">
@@ -18,7 +18,7 @@
                         <fa-icon [icon]="faEllipsisH"></fa-icon>
                     </button>
                     <mat-menu #menu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
-                        <button mat-menu-item>Report</button>
+                        <button mat-menu-item (click)="reportByDialog()">Report</button>
                     </mat-menu>
                 </div>
             </ng-container>
@@ -30,7 +30,7 @@
                     <fa-icon [icon]="faEllipsisH"></fa-icon>
                 </button>
                 <mat-menu #menu="matMenu" yPosition="below" xPosition="before" [overlapTrigger]="false">
-                    <button mat-menu-item>Report</button>
+                    <button mat-menu-item (click)="reportByDialog()">Report</button>
                 </mat-menu>
             </div>
         </ng-container>
@@ -48,11 +48,11 @@
                                 <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
                                     <ng-container *ngFor="let image of dataSource.user.image">
                                         <span class="rounded-full p-1 inline-block bg-yellow-500" *ngIf="image.type === 'avatar'">
-                                            <img [src]="image.link ? image.link : './../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg'"
+                                            <img [src]="image.link ? image.link : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'"
                                                 alt="Logo" class="w-32 h-32 rounded-full">
                                         </span>
                                         <span class="rounded-full p-1 inline-block bg-yellow-500" *ngIf="image.type !== 'avatar' && image.type !== 'background'">
-                                            <img src="./../../../assets/img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
+                                            <img src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
                                                 alt="Logo" class="w-32 h-32 rounded-full">
                                         </span>
                                     </ng-container>
@@ -61,7 +61,7 @@
                                 <ng-container *ngIf="dataSource.user.image === null">
                                     <ng-container>
                                         <span class="rounded-full p-1 inline-block bg-yellow-500">
-                                            <img src="./../../../assets//img/1815212332_preview_istockphoto-590147780-612x612 (1).jpg"
+                                            <img src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
                                                 alt="Logo" class="w-32 h-32 rounded-full">
                                         </span>
                                     </ng-container>
@@ -129,9 +129,14 @@
                         </div>
                     </div>
                     <div class="flex">
-                        <div class="md:px-7">
-                            <span class="text-yellow-700">Shares with you X interests</span>
+                        <div class="md:px-7" *ngIf="similarInterests > 0; else noneSharedInterests">
+                            <span class="text-yellow-700">Shares with you {{similarInterests}} interests</span>
                         </div>
+                        <ng-template #noneSharedInterests>
+                            <div class="md:px-7">
+                                <span class="text-yellow-700">No shared interests</span>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
 

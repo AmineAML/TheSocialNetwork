@@ -1,0 +1,14 @@
+<div *ngIf="!isServerRespondedWithData">
+    <!-- Display loading spinner -->
+    <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="isServerRespondedWithData">
+    <!-- Email confirmed -->
+    <div *ngIf="isEmailConfirmed; else notConfirmed">
+        Your email has been confirmed
+    </div>
+    <ng-template #notConfirmed>
+        Your email was not confirmed
+    </ng-template>
+</div>

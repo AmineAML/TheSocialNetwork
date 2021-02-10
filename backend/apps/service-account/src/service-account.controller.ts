@@ -74,7 +74,7 @@ export class ServiceAccountController {
                 subject: 'Email confirmation',
                 text: "and easy to do anywhere, even with Node.js",
                 html: `<center>
-                <b>Hi there, please confirm your email to unlock the full features of The Social Network.</b><br>
+                <b>Hi there, please confirm your email to unlock the full features of ${this.userService.getAppName()}.</b><br>
                 Use the following link for this.<br>
                 <a href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
                 If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
@@ -83,7 +83,7 @@ export class ServiceAccountController {
               .toPromise();
           } catch (e) {
             console.log(e)
-            
+
             result = {
               status: HttpStatus.PRECONDITION_FAILED,
               message: 'user_create_precondition_failed',
@@ -304,9 +304,7 @@ export class ServiceAccountController {
   }
 
   @MessagePattern('user_confirm')
-  public async confirmUser(confirmParams: {
-    link: string;
-  }): Promise<IUserConfirmResponse> {
+  public async confirmUser(confirmParams: { link: string }): Promise<IUserConfirmResponse> {
     let result: IUserConfirmResponse;
 
     if (confirmParams) {
@@ -326,12 +324,12 @@ export class ServiceAccountController {
           .send('mail_send_welcome_tutorial', {
             to: updatedUser.email,
             from: this.userService.getAppEmail(),
-            subject: `Welcome to ${this.userService.getAppName}`,
+            subject: `Welcome to ${this.userService.getAppName()}`,
             html: `<center>
-          Dear ${updatedUser.first_name} ${updatedUser.last_name},
-          <b>Thank you for joining ${this.userService.getAppName}, we are happy to have you!<br>
+          Dear ${updatedUser.username},
+          <b>Thank you for joining ${this.userService.getAppName()}, we are happy to have you as our member!<br>
           With us you can make new friends, chat and add people to your network<br>
-          ${this.userService.getAppName} team
+          ${this.userService.getAppName()} team
           </center>`,
           })
           .toPromise();
@@ -382,4 +380,54 @@ export class ServiceAccountController {
     return result;
   }
 
+    //Resend email confirmation link
+    @MessagePattern('user_regenerate_email_confirmation_link')
+    public async ReconfirmEmail(id: string): Promise<IUserUpdateResponse> {
+      let result: IUserUpdateResponse;
+  
+      if (id) {
+        try {
+          const userLink = await this.userService.regenerateUserLink(id);
+          const user = await this.userService.searchUserById(id)
+          result = {
+            status: HttpStatus.CREATED,
+            message: 'regenerate_email_confirmation_link_success',
+            user: user,
+            errors: null,
+          };
+          this.mailerServiceClient
+            .send('mail_send_confirm_email', {
+              to: user.email,
+              from: this.userService.getAppEmail(),
+              subject: 'Email confirmation',
+              text: "and easy to do anywhere, even with Node.js",
+              html: `<center>
+                <b>Hi there, please confirm your email to unlock the full features of ${this.userService.getAppName()}.</b><br>
+                Use the following link for this.<br>
+                <a href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
+                If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
+                </center>`,
+            })
+            .toPromise();
+        } catch (e) {
+          console.log(e)
+  
+          result = {
+            status: HttpStatus.PRECONDITION_FAILED,
+            message: 'regenerate_email_confirmation_link_precondition_failed',
+            user: null,
+            errors: e.errors,
+          };
+        }
+      } else {
+        result = {
+          status: HttpStatus.BAD_REQUEST,
+          message: 'regenerate_confirmation_link_bad_request',
+          user: null,
+          errors: null,
+        };
+      }
+  
+      return result;
+    }
 }

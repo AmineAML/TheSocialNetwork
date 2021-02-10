@@ -11,6 +11,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { MemberGuard } from './guards/member.guard';
 import { AuthService } from './services/auth.service';
 import { EmailNotConfirmedComponent } from './components/email-not-confirmed/email-not-confirmed.component';
+import { DialogReportComponent } from './components/dialog-report/dialog-report.component';
 
 
 
@@ -18,7 +19,8 @@ import { EmailNotConfirmedComponent } from './components/email-not-confirmed/ema
   declarations: [
     HeaderComponent,
     FooterComponent,
-    EmailNotConfirmedComponent
+    EmailNotConfirmedComponent,
+    DialogReportComponent
   ],
   imports: [
     CommonModule,

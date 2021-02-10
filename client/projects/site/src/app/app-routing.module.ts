@@ -27,6 +27,9 @@ const routes: Routes = [
     loadChildren: () => import('./layout/search-result/search-result.module').then(m => m.SearchResultModule), 
     canActivate: [MemberGuard]
   },
+  { path: 'confirm_email/:link', 
+    loadChildren: () => import('./layout/email-confirmed/email-confirmed.module').then(m => m.EmailConfirmedModule), 
+  },
   //{ path: '', redirectTo: 'landing', pathMatch: 'full' },
   //{ path: '404', loadChildren: () => import('./layout/error/error.module').then(m => m.ErrorModule) },
   //{ path: '**', redirectTo: '404' }

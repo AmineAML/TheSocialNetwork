@@ -3,24 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { catchError, map, mapTo, tap } from 'rxjs/operators'
-import { UserProfileData } from './data.service'
-
-export interface LoginForm {
-  email: string
-  password: string
-}
-
-//Not all properties must specify them
-export interface RegisterForm {
-  username?: string
-  email?: string
-  password?: string
-}
-
-export class Tokens {
-  access_token: string;
-  refresh_token: string;
-}
+import { LoginForm, RegisterForm, UserProfileData, Tokens } from '../../shared/types';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +15,9 @@ export class AuthService {
 
   private loggedIn: Subject<boolean> = new ReplaySubject<boolean>(1);
 
-  private ModifyAvatarLink: Subject<boolean> = new ReplaySubject<boolean>(1);
+  private modifyAvatarLink: Subject<boolean> = new ReplaySubject<boolean>(1);
+  
+  private confirmedEmailLink: Subject<boolean> = new ReplaySubject<boolean>(1);
 
   constructor(private http: HttpClient,
     private router: Router) { }
@@ -82,37 +67,6 @@ export class AuthService {
         alert(err);
         return of(false);
       }));
-    //map(user => user)
-  }
-
-  loginStatusChange(): Observable<boolean> {
-    return this.loggedIn.asObservable();
-  }
-
-  public getAvatarLink(): Observable<boolean> {
-
-    return this.ModifyAvatarLink.asObservable();
-  }
-
-  public setAvatarLink(value: boolean): void {
-
-    this.ModifyAvatarLink.next(value);
-  }
-
-  authenticatedUser() {
-    if (this.isLoggedIn) {
-      return this.http.get<any>('/api/v1/users/user', { headers: { 'authorization': this.getAccessToken() } }).pipe(
-        map((user: UserProfileData) => {
-          return user.data.user.username
-        }),
-        //mapTo(true),
-        catchError(error => {
-          //alert(error.error);
-          return of(false);
-        }));
-    }
-
-    return null
   }
 
   refreshToken() {
@@ -130,11 +84,45 @@ export class AuthService {
     );
   }
 
-  private storeAccessToken(access_token: string) {
-    localStorage.setItem(this.ACCESS_TOKEN, access_token);
+  authenticatedUser() {
+    if (this.isLoggedIn) {
+      return this.http.get<any>('/api/v1/users/user', { headers: { 'authorization': this.getAccessToken() } }).pipe(
+        map((user: UserProfileData) => {
+          return user.data.user.username
+        }),
+        catchError(error => {
+          //alert(error.error);
+          return of(false);
+        }));
+    }
+
+    return null
   }
 
-  isLoggedIn() {
+  public loginStatusChange(): Observable<boolean> {
+    return this.loggedIn.asObservable();
+  }
+
+  public getAvatarLink(): Observable<boolean> {
+
+    return this.modifyAvatarLink.asObservable();
+  }
+
+  public setAvatarLink(value: boolean): void {
+
+    this.modifyAvatarLink.next(value);
+  }
+
+  public getConfirmedEmailLink(): Observable<boolean> {
+    return this.confirmedEmailLink.asObservable();
+  }
+
+  public setConfirmedEmailLink(value: boolean): void {
+
+    this.confirmedEmailLink.next(value);
+  }
+
+  public isLoggedIn() {
     let loggedIn
 
     loggedIn = !!this.getAccessToken();
@@ -148,8 +136,16 @@ export class AuthService {
     return false
   }
 
-  getAccessToken() {
+  private storeAccessToken(access_token: string) {
+    localStorage.setItem(this.ACCESS_TOKEN, access_token);
+  }
+
+  public getAccessToken() {
     return localStorage.getItem(this.ACCESS_TOKEN);
+  }
+
+  public invalidRefreshToken() {
+    this.doLogoutUser()
   }
 
   private getRefreshToken() {
@@ -172,10 +168,6 @@ export class AuthService {
     this.router.navigate(['/login'])
   }
 
-  invalidRefreshToken() {
-    this.doLogoutUser()
-  }
-
   private doLoginUser(tokens: Tokens) {
     this.storeTokens(tokens);
   }
@@ -184,14 +176,4 @@ export class AuthService {
     localStorage.setItem(this.ACCESS_TOKEN, tokens.access_token);
     localStorage.setItem(this.REFRESH_TOKEN, tokens.refresh_token);
   }
-
-  // login(loginForm: LoginForm) {
-  //   return this.http.post<any>('/api/v1/users/login', { email: loginForm.email, password: loginForm.password }).pipe(
-  //     map((data) => {
-  //       console.log(data.data.access_token)
-  //       localStorage.setItem('the-social-network', data.data.access_token)
-  //       return data
-  //     })
-  //   )
-  // }
 }

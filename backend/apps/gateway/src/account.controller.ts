@@ -28,6 +28,9 @@ import { request, Response } from 'express';
 import { GetInterestAllResponseDto } from './interfaces/interest/dto/get-interest-all-response.dto';
 import { IServiceUserGetInterestAllResponse } from './interfaces/interest/service-account-get-interest-all-response.interface';
 import { UserIsUserGuard } from './guards/user-is-user.guard';
+import { ContactUsDto } from './interfaces/mailer/dto/contact-us.dto';
+import { ContactUsResponseDto } from './interfaces/mailer/dto/contact-us-response.dto';
+import { IServiceContactUsResponse } from './interfaces/mailer/service-mailer-respone.interface';
 
 @Controller('users')
 export class AccountsController {
@@ -117,8 +120,8 @@ export class AccountsController {
   }
 
   //Authenticated user data from JWT token
-  @Get('user')
   @UseGuards(AuthGuard)
+  @Get('user')
   public async getUserByToken(@Req() request: IAuthorizedRequest): Promise<GetUserByTokenResponseDto> {
     //console.log(request)
     const userInfo = request.user;
@@ -180,9 +183,9 @@ export class AccountsController {
   }
 
   //Users by query search of interests
-  @Get('query')
   @hasRoles(Role.User, Role.Admin)
   @UseGuards(AuthGuard, /*RolesGuard*/)
+  @Get('query')
   public async getUsersByQuery(@Query('search_term') search_term: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<GetUsersByQueryResponseDto> {
     //page is either a number specified by the user or default to 1, and same to limit that either specified by the user or default to 10
     //limit is max to 100 items per page, if the user specified more than that, default to 100 else what the user specified
@@ -356,13 +359,33 @@ export class AccountsController {
   @Get('interests')
   public async getTopInterests(): Promise<GetInterestAllResponseDto> {
     const interestResponse: IServiceUserGetInterestAllResponse = await this.accountServiceClient
-    .send('interest_get_all', {})
-    .toPromise();
+      .send('interest_get_all', {})
+      .toPromise();
 
     return {
       message: interestResponse.message,
       data: {
         interests: interestResponse.interests,
+      },
+      errors: null,
+    };
+  }
+
+  //Resend confirmation email link
+  @UseGuards(AuthGuard)
+  @Put('user/confirm/email')
+  public async regenerateEmailConfirmationLink(@Req() request: IAuthorizedRequest): Promise<UpdateUserResponseDto> {
+    //console.log(request)
+    const userInfo = request.user;
+
+    const userResponse: IServiceUserGetByIdResponse = await this.accountServiceClient
+      .send('user_regenerate_email_confirmation_link', userInfo.id)
+      .toPromise();
+
+    return {
+      message: userResponse.message,
+      data: {
+        user: userResponse.user,
       },
       errors: null,
     };
