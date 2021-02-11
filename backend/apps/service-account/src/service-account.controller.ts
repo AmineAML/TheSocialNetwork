@@ -72,11 +72,11 @@ export class ServiceAccountController {
                 to: createdUser.email,
                 from: this.userService.getAppEmail(),
                 subject: 'Email confirmation',
-                text: "and easy to do anywhere, even with Node.js",
+                text: "Happy to have you as a member, confirm your email!",
                 html: `<center>
                 <b>Hi there, please confirm your email to unlock the full features of ${this.userService.getAppName()}.</b><br>
                 Use the following link for this.<br>
-                <a href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
+                <a clicktracking="off" href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
                 If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
                 </center>`,
               })
@@ -273,7 +273,7 @@ export class ServiceAccountController {
 
       console.log(usersResponse.users)
 
-      if (usersResponse.users) {
+      if (usersResponse.users && usersResponse.users.length > 0) {
         result = {
           status: HttpStatus.OK,
           message: 'users_get_by_id_query',
@@ -325,6 +325,7 @@ export class ServiceAccountController {
             to: updatedUser.email,
             from: this.userService.getAppEmail(),
             subject: `Welcome to ${this.userService.getAppName()}`,
+            text: "The Social Network team welcomes you!",
             html: `<center>
           Dear ${updatedUser.username},
           <b>Thank you for joining ${this.userService.getAppName()}, we are happy to have you as our member!<br>
@@ -400,11 +401,11 @@ export class ServiceAccountController {
               to: user.email,
               from: this.userService.getAppEmail(),
               subject: 'Email confirmation',
-              text: "and easy to do anywhere, even with Node.js",
+              text: "Happy to have you as a member, confirm your email!",
               html: `<center>
                 <b>Hi there, please confirm your email to unlock the full features of ${this.userService.getAppName()}.</b><br>
                 Use the following link for this.<br>
-                <a href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
+                <a clicktracking="off" href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
                 If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
                 </center>`,
             })

@@ -27,26 +27,39 @@ export class DataService {
         map((resultFromRequest2: ImageData) => {
           // use resultFromRequest1 or 2
 
-          let users
+          let users = null
+
+          let res: any
           
-          if (resultFromRequest2.data.images && resultFromRequest2.data.images.length > 0) {
-            users = resultFromRequest1.data.users.map(user => ({
-              ...user,
-              image: resultFromRequest2.data.images.filter(
-                image => image.user_id === user.id
-              )
-            }))
+          if (resultFromRequest1.data.users !== null) {
+            if (resultFromRequest2.data.images !== null) {
+              users = resultFromRequest1.data.users.map(user => ({
+                ...user,
+                image: resultFromRequest2.data.images.filter(
+                  image => image.user_id === user.id
+                )
+              }))
+            } else {
+              users = resultFromRequest1.data.users.map(user => ({
+                ...user,
+                image: null
+              }))
+            }
+
+            res = {
+              users,
+              link: resultFromRequest1.data.link,
+              meta: resultFromRequest1.data.meta
+            }
           } else {
-            users = resultFromRequest1.data.users.map(user => ({
-              ...user
-            }))
+            res = {
+              users,
+              link: null,
+              meta: null
+            }
           }
 
-          return {
-            users,
-            link: resultFromRequest1.data.link,
-            meta: resultFromRequest1.data.meta
-          }
+          return res
         }))
       ),
       catchError(err => throwError(err))
@@ -62,16 +75,38 @@ export class DataService {
         // }),
         map((resultFromRequest2: ImageData) => {
           // use resultFromRequest1 or 2
-          const user = {
-            ...resultFromRequest1.data.user,
-            image: resultFromRequest2.data.images
+
+          let user = null
+
+          let res: any
+          
+          if (resultFromRequest1.data.user !== null) {
+            if (resultFromRequest2.data.images !== null) {
+              user = {
+                ...resultFromRequest1.data.user,
+                image: resultFromRequest2.data.images
+              }
+            } else {
+              user = {
+                ...resultFromRequest1.data.user,
+                image: null
+              }
+            }
+
+            res = {
+              user,
+              link: resultFromRequest1.data.link,
+              meta: resultFromRequest1.data.meta
+            }
+          } else {
+            res = {
+              user,
+              link: null,
+              meta: null
+            }
           }
 
-          return {
-            user,
-            link: resultFromRequest1.data.link,
-            meta: resultFromRequest1.data.meta
-          }
+          return res
         }))
       ),
       catchError(err => throwError(err))
@@ -79,7 +114,7 @@ export class DataService {
   }
 
   findAllImagesByUsersIds(users: User | User[]): Observable<ImageData> {
-    if (users) {
+    if (users !== null) {
       let payload = new HttpParams()
 
       if (Array.isArray(users)) {

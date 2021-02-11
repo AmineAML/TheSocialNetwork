@@ -35,6 +35,8 @@ export class EmailNotConfirmedComponent implements OnInit, OnDestroy {
     ).subscribe(async loggedIn => {
       if (loggedIn) {
         await this.getUser()
+      } else {
+        this.isServerRespondedWithData = Promise.resolve(false)
       }
     });
   }

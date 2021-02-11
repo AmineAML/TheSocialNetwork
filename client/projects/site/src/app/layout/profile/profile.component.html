@@ -1,5 +1,5 @@
-<div class="md:flex h-full text-amethyst bg-bedrock flex-col" *ngIf="isServerRespondedWithData | async">
-    <div class="m-auto md:w-4/5">
+<div class="md:flex text-amethyst bg-bedrock flex-col min-h-screen" *ngIf="isServerRespondedWithData | async">
+    <div class="m-auto md:w-4/5" *ngIf="dataSource.user !== null; else profileNotFound">
         <!-- Background image -->
         <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
             <ng-container *ngFor="let image of dataSource.user.image">
@@ -23,7 +23,7 @@
                 </div>
             </ng-container>
         </ng-container>
-        <ng-container *ngIf="dataSource.user.image === null">
+        <ng-container *ngIf="dataSource.user.image === null && dataSource.user.image.length > 0">
             <div class="relative">
                 <img class="object-fit-cover" src="./../../../assets/img/860x394.jpg" alt="Background">
                 <button class="absolute -bottom-7 md:right-16 right-7" [matMenuTriggerFor]="menu">
@@ -168,4 +168,9 @@
             <mat-divider></mat-divider>
         </div>
     </div>
+    <ng-template #profileNotFound>
+        <div class="mx-auto md:w-4/5">
+            Profile not found
+        </div>
+    </ng-template>
 </div>

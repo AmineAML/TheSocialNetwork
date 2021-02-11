@@ -53,7 +53,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
         this.isServerRespondedWithData = Promise.resolve(true)
 
-        this.getAuthenticatedUser()
+        if (userData.user !== null) {
+          this.getAuthenticatedUser()
+        }
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()

@@ -38,7 +38,7 @@ export class SearchResultComponent implements OnInit {
 
   dataSource: Userss = null
 
-  myControl = new FormControl();
+  myControl = new FormControl('ree');
   
   options: Interest[] = [];
 
@@ -57,7 +57,7 @@ export class SearchResultComponent implements OnInit {
               private location: Location) { }
 
   async getUsers() {
-    this.dataService.findByQuery(this.interest, this.page, this.size).pipe(
+    this.dataService.findByQuery(/*this.interest*/this.myControl.value, this.page, this.size).pipe(
       //Display data into console log
       //tap(users => console.log(users)),
       map(async (userData: Userss) => {
@@ -69,7 +69,7 @@ export class SearchResultComponent implements OnInit {
     ).subscribe()
 
     //Modify the url
-    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { interest: this.interest, page: this.page, size: this.size } }).toString()
+    const url = this.router.createUrlTree([], { relativeTo: this.activatedRoute, queryParams: { interest: this.myControl.value, page: this.page, size: this.size } }).toString()
 
     this.location.go(url);
   }
@@ -152,9 +152,6 @@ export class SearchResultComponent implements OnInit {
   private _filter(name: string): Interest[] {
     const filterValue = name.toLowerCase();
 
-    console.log(this.options)
-
-    // Production important verifying this has values
     if (this.options === null) {
       return null
     }
@@ -176,6 +173,7 @@ export class SearchResultComponent implements OnInit {
       this.interest = params.interest
       this.page = params.page || 1
       this.size = params.size || 10
+      this.myControl.setValue(params.interest)
     })
 
     await this.getUsers()
