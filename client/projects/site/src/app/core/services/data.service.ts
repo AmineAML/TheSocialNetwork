@@ -26,12 +26,21 @@ export class DataService {
       mergeMap((resultFromRequest1: UserData) => this.findAllImagesByUsersIds(resultFromRequest1.data.users).pipe(
         map((resultFromRequest2: ImageData) => {
           // use resultFromRequest1 or 2
-          const users = resultFromRequest1.data.users.map(user => ({
-            ...user,
-            image: resultFromRequest2.data.images.filter(
-              image => image.user_id === user.id
-            )
-          }))
+
+          let users
+          
+          if (resultFromRequest2.data.images && resultFromRequest2.data.images.length > 0) {
+            users = resultFromRequest1.data.users.map(user => ({
+              ...user,
+              image: resultFromRequest2.data.images.filter(
+                image => image.user_id === user.id
+              )
+            }))
+          } else {
+            users = resultFromRequest1.data.users.map(user => ({
+              ...user
+            }))
+          }
 
           return {
             users,
