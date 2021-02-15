@@ -1,79 +1,42 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Subject } from 'rxjs';
-import { catchError, map, takeUntil } from 'rxjs/operators';
-import { DataService } from '../../../core/services/data.service';
-import { MessageSnackBarComponent } from '../../../shared/components/message-snack-bar/message-snack-bar.component';
+import { ContactForm } from '../../../shared/types';
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
-export class ContactComponent implements OnInit, OnDestroy {
+export class ContactComponent implements OnInit {
+  @Output() submit = new EventEmitter<ContactForm>()
+  
   contactForm: FormGroup
 
-  //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
+  originalContactFormValue: any
 
-  isContactUsEmailSent: boolean
-
-  constructor(private formBuilder: FormBuilder,
-              private dataService: DataService,
-              private snackBar: MatSnackBar) { }
-
-  submitContactEmail() {
-    this.dataService.sendContactEmail(this.contactForm.getRawValue()).pipe(
-      map((value) => {
-        console.log(value)
-        
-        if (value) {
-          this.isContactUsEmailSent = true
-
-          this.snackBar.openFromComponent(MessageSnackBarComponent, {
-            duration: 7000,
-            data: {
-              message: "You message is sent",
-              hasError: false
-            }
-          })
-
-          this.contactForm.reset()
-        }
-      }),
-      catchError(async (err) => {
-        // console.log(err)
-
-        this.isContactUsEmailSent = false
-
-        this.snackBar.openFromComponent(MessageSnackBarComponent, {
-          duration: 7000,
-          data: {
-            message: "We couldn't send your message",
-            hasError: true
-          }
-        })
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-  }
+  constructor(private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
     this.contactForm = this.formBuilder.group({
-      name: [null, [Validators.required]],
-      email: [null, [
+      name: ["", [Validators.required]],
+      email: ["", [
         Validators.required,
         Validators.email
       ]],
-      subject: [null, [Validators.required]],
-      message: [null, [Validators.required]]
+      subject: ["", [Validators.required]],
+      message: ["", [Validators.required]]
     })
-  }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next()
+    /*
+      Difference between this.contactForm.getRawValue() vs this.contactForm.value
+        this.contactForm.getRawValue() does get this values initialized on the FormBuilder (in this case: null)
+        this.contactForm.value doesn't get the values initialized on the FormBuilder (in this case it does set the values as: "")
 
-    this.ngUnsubscribe.complete()
+      Why this.contactForm.getRawValue() is better?
+        because resetting the form value after a successful data submit does set the values as null
+      
+      Thus this works better preventing the user from not saving their form data by comparing both initial values and values that were reset
+    */
+    this.originalContactFormValue = this.contactForm.getRawValue()//.value;
   }
 }

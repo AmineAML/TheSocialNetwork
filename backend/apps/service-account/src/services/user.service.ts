@@ -97,7 +97,7 @@ export class UserService {
         
         await this.insertOrIncrementInterest(addedInterests)
         
-        await this.DecrementInterest(deletedInterests)
+        await this.decrementInterest(deletedInterests)
 
         return userModel
     }
@@ -106,6 +106,12 @@ export class UserService {
         //return this.userModel.updateOne({ _id: id }, userParams).exec();
         
         return this.userModel.findOneAndUpdate({ _id: id }, { is_confirmed: userParams.is_confirmed }, { new: true, upsert: true })
+    }
+
+    public async changeUserPasswordById(id: string, new_password: string): Promise<IUser> {
+        //return this.userModel.updateOne({ _id: id }, userParams).exec();
+        
+        return this.userModel.findOneAndUpdate({ _id: id }, { password: new_password }, { new: true, upsert: true })
     }
 
     /*public async searchUsersByCategory(category: number[]): Promise<IUser[]> {
@@ -218,7 +224,7 @@ export class UserService {
         }
     }
 
-    public async DecrementInterest(deleteHobbies: Array<string>/*userModel: IUser*/)/*: Promise<IInterest[]>*/ {
+    public async decrementInterest(deleteHobbies: Array<string>/*userModel: IUser*/)/*: Promise<IInterest[]>*/ {
         if (deleteHobbies && deleteHobbies.length > 0) {
             deleteHobbies.forEach(async interest => {
                 //query.push({ 'name': interest.toLowerCase() }, { $inc: { byNumberOfUsers: 1 } }, { new: true, upsert: true })
@@ -228,5 +234,9 @@ export class UserService {
 
             console.log('Removed hobbies')
         }
+    }
+
+    public async deleteUser(id: string) {
+        return this.userModel.findByIdAndDelete(id).exec()
     }
 }

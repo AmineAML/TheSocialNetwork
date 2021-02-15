@@ -25,7 +25,7 @@
 							"urlencoded": [
 								{
 									"key": "email",
-									"value": "joeyoooooooooooooooooooooooooooooooo@email.com",
+									"value": "joeyooooooooooooooooooooooooooooooooooooooooo@email.com",
 									"type": "text"
 								},
 								{
@@ -35,7 +35,7 @@
 								},
 								{
 									"key": "username",
-									"value": "joeyyyyoooooooooooooooooooooooooooooooooo",
+									"value": "joeyyyyooooooooooooooooooooooooooooooooooooooooooo",
 									"type": "text"
 								},
 								{
@@ -479,6 +479,112 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Resend email confirmation link",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDEwNjgwNzY4NmMwMDVlMWM5ZmE0ODYiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMTk1NTAwMSwiZXhwIjoxNjExOTU1OTAxfQ.pOATVSBbxkcZnr4fUpfJ_qPpDcCwPftbrYmnSwJ8DkE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/confirm/email",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"confirm",
+								"email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDI1ZWU4YTAyNWNmZjUzMjRlNGI0MjkiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMzMxMTI1OCwiZXhwIjoxNjEzMzExNDM4fQ.lsBQU_TV7SZ2znY6IPC4dwZs0oC6iHHFJQBWChLbAlU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"superpowerfulpw\",\r\n    \"new_password\": \"ree\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user/change/password",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user",
+								"change",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MDI1ZWU4YTAyNWNmZjUzMjRlNGI0MjkiLCJyb2xlIjoidXNlciIsImlhdCI6MTYxMzMxMTMxNCwiZXhwIjoxNjEzMzExNDk0fQ.Gf3Qp26memg5eqQ5McKLA5l_l7fi2uvCNd8F_7_1L4A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/v1/users/user/6025ee8a025cff5324e4b429",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"user",
+								"6025ee8a025cff5324e4b429"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -752,6 +858,41 @@
 								"reports",
 								"report",
 								"5ffe20f62fe4c31294ea330f"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Mailer",
+			"item": [
+				{
+					"name": "Contact us email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Ree\",\r\n    \"email\": \"ree@email.com\",\r\n    \"subject\": \"Reeeeee\",\r\n    \"message\": \"example\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/v1/mailer/contact",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"mailer",
+								"contact"
 							]
 						}
 					},

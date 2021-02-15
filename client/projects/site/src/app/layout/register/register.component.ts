@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../core/services/auth.service';
 
-class CustormValidators {
+class CustomValidators {
   // static passwordContainsNumber(control: AbstractControl): ValidationErrors {
   //   const regex = /\d/
 
@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private ngUnsubscribe = new Subject()
 
   constructor(private formBuilder: FormBuilder,
-              private authService: AuthService) { }
+    private authService: AuthService) { }
 
   onSubmit() {
     if (this.registerForm.invalid) {
@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         Validators.required
       ]]
     }, {
-      validators: CustormValidators.passwordMatch
+      validators: CustomValidators.passwordMatch
     })
   }
 

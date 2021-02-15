@@ -5,9 +5,13 @@ import { ContactComponent } from './contact/contact.component';
 import { FeaturesComponent } from './features/features.component';
 import { HeroComponent } from './hero/hero.component';
 import { LandingComponent } from './landing.component';
+import { FormCanDeactivateGuard } from '../../core/guards/form-can-deactivate.guard';
 
 const routes: Routes = [
-  { path: '', component: LandingComponent }
+  { path: '',
+    component: LandingComponent,
+    canDeactivate: [FormCanDeactivateGuard]
+  }
 ];
 
 @NgModule({

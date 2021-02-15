@@ -2,9 +2,9 @@
 <div mat-dialog-content>
     <p>You're reporting {{data.username}}, tell us why?</p>
     <textarea class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7" name="description"
-        placeholder="Eg: community rules infrigement" #description></textarea>
+        placeholder="Eg: community rules infrigement" #description cdkFocusInitial></textarea>
 </div>
 <div mat-dialog-actions>
-    <button type="submit" class="bg-red-300 hover:bg-red-400 text-red-800 rounded py-3 px-6" (click)="submitUserReport(description.value)" [disabled]="description.value.length === 0" cdkFocusInitial>Report</button>
+    <button type="submit" class="bg-red-300 hover:bg-red-400 text-red-800 rounded py-3 px-6" (click)="submitUserReport(description.value)" [disabled]="description.value.length === 0">Report</button>
     <button mat-button (click)="onNoClick()">Close</button>
 </div>

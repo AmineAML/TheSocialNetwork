@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, HttpException, HttpStatus, Inject, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Put, Query, Req, Res, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { IAuthorizedRequest } from './interfaces/common/authorized-request.interface';
 import { IServiceAuthCreateResponse } from './interfaces/token/service-auth-create-response.interface';
@@ -24,13 +24,13 @@ import { Role } from './enums/role.enum';
 import { ConfirmUserDto } from './interfaces/user/dto/confirm-user.dto';
 import { ConfirmUserResponseDto } from './interfaces/user/dto/confirm-user-response.dto';
 import { IServiceUserConfirmResponse } from './interfaces/user/service-account-confirm-response.interface';
-import { request, Response } from 'express';
+import { Request, Response } from 'express';
 import { GetInterestAllResponseDto } from './interfaces/interest/dto/get-interest-all-response.dto';
 import { IServiceUserGetInterestAllResponse } from './interfaces/interest/service-account-get-interest-all-response.interface';
 import { UserIsUserGuard } from './guards/user-is-user.guard';
-import { ContactUsDto } from './interfaces/mailer/dto/contact-us.dto';
-import { ContactUsResponseDto } from './interfaces/mailer/dto/contact-us-response.dto';
-import { IServiceContactUsResponse } from './interfaces/mailer/service-mailer-respone.interface';
+import { ChangePasswordDto } from './interfaces/user/dto/change-password.dto';
+import { ChangePasswordResponseDto } from './interfaces/user/dto/change-password-response.dto';
+import { IServiceChangePasswordResponse } from './interfaces/user/service-account-change-password-response.interface';
 
 @Controller('users')
 export class AccountsController {
@@ -40,7 +40,7 @@ export class AccountsController {
 
   //New user
   @Post('user')
-  public async createUser(@Body() userRequest: CreateUserDto): Promise<CreateUserResponseDto> {
+  public async createUser(@Body() userRequest: CreateUserDto, @Res({ passthrough: true }) response: Response): Promise<CreateUserResponseDto> {
     userRequest.role = Role.User
 
     const createUserResponse: IServiceUserCreateResponse = await this.accountServiceClient
@@ -63,12 +63,22 @@ export class AccountsController {
     })
       .toPromise();
 
+    //response.cookie('Set-Cookie', createTokenResponse.refresh_token)
+
+    response.cookie('Refresh-Token', createTokenResponse.refresh_token, {
+      httpOnly: true,
+      //Valid with HTTPS only, meaning it's not working on localhost
+      //secure: true,
+      maxAge: 3600000,
+      path: '/'
+    })
+
     return {
       message: createUserResponse.message,
       data: {
         user: createUserResponse.user,
         access_token: createTokenResponse.access_token,
-        refresh_token: createTokenResponse.refresh_token
+        refresh_token: null//createTokenResponse.refresh_token
       },
       errors: {
         user_error: createUserResponse.errors,
@@ -183,10 +193,9 @@ export class AccountsController {
   }
 
   //Users by query search of interests
-  @hasRoles(Role.User, Role.Admin)
-  @UseGuards(AuthGuard, /*RolesGuard*/)
+  @UseGuards(AuthGuard)
   @Get('query')
-  public async getUsersByQuery(@Query('search_term') search_term: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<GetUsersByQueryResponseDto> {
+  public async getUsersByQuery(@Query('search_term') search_term: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10, @Req() req: Request): Promise<GetUsersByQueryResponseDto> {
     //page is either a number specified by the user or default to 1, and same to limit that either specified by the user or default to 10
     //limit is max to 100 items per page, if the user specified more than that, default to 100 else what the user specified
     page = Number(page)
@@ -210,7 +219,7 @@ export class AccountsController {
           match,
           page,
           limit,
-          route: `http://localhost:3000/api/v1/users/query?search_term=${search_term}`
+          route: `${req.headers.host}/search?interest=${search_term}`
         })
         .toPromise();
     }
@@ -244,7 +253,7 @@ export class AccountsController {
   //Login user
   @Post('/login')
   //@Header('Set-Cookie', 'ree=coooooookie')
-  public async loginUser(@Body() loginRequest: LoginUserDto): Promise<LoginUserResponseDto> {
+  public async loginUser(@Body() loginRequest: LoginUserDto, @Res({ passthrough: true }) response: Response): Promise<LoginUserResponseDto> {
     const getUserResponse: IServiceUserSearchResponse = await this.accountServiceClient
       .send('user_search_by_credentials', loginRequest)
       .toPromise();
@@ -267,11 +276,19 @@ export class AccountsController {
       })
       .toPromise();
 
+    response.cookie('Refresh-Token', createTokenResponse.refresh_token, {
+      httpOnly: true,
+      //Valid with HTTPS only, meaning it's not working on localhost
+      //secure: true,
+      maxAge: 3600000,
+      path: '/'
+    })
+
     return {
       message: createTokenResponse.message,
       data: {
         access_token: createTokenResponse.access_token,
-        refresh_token: createTokenResponse.refresh_token
+        refresh_token: null//createTokenResponse.refresh_token
       },
       errors: null,
     };
@@ -281,7 +298,17 @@ export class AccountsController {
   //@UseGuards(AuthGuard)
   @Post('/refresh_token')
   public async refreshToken(@Req() req: Request, @Body() token: { refresh_token: string }): Promise<any> {
-    const refresh_token = token.refresh_token//req.headers['authorization']?.split(' ')[1]
+    const refresh_token = req.cookies['Refresh-Token']//.Refresh//token.refresh_token//req.headers['authorization']?.split(' ')[1]
+
+    if (!refresh_token) {
+      return {
+        message: 'refresh_token_cookie_not_found_because_not_authenticated',
+        data: {
+          access_token: null,
+        },
+        errors: null,
+      };
+    }
 
     console.log(refresh_token)
 
@@ -301,7 +328,7 @@ export class AccountsController {
   //Logout authenticated user
   @UseGuards(AuthGuard)
   @Put('/logout')
-  public async logoutUser(@Req() request: IAuthorizedRequest): Promise<LogoutUserResponseDto> {
+  public async logoutUser(@Req() request: IAuthorizedRequest, @Res({ passthrough: true }) response: Response): Promise<LogoutUserResponseDto> {
     const userInfo = request.user;
 
     const destroyTokenResponse: IServiceAuthDestroyResponse = await this.authServiceClient
@@ -320,6 +347,10 @@ export class AccountsController {
         destroyTokenResponse.status,
       );
     }
+
+    //response.cookie('Set-Cookie', 'Refresh=; HttpOnly; Path=/; Max-Age=0')
+    
+    response.clearCookie('Refresh-Token')
 
     return {
       message: destroyTokenResponse.message,
@@ -362,6 +393,17 @@ export class AccountsController {
       .send('interest_get_all', {})
       .toPromise();
 
+    if (interestResponse.status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: interestResponse.message,
+          data: null,
+          errors: null,
+        },
+        interestResponse.status,
+      );
+    }
+
     return {
       message: interestResponse.message,
       data: {
@@ -382,11 +424,81 @@ export class AccountsController {
       .send('user_regenerate_email_confirmation_link', userInfo.id)
       .toPromise();
 
+    if (userResponse.status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: userResponse.message,
+          data: null,
+          errors: null,
+        },
+        userResponse.status,
+      );
+    }
+
     return {
       message: userResponse.message,
       data: {
         user: userResponse.user,
       },
+      errors: null,
+    };
+  }
+
+  //Delete user by id account
+  @hasRoles(Role.User, Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard, UserIsUserGuard)
+  @Delete('user/:id')
+  public async deleteUserById(@Req() request: IAuthorizedRequest, @Res({ passthrough: true }) response: Response): Promise<any> {
+    const userInfo = request.user
+
+    const userResponse: any = await this.accountServiceClient
+      .send('user_delete_account', userInfo.id)
+      .toPromise()
+
+    if (userResponse.status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: userResponse.message,
+          errors: userResponse.errors,
+          data: null,
+        },
+        userResponse.status,
+      );
+    }
+
+    response.clearCookie('Refresh-Token')
+
+    return {
+      message: userResponse.message,
+      data: null,
+      errors: null
+    }
+  }
+
+  //Modify Password
+  @UseGuards(AuthGuard)
+  @Put('/user/change/password')
+  public async modifyPassword(@Body() passwordRequest: ChangePasswordDto, @Req() request: IAuthorizedRequest): Promise<ChangePasswordResponseDto> {
+    passwordRequest.id = request.user.id
+
+    const changepasswordResponse: IServiceChangePasswordResponse = await this.accountServiceClient
+      .send('user_change_password', passwordRequest)
+      .toPromise();
+
+    if (changepasswordResponse.status !== HttpStatus.OK) {
+      throw new HttpException(
+        {
+          message: changepasswordResponse.message,
+          data: null,
+          errors: null,
+        },
+        changepasswordResponse.status,
+      );
+    }
+
+    return {
+      message: changepasswordResponse.message,
+      data: null,
       errors: null,
     };
   }

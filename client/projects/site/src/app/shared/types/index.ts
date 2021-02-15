@@ -1,5 +1,3 @@
-import { from } from 'rxjs'
-
 export { Tokens } from './tokens.interface'
 export { RegisterForm } from './register-form.interface'
 export { LoginForm } from './login-form.interface'
@@ -18,3 +16,4 @@ export { UserData } from './user-data.interface'
 export { Userss } from './userss.interface'
 export { Userr } from './userr.interface'
 export { File } from './file.interface'
+export { PasswordForm } from './password-form.interface'

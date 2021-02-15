@@ -42,6 +42,9 @@ export class TokenService {
 
         newToken.access_token = access_token
 
+        //Cookie of refresh token
+        //newToken.refresh_token = `Refresh=${refresh_token}; Secure; HttpOnly; Path=/; Max-Age=3600000`; //max age of refresh token of 1 hour as milliseconds
+        
         newToken.refresh_token = refresh_token
 
         return newToken

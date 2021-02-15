@@ -1,10 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { startWith, map, takeUntil } from 'rxjs/operators';
-import { DataService } from '../../../core/services/data.service';
-import { InterestData } from '../../../shared/types';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 export interface Interest {
   name: string;
@@ -15,45 +12,15 @@ export interface Interest {
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.scss']
 })
-export class HeroComponent implements OnInit, OnDestroy {
+export class HeroComponent implements OnInit {
+  @Output() getUsers = new EventEmitter<string>()
+  @Input() options: Interest[]
+  
   myControl = new FormControl();
-
-  options: Interest[] = [];
 
   filteredOptions: Observable<Interest[]>;
 
-  dataSource: InterestData = null
-
-  //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
-
-  constructor(private router: Router,
-              private dataService: DataService) { }
-
-  async getInterests() {
-    this.dataService.findAllInterestsSorted().pipe(
-      //Display data into console log
-      // tap(interests => console.log(interests)),
-      map((interestData: InterestData) => {
-        this.dataSource = interestData
-
-        this.dataSource.data.interests.forEach(interest => {
-          this.options.push(
-            { name: interest.name }
-          )
-        })
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-  }
-
-  getUsers(query: string) {
-    this.router.navigate(['search'], { queryParams: { interest: query } })
-  }
-
-  displayFn(interest: Interest): string {
-    return interest && interest.name ? interest.name : '';
-  }
+  constructor() { }
 
   private _filter(name: string): Interest[] {
     const filterValue = name.toLowerCase();
@@ -62,19 +29,11 @@ export class HeroComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    await this.getInterests()
-
     this.filteredOptions = this.myControl.valueChanges
       .pipe(
         startWith(''),
         map(value => typeof value === 'string' ? value : value.name),
         map(name => name ? this._filter(name) : this.options.slice())
       );
-  }
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next()
-
-    this.ngUnsubscribe.complete()
   }
 }

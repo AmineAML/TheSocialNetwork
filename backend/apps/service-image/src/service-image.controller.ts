@@ -1,4 +1,4 @@
-import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { Controller, HttpStatus } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { IImageConfirmResponse } from './interfaces/image-confirm-response.interface';
 import { IImageCreateResponse } from './interfaces/image-create-response.interface';
@@ -18,6 +18,8 @@ export class ServiceImageController {
     if (imageParams) {
       console.log(imageParams)
 
+      console.log(imageParams.file.avatar)
+
       try {
         const uploadedImages: any = await this.imageService.createImages(imageParams);
         result = {
@@ -29,6 +31,7 @@ export class ServiceImageController {
 
         console.log(uploadedImages)
       } catch (e) {
+        console.log(e)
         result = {
           status: HttpStatus.PRECONDITION_FAILED,
           message: 'image_upload_precondition_failed',

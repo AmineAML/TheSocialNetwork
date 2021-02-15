@@ -140,7 +140,9 @@ export class ImageService {
     }
 
     public async deleteImageById(image_id: string, imagekit_file_id: string): Promise<IImage> {
-        await this.imageKit.deleteFile(imagekit_file_id)
+        await this.imageKit.deleteFile(imagekit_file_id).catch(err => {
+            console.log(`The file you're requesting its deletion was already deleted or it doesn't exist`)
+        })
 
         return this.imageModel.findOneAndDelete/*.deleteOne*/({ _id: image_id }).exec();
     }
@@ -151,7 +153,8 @@ export class ImageService {
         try {
             const res = await this.imageKit.upload({
                 file: image,
-                fileName: fileName
+                fileName: fileName,
+                folder: 'TheSocialNetwork'
             })
 
             link = {
@@ -176,7 +179,8 @@ export class ImageService {
             try {
                 const res = await this.imageKit.upload({
                     file: image[i],
-                    fileName: fileName[i]
+                    fileName: fileName[i],
+                    folder: 'TheSocialNetwork'
                 })
 
                 links.push({

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, mapTo, mergeMap, tap } from 'rxjs/operators';
-import { ContactForm, ImageData, InterestData, ReportForm, User, UserData, UserProfileData } from '../../shared/types';
+import { ContactForm, ImageData, InterestData, PasswordForm, ReportForm, User, UserData, UserProfileData } from '../../shared/types';
 
 
 @Injectable({
@@ -194,7 +194,7 @@ export class DataService {
   resendEmailConfirmationLink(): Observable<User> {
     return this.http.put('/api/v1/users/user/confirm/email', {}).pipe(
       tap(confirmationEmailSent => {
-        console.log(confirmationEmailSent)
+        //console.log(confirmationEmailSent)
 
         return true
       }),
@@ -219,12 +219,25 @@ export class DataService {
   sendContactEmail(contactForm: ContactForm) {
     return this.http.post<any>('/api/v1/mailer/contact', contactForm).pipe(
       tap(contactEmailSent => {
-        console.log(contactEmailSent)
+        //console.log(contactEmailSent)
 
         return true
       }),
       catchError(error => {
         return throwError(error)
       }));
+  }
+
+  changePassword(passwordForm: PasswordForm) {
+    return this.http.put<any>('/api/v1/users/user/change/password', passwordForm).pipe(
+      tap(passwordModified => {
+        console.log(passwordModified)
+
+        return true
+      }),
+      catchError(error => {
+        return throwError(error)
+      })
+    )
   }
 }

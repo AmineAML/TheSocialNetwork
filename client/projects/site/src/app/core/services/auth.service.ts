@@ -9,8 +9,10 @@ import { LoginForm, RegisterForm, UserProfileData, Tokens } from '../../shared/t
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly ACCESS_TOKEN = 'THE_SOCIAL_NETWORK_ACCESS_TOKEN';
-  private readonly REFRESH_TOKEN = 'THE_SOCIAL_NETWORK_REFRESH_TOKEN';
+  //private readonly ACCESS_TOKEN = 'THE_SOCIAL_NETWORK_ACCESS_TOKEN';
+
+  //private readonly REFRESH_TOKEN = 'THE_SOCIAL_NETWORK_REFRESH_TOKEN';
+
   public loggedUsername: string;
 
   private loggedIn: Subject<boolean> = new ReplaySubject<boolean>(1);
@@ -18,6 +20,8 @@ export class AuthService {
   private modifyAvatarLink: Subject<boolean> = new ReplaySubject<boolean>(1);
   
   private confirmedEmailLink: Subject<boolean> = new ReplaySubject<boolean>(1);
+
+  private accessToken: string = null
 
   constructor(private http: HttpClient,
     private router: Router) { }
@@ -28,6 +32,8 @@ export class AuthService {
         this.doLoginUser(tokens.data)
 
         this.loggedIn.next(true)
+
+        this.startRefreshTokenTimer()
       }),
       mapTo(true),
       catchError(error => {
@@ -37,9 +43,11 @@ export class AuthService {
   }
 
   logout() {
-    return this.http.put<any>('/api/v1/users/logout', { headers: { 'authorization': this.getRefreshToken() } }).pipe(
+    return this.http.put<any>('/api/v1/users/logout', { /*headers: { 'authorization': this.getRefreshToken() }*/ }).pipe(
       tap(() => {
         this.doLogoutUser()
+
+        this.stopRefreshTokenTimer()
       }),
       mapTo(true),
       catchError(error => {
@@ -59,6 +67,8 @@ export class AuthService {
 
         this.loggedIn.next(true)
 
+        this.startRefreshTokenTimer()
+
         this.router.navigate(['edit-profile'])
       }),
       mapTo(true),
@@ -69,10 +79,32 @@ export class AuthService {
       }));
   }
 
+  delete(id: string) {
+    return this.http.delete<any>(`/api/v1/users/user/${id}`).pipe(
+      tap(account => {
+        this.doLogoutUser()
+
+        this.stopRefreshTokenTimer()
+      }),
+      mapTo(true),
+      catchError(error => {
+        return of(false)
+      })
+    )
+  }
+
   refreshToken() {
-    return this.http.post<any>('/api/v1/users/refresh_token', { refresh_token: this.getRefreshToken() }).pipe(
+    //Apply withCredential meaning allow sending cookies which contain the refresh token
+    return this.http.post<any>('/api/v1/users/refresh_token', { /*refresh_token: this.getRefreshToken()*/ }, { withCredentials: true }).pipe(
       tap((tokens) => {
-        this.storeAccessToken(tokens.data.access_token);
+        //If refresh token cookie was sent empty meaning client is not authenticated and the server response is an empty access token
+        if (tokens.data.access_token) {
+          this.storeAccessToken(tokens.data.access_token);
+
+          this.startRefreshTokenTimer()
+        } else {
+          this.loggedIn.next(false)
+        }
       }),
       catchError(error => {
         this.invalidRefreshToken()
@@ -97,6 +129,17 @@ export class AuthService {
     }
 
     return null
+  }
+
+  private refreshTokenTimeout
+
+  private startRefreshTokenTimer() {
+    //Refresh access token before it expires as the backend has it valid for 15 minutes thus refresh it each 14 minutes meanning a minute before token expires
+    this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), 14 * 60 * 1000)
+  }
+
+  private stopRefreshTokenTimer() {
+    clearTimeout(this.refreshTokenTimeout)
   }
 
   public loginStatusChange(): Observable<boolean> {
@@ -137,20 +180,25 @@ export class AuthService {
   }
 
   private storeAccessToken(access_token: string) {
-    localStorage.setItem(this.ACCESS_TOKEN, access_token);
+    //localStorage.setItem(this.ACCESS_TOKEN, access_token);
+
+    this.accessToken = access_token
   }
 
   public getAccessToken() {
-    return localStorage.getItem(this.ACCESS_TOKEN);
+    //return localStorage.getItem(this.ACCESS_TOKEN);
+
+    return this.accessToken
   }
 
   public invalidRefreshToken() {
     this.doLogoutUser()
   }
 
-  private getRefreshToken() {
+  /*private getRefreshToken() {
     return localStorage.getItem(this.REFRESH_TOKEN);
   }
+  */
 
   private doLogoutUser() {
     this.loggedUsername = null;
@@ -159,8 +207,9 @@ export class AuthService {
   }
 
   private removeTokens() {
-    localStorage.removeItem(this.ACCESS_TOKEN);
-    localStorage.removeItem(this.REFRESH_TOKEN);
+    //localStorage.removeItem(this.ACCESS_TOKEN);
+    //localStorage.removeItem(this.REFRESH_TOKEN);
+    this.accessToken = null
     this.redirectToLoginPage()
   }
 
@@ -173,7 +222,9 @@ export class AuthService {
   }
 
   private storeTokens(tokens: Tokens) {
-    localStorage.setItem(this.ACCESS_TOKEN, tokens.access_token);
-    localStorage.setItem(this.REFRESH_TOKEN, tokens.refresh_token);
+    //localStorage.setItem(this.ACCESS_TOKEN, tokens.access_token);
+    //localStorage.setItem(this.REFRESH_TOKEN, tokens.refresh_token);
+
+    this.accessToken = tokens.access_token
   }
 }

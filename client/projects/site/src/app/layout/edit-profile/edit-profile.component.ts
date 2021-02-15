@@ -1,10 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, HostListener } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators, FormArray, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatAutocomplete } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { Observable, of, Subject } from 'rxjs';
-import { catchError, map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { catchError, map, startWith, takeUntil } from 'rxjs/operators';
 import { faTimes } from '@fortawesome/free-solid-svg-icons'
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { DataService } from '../../core/services/data.service';
@@ -13,13 +13,29 @@ import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageSnackBarComponent } from '../../shared/components/message-snack-bar/message-snack-bar.component';
 import { File, User, Userss } from '../../shared/types';
+import { ComponentCanDeactivate } from '../../core/guards/form-can-deactivate.guard';
+
+class CustomValidators {
+  static passwordMatch(control: AbstractControl): ValidationErrors {
+    const password = control.get('new_password').value
+    const confirm_password = control.get('confirm_new_password').value
+
+    if ((password !== null && confirm_password !== null) && (password == confirm_password)) {
+      return null
+    } else {
+      return {
+        passwordNotMatching: true
+      }
+    }
+  }
+}
 
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.scss']
 })
-export class EditProfileComponent implements OnInit, OnDestroy {
+export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeactivate {
   faTimes = faTimes
   faFacebook = faFacebook
   faLinkedin = faLinkedin
@@ -44,6 +60,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   dataSource: Userss = null
 
   form: FormGroup
+  
+  changePasswordform: FormGroup
 
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -66,6 +84,10 @@ export class EditProfileComponent implements OnInit, OnDestroy {
   showAvatarSpinner = false
 
   showBackgroundSpinner = false
+
+  originalFormValue: any
+  
+  originalPasswordFormValue: any
 
   constructor(private dataService: DataService,
     private authService: AuthService,
@@ -166,11 +188,13 @@ export class EditProfileComponent implements OnInit, OnDestroy {
           })
           this.showAvatarSpinner = false
           this.authService.setAvatarLink(true);
+          this.originalFormValue = this.form.getRawValue();
         } else {
           this.form.patchValue({
             background: event.body.data.images[0].link
           })
           this.showBackgroundSpinner = false
+          this.originalFormValue = this.form.getRawValue();
         }
       }
     })
@@ -215,6 +239,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
         this.interests = userData.user.interest
 
         this.isServerRespondedWithData = Promise.resolve(true)
+
+        this.originalFormValue = this.form.getRawValue();
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -233,6 +259,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       }
     })
 
+    this.originalFormValue = this.form.getRawValue();
+
     // Set form values as not changed
     this.form.markAsPristine()
   }
@@ -242,8 +270,6 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.dataService.resendEmailConfirmationLink().pipe(
       map((user: User) => {
         if (user) {
-          console.log('Email confirmation link sent')
-
           this.snackBar.openFromComponent(MessageSnackBarComponent, {
             duration: 7000,
             data: {
@@ -256,12 +282,48 @@ export class EditProfileComponent implements OnInit, OnDestroy {
       catchError(async (err) => {
         console.log(err)
 
-        console.log("Email confirmation not sent")
-
         this.snackBar.openFromComponent(MessageSnackBarComponent, {
           duration: 7000,
           data: {
             message: "We couldn't send your email confirmation",
+            hasError: true
+          }
+        })
+      }),
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
+  }
+
+  // Delete user's account
+  deleteAccount(id: string) {
+    this.authService.delete(id).pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe()
+  }
+
+  changePassword() {
+    this.dataService.changePassword(this.changePasswordform.getRawValue()).pipe(
+      map(() => {
+        this.snackBar.openFromComponent(MessageSnackBarComponent, {
+          duration: 7000,
+          data: {
+            message: "Password modified sent",
+            hasError: false
+          }
+        })
+
+        this.changePasswordform.reset(this.originalPasswordFormValue)
+
+        // Set form values as not changed
+        this.changePasswordform.markAsPristine()
+      }),
+      catchError(async (err) => {
+        console.log(err)
+
+        this.snackBar.openFromComponent(MessageSnackBarComponent, {
+          duration: 7000,
+          data: {
+            message: "We couldn't modify your password",
             hasError: true
           }
         })
@@ -319,31 +381,55 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     this.username = this.authService.loggedUsername
 
     this.form = this.formBuilder.group({
-      id: [{ value: null, disabled: true }, [Validators.required]],
-      first_name: [null, [Validators.required]],
-      last_name: [null, [Validators.required]],
-      description: [null, [Validators.required]],
-      gender: [null, [Validators.required]],
+      id: [{ value: "", disabled: true }, [Validators.required]],
+      first_name: ["", [Validators.required]],
+      last_name: ["", [Validators.required]],
+      description: ["", [Validators.required]],
+      gender: ["", [Validators.required]],
       interest: this.formBuilder.array([]),
       social_media: this.formBuilder.group({
-        facebook: [null, [Validators.required]],
-        linkedin: [null, [Validators.required]],
-        twitter: [null, [Validators.required]],
-        tiktok: [null, [Validators.required]],
-        discord: [null, [Validators.required]],
-        instagram: [null, [Validators.required]],
-        youtube: [null, [Validators.required]]
+        facebook: ["", [Validators.required]],
+        linkedin: ["", [Validators.required]],
+        twitter: ["", [Validators.required]],
+        tiktok: ["", [Validators.required]],
+        discord: ["", [Validators.required]],
+        instagram: ["", [Validators.required]],
+        youtube: ["", [Validators.required]]
       }),
-      avatar: [null],
-      background: [null]
+      avatar: [""],
+      background: [""]
+    })
+
+    this.changePasswordform = this.formBuilder.group({
+      password: ["", [
+        Validators.required
+      ]],
+      new_password: ["", [
+        Validators.required
+      ]],
+      confirm_new_password: ["", [
+        Validators.required
+      ]]
+    }, {
+      validators: CustomValidators.passwordMatch
     })
 
     this.getUser()
+    
+    this.originalPasswordFormValue = this.changePasswordform.getRawValue();
   }
 
   ngOnDestroy() {
     this.ngUnsubscribe.next()
 
     this.ngUnsubscribe.complete()
+  }
+
+  //Handles warning on unsaved form on refresh page
+  @HostListener("window:beforeunload")
+  //Handles warning on unsaved form on routing
+  canDeactivate() {
+    //Compare initial form value with its value on navigation
+    return JSON.stringify(this.originalFormValue) !== JSON.stringify(this.form.getRawValue()) ? false : (JSON.stringify(this.originalPasswordFormValue) !== JSON.stringify(this.changePasswordform.getRawValue()) ? false : true)
   }
 }

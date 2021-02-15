@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Inject, Param, Post, Query, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { Request, request } from 'express';
 import { hasRoles } from './decorators/roles.decorator';
 import { Role } from './enums/role.enum';
 import { AuthGuard } from './guards/auth.guard';

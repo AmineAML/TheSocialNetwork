@@ -1,8 +1,10 @@
 <div class="md:flex h-screen text-amethyst bg-bedrock">
 
     <div class="m-auto w-2/4">
+        <!-- <form class="flex flex-col gap-3 p-5" [formGroup]="contactForm" name="contact" id='contact-form' method="post"
+        (ngSubmit)="submitContactEmail()"> -->
         <form class="flex flex-col gap-3 p-5" [formGroup]="contactForm" name="contact" id='contact-form' method="post"
-        (ngSubmit)="submitContactEmail()">
+        (ngSubmit)="submit.emit(contactForm.getRawValue())">
         <div class="mb-3">
             <h3>Do you have any questions? <br/>You want some enqueries on something? <br/><span class="border-b-8 border-purple-300">Or you just want to
                 say "Hi"</span></h3>

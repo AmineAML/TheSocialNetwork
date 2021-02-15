@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -13,15 +13,22 @@ import { AuthService } from './services/auth.service';
 import { EmailNotConfirmedComponent } from './components/email-not-confirmed/email-not-confirmed.component';
 import { DialogReportComponent } from './components/dialog-report/dialog-report.component';
 import { CustomPreloadingStrategyService } from './services/custom-preloading-strategy.service';
+import { AppInitializeService } from './services/app-initialize.service';
+import { DialogConfirmationComponent } from './components/dialog-confirmation/dialog-confirmation.component';
 
-
+export function initializeApp1(appInitializeService: AppInitializeService) {
+  return (): Promise<any> => { 
+    return appInitializeService.init();
+  }
+}
 
 @NgModule({
   declarations: [
     HeaderComponent,
     FooterComponent,
     EmailNotConfirmedComponent,
-    DialogReportComponent
+    DialogReportComponent,
+    DialogConfirmationComponent
   ],
   imports: [
     CommonModule,
@@ -35,11 +42,13 @@ import { CustomPreloadingStrategyService } from './services/custom-preloading-st
     EmailNotConfirmedComponent
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     AuthGuard,
     MemberGuard,
     AuthService,
-    CustomPreloadingStrategyService
+    CustomPreloadingStrategyService,
+    AppInitializeService,
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: APP_INITIALIZER, useFactory: initializeApp1, deps: [AppInitializeService], multi: true }
   ]
 })
 export class CoreModule { }

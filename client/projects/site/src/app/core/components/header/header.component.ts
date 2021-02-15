@@ -66,6 +66,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (loggedIn) {
         await this.getUser()
       } else {
+        this.isServerRespondedWithData = Promise.resolve(false)
+        
         this.username = null
 
         this.dataSource = null

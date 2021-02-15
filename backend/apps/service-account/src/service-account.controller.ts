@@ -8,6 +8,7 @@ import { IUser } from './interfaces/user.interface';
 import { UserService } from './services/user.service';
 import { IUserUpdateResponse } from './interfaces/user-update-response.interface';
 import { IInterestAllResponse } from './interfaces/interest-all.interface';
+import { IChangePasswordResponse } from './interfaces/user-change-password-response.interface';
 
 @Controller()
 export class ServiceAccountController {
@@ -381,54 +382,127 @@ export class ServiceAccountController {
     return result;
   }
 
-    //Resend email confirmation link
-    @MessagePattern('user_regenerate_email_confirmation_link')
-    public async ReconfirmEmail(id: string): Promise<IUserUpdateResponse> {
-      let result: IUserUpdateResponse;
-  
-      if (id) {
-        try {
-          const userLink = await this.userService.regenerateUserLink(id);
-          const user = await this.userService.searchUserById(id)
-          result = {
-            status: HttpStatus.CREATED,
-            message: 'regenerate_email_confirmation_link_success',
-            user: user,
-            errors: null,
-          };
-          this.mailerServiceClient
-            .send('mail_send_confirm_email', {
-              to: user.email,
-              from: this.userService.getAppEmail(),
-              subject: 'Email confirmation',
-              text: "Happy to have you as a member, confirm your email!",
-              html: `<center>
+  //Resend email confirmation link
+  @MessagePattern('user_regenerate_email_confirmation_link')
+  public async ReconfirmEmail(id: string): Promise<IUserUpdateResponse> {
+    let result: IUserUpdateResponse;
+
+    if (id) {
+      try {
+        const userLink = await this.userService.regenerateUserLink(id);
+        const user = await this.userService.searchUserById(id)
+        result = {
+          status: HttpStatus.CREATED,
+          message: 'regenerate_email_confirmation_link_success',
+          user: user,
+          errors: null,
+        };
+        this.mailerServiceClient
+          .send('mail_send_confirm_email', {
+            to: user.email,
+            from: this.userService.getAppEmail(),
+            subject: 'Email confirmation',
+            text: "Happy to have you as a member, confirm your email!",
+            html: `<center>
                 <b>Hi there, please confirm your email to unlock the full features of ${this.userService.getAppName()}.</b><br>
                 Use the following link for this.<br>
                 <a clicktracking="off" href="${this.userService.getConfirmationLink(userLink.link)}"><b>Confirm The Email</b></a><br>
                 If that doesn't work, paste this link into a new page: ${this.userService.getConfirmationLink(userLink.link)}
                 </center>`,
-            })
-            .toPromise();
-        } catch (e) {
-          console.log(e)
-  
+          })
+          .toPromise();
+      } catch (e) {
+        console.log(e)
+
+        result = {
+          status: HttpStatus.PRECONDITION_FAILED,
+          message: 'regenerate_email_confirmation_link_precondition_failed',
+          user: null,
+          errors: e.errors,
+        };
+      }
+    } else {
+      result = {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'regenerate_confirmation_link_bad_request',
+        user: null,
+        errors: null,
+      };
+    }
+
+    return result;
+  }
+
+  //Delete user's account by id
+  @MessagePattern('user_delete_account')
+  public async deleteModify(id: string): Promise<any> {
+    let result: any;
+
+    if (id) {
+      await this.userService.deleteUser(id);
+
+      result = {
+        status: HttpStatus.OK,
+        message: 'user_delete_account_success',
+        errors: null,
+      };
+    } else {
+      result = {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'user_delete_account_request',
+        errors: null,
+      };
+    }
+
+    return result;
+  }
+
+  //Change password
+  @MessagePattern('user_change_password')
+  public async changePassword(changePassword: { id: string, password: string, new_password: string }): Promise<IChangePasswordResponse> {
+    let result: IChangePasswordResponse;
+
+    if (changePassword) {
+      //Find user by id
+      const user = await this.userService.searchUserById(changePassword.id);
+
+      if (user) {
+        //Compare password with hashedpassword
+        if (await user.compareEncryptedPassword(changePassword.password)) {
+          const userId = user.id
+
+          const hashedPassword = await user.getEncryptedPassword(changePassword.new_password)
+
+          //Modify password with new password of the user
+          await this.userService.changeUserPasswordById(userId, hashedPassword);
+
           result = {
-            status: HttpStatus.PRECONDITION_FAILED,
-            message: 'regenerate_email_confirmation_link_precondition_failed',
-            user: null,
-            errors: e.errors,
+            status: HttpStatus.OK,
+            message: 'user_change_password_success',
+            errors: null
+          };
+        } else {
+          result = {
+            status: HttpStatus.NOT_FOUND,
+            message: 'user_change_password_not_match',
+            errors: null
           };
         }
       } else {
         result = {
-          status: HttpStatus.BAD_REQUEST,
-          message: 'regenerate_confirmation_link_bad_request',
-          user: null,
+          status: HttpStatus.NOT_FOUND,
+          message: 'user_change_password_not_found',
           errors: null,
         };
       }
-  
-      return result;
+    } else {
+      result = {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'user_change_password_bad_request',
+        errors: null,
+      };
     }
+
+    return result;
+  }
 }
