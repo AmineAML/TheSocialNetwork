@@ -6,7 +6,7 @@
             <figure class="md:flex rounded-xl p-8 w-96">
                 <img class="w-32 h-32 rounded-full mx-auto"
                     [src]="form.get('avatar').value ? form.get('avatar').value : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'"
-                    alt="Avatar" *ngIf="!showAvatarSpinner">
+                    alt="Avatar" *ngIf="!showAvatarSpinner" #avatarimg (error)="avatarimg.src='../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'">
                 <mat-spinner *ngIf="showAvatarSpinner"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
                     <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
@@ -28,7 +28,7 @@
             <figure class="md:flex rounded-xl p-8 flex-col">
                 <img class="mx-auto max-h-32"
                     [src]="form.get('background').value ? form.get('background').value : './../../../assets/img/860x394.jpg'"
-                    alt="Background" *ngIf="!showBackgroundSpinner">
+                    alt="Background" *ngIf="!showBackgroundSpinner" #bgimg (error)="bgimg.src='./../../../assets/img/860x394.jpg'">
                 <mat-spinner *ngIf="showBackgroundSpinner" class="mx-auto"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
                     <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"

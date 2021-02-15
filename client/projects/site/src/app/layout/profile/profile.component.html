@@ -4,7 +4,7 @@
         <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
             <ng-container *ngFor="let image of dataSource.user.image">
                 <div class="relative" *ngIf="image.type === 'background'">
-                    <img class="object-fit-cover" [src]="image.link ? image.link : './../../../assets/img/860x394.jpg'" alt="Background">
+                    <img class="object-fit-cover" [src]="image.link ? image.link : './../../../assets/img/860x394.jpg'" alt="Background" #bgimg (error)="bgimg.src='./../../../assets/img/860x394.jpg'">
                     <button class="absolute -bottom-7 md:right-16 right-7" [matMenuTriggerFor]="menu">
                         <fa-icon [icon]="faEllipsisH"></fa-icon>
                     </button>
@@ -49,7 +49,7 @@
                                     <ng-container *ngFor="let image of dataSource.user.image">
                                         <span class="rounded-full p-1 inline-block bg-yellow-500" *ngIf="image.type === 'avatar'">
                                             <img [src]="image.link ? image.link : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'"
-                                                alt="Logo" class="w-32 h-32 rounded-full">
+                                                alt="Logo" class="w-32 h-32 rounded-full" #avatarimg (error)="avatarimg.src='../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'">
                                         </span>
                                         <span class="rounded-full p-1 inline-block bg-yellow-500" *ngIf="image.type !== 'avatar' && image.type !== 'background'">
                                             <img src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
