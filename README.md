@@ -60,6 +60,7 @@ The naming is inspired from the movie [The Social Network (2010)](https://www.im
 * Nginx configured for Angular routing
 * Let's Encrypt HTTPS certificates with Certbot
 * GitHub actions for CI/CD
+* Pagination
 
 ## How To Use
 
