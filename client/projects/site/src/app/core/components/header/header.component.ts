@@ -54,6 +54,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.dataSource = userData
 
         this.isServerRespondedWithData = Promise.resolve(true)
+
+        this.authService.loggedUsername = this.dataSource.user.username
+
+        this.authService.setLoggedInUsername(true);
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()

@@ -161,6 +161,49 @@ export class ServiceImageController {
     return result;
   }
 
+  //Account removal delete all profile images
+  @MessagePattern('image_delete_all')
+  public async deleteAllProfileImages(user_id: string): Promise<IImageConfirmResponse> {
+    let result: IImageConfirmResponse;
+
+    if (user_id) {
+      const images = await this.imageService.searchImagesRemovalByUserId(user_id);
+
+      if (images && images.length > 0) {
+        try {
+          await this.imageService.deleteAllProfileImages(images)
+          
+          result = {
+            status: HttpStatus.OK,
+            message: 'image_delete_all_success',
+            errors: null
+          };
+        } catch (e) {
+          console.log(e)
+          result = {
+            status: HttpStatus.PRECONDITION_FAILED,
+            message: 'image_delete_all_precondition_failed',
+            errors: e.errors,
+          };
+        }
+      } else {
+        result = {
+          status: HttpStatus.NOT_FOUND,
+          message: 'image_delete_all_not_found',
+          errors: null
+        };
+      }
+    } else {
+      result = {
+        status: HttpStatus.BAD_REQUEST,
+        message: 'image_delete_bad_request',
+        errors: null,
+      };
+    }
+
+    return result;
+  }
+
   //DEPRECATED
   // @MessagePattern('image_upload')
   // public async uploadImage(imageParams: { image: IImage, file: { avatar: any, background: any } }): Promise<IImageCreateResponse> {

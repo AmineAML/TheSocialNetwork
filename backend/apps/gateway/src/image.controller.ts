@@ -114,24 +114,23 @@ export class ImageController {
         };
     }
 
-    //DEPRECATED
     //Images by users ids
-    // @Post('images')
-    // public async getImagesByUsersIds(@Body() users: { usersIds: string[] }): Promise<GetImagesByUserIdResponseDto> {
-    //     console.log(users)
-    //     //const imageInfo = image;
+    @Post('images')
+    public async getImagesByUsersIds(@Body() users: { usersIds: string[] }): Promise<GetImagesByUserIdResponseDto> {
+        console.log(users)
+        //const imageInfo = image;
 
-    //     //Improve this by returning data based on user's role as Livreur, client(meaning normal user), entreprise, moderator and admin
-    //     const ImageResponse: IServiceImagesGetByUserOrVehiculeIdResponse = await this.imageServiceClient
-    //         .send('images_get_by_users_ids', users.usersIds)
-    //         .toPromise();
+        //Improve this by returning data based on user's role as Livreur, client(meaning normal user), entreprise, moderator and admin
+        const ImageResponse: IServiceImagesGetByUserOrVehiculeIdResponse = await this.imageServiceClient
+            .send('images_get_by_users_ids', users.usersIds)
+            .toPromise();
 
-    //     return {
-    //         message: ImageResponse.message,
-    //         data: {
-    //             images: ImageResponse.images,
-    //         },
-    //         errors: null,
-    //     };
-    // }
+        return {
+            message: ImageResponse.message,
+            data: {
+                images: ImageResponse.images,
+            },
+            errors: null,
+        };
+    }
 }

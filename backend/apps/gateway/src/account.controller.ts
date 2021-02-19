@@ -31,11 +31,13 @@ import { UserIsUserGuard } from './guards/user-is-user.guard';
 import { ChangePasswordDto } from './interfaces/user/dto/change-password.dto';
 import { ChangePasswordResponseDto } from './interfaces/user/dto/change-password-response.dto';
 import { IServiceChangePasswordResponse } from './interfaces/user/service-account-change-password-response.interface';
+import { IServiceImageDeleteResponse } from './interfaces/image/service-image-delete-response.interface';
 
 @Controller('users')
 export class AccountsController {
   constructor(@Inject('ACCOUNT_SERVICE') private readonly accountServiceClient: ClientProxy,
-    @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy
+    @Inject('AUTH_SERVICE') private readonly authServiceClient: ClientProxy,
+    @Inject('IMAGE_SERVICE') private readonly imageServiceClient: ClientProxy
   ) { }
 
   //New user
@@ -349,7 +351,7 @@ export class AccountsController {
     }
 
     //response.cookie('Set-Cookie', 'Refresh=; HttpOnly; Path=/; Max-Age=0')
-    
+
     response.clearCookie('Refresh-Token')
 
     return {
@@ -454,6 +456,10 @@ export class AccountsController {
     const userResponse: any = await this.accountServiceClient
       .send('user_delete_account', userInfo.id)
       .toPromise()
+
+    await this.imageServiceClient
+      .send('image_delete_all', userInfo.id)
+      .toPromise();
 
     if (userResponse.status !== HttpStatus.OK) {
       throw new HttpException(

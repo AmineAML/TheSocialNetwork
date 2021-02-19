@@ -5,6 +5,7 @@
             <img src="./../../../../favicon.ico" width="50" alt="Logo" class="mr-2">
         </a>
         <a class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2" [routerLink]="['/']">Home</a>
+        <a class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2" [routerLink]="['/hobbies']">Hobbies</a>
     </div>
 
     <div class="hidden md:block" *ngIf="isServerRespondedWithData | async; else notAuthenticated">

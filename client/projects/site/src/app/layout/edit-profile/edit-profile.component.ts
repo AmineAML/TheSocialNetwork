@@ -207,40 +207,42 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
       map((userData: Userss) => {
         this.dataSource = userData
 
-        let avatar, background
+        if (userData.user !== null) {
+          let avatar, background
 
-        if (this.dataSource.user.image !== null) {
-          this.dataSource.user.image.forEach(image => {
-            if (image.type === 'avatar') {
-              avatar = image.link
-            } else if (image.type === 'background') {
-              background = image.link
-            }
+          if (userData.user.image !== null) {
+            userData.user.image.forEach(image => {
+              if (image.type === 'avatar') {
+                avatar = image.link
+              } else if (image.type === 'background') {
+                background = image.link
+              }
+            })
+          }
+  
+          this.form.patchValue({
+            id: userData.user.id,
+            first_name: userData.user.first_name,
+            last_name: userData.user.last_name,
+            description: userData.user.description,
+            gender: userData.user.gender,
+            social_media: userData.user.social_media || {},
+            avatar: avatar,
+            background: background
           })
+  
+          if (userData.user.interest && userData.user.interest.length > 0) {
+            userData.user.interest.forEach(interest => {
+              this.aliases.push(this.formBuilder.control(interest))
+            })
+          }
+  
+          this.interests = userData.user.interest
+  
+          this.isServerRespondedWithData = Promise.resolve(true)
+  
+          this.originalFormValue = this.form.getRawValue();
         }
-
-        this.form.patchValue({
-          id: userData.user.id,
-          first_name: userData.user.first_name,
-          last_name: userData.user.last_name,
-          description: userData.user.description,
-          gender: userData.user.gender,
-          social_media: userData.user.social_media || {},
-          avatar: avatar,
-          background: background
-        })
-
-        if (userData.user.interest && userData.user.interest.length > 0) {
-          userData.user.interest.forEach(interest => {
-            this.aliases.push(this.formBuilder.control(interest))
-          })
-        }
-
-        this.interests = userData.user.interest
-
-        this.isServerRespondedWithData = Promise.resolve(true)
-
-        this.originalFormValue = this.form.getRawValue();
       }),
       takeUntil(this.ngUnsubscribe)
     ).subscribe()
@@ -377,6 +379,18 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
     this.aliases.push(this.formBuilder.control(''));
   }
 
+  loggedInUsername() {
+    this.authService.getLoggedInUsername().pipe(
+      takeUntil(this.ngUnsubscribe)
+    ).subscribe((value: boolean) => {
+      if (value) {
+        this.username = this.authService.loggedUsername
+
+        this.getUser()
+      }
+    })
+  }
+
   ngOnInit(): void {
     this.username = this.authService.loggedUsername
 
@@ -413,10 +427,10 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
     }, {
       validators: CustomValidators.passwordMatch
     })
-
-    this.getUser()
     
     this.originalPasswordFormValue = this.changePasswordform.getRawValue();
+
+    this.loggedInUsername()
   }
 
   ngOnDestroy() {

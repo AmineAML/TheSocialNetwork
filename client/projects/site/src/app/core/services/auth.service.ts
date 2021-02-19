@@ -23,6 +23,8 @@ export class AuthService {
 
   private accessToken: string = null
 
+  private modifyLoggedInUsername: Subject<boolean> = new ReplaySubject<boolean>(1);
+
   constructor(private http: HttpClient,
     private router: Router) { }
 
@@ -154,6 +156,16 @@ export class AuthService {
   public setAvatarLink(value: boolean): void {
 
     this.modifyAvatarLink.next(value);
+  }
+
+  public getLoggedInUsername(): Observable<boolean> {
+
+    return this.modifyLoggedInUsername.asObservable();
+  }
+
+  public setLoggedInUsername(value: boolean): void {
+
+    this.modifyLoggedInUsername.next(value);
   }
 
   public getConfirmedEmailLink(): Observable<boolean> {

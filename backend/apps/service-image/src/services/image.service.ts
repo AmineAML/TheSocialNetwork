@@ -120,6 +120,14 @@ export class ImageService {
         return imageModel
     }
 
+    public async searchImagesRemovalByUserId(user_id: string): Promise<IImage[]> {
+        const imageModel = await this.imageModel.find({ user_id: user_id }).exec();
+
+        console.log(imageModel)
+
+        return imageModel
+    }
+
     public async searchImagesByUsersIds(users_ids: Array<string>): Promise<IImage[]> {
         console.log(users_ids)
 
@@ -142,9 +150,23 @@ export class ImageService {
     public async deleteImageById(image_id: string, imagekit_file_id: string): Promise<IImage> {
         await this.imageKit.deleteFile(imagekit_file_id).catch(err => {
             console.log(`The file you're requesting its deletion was already deleted or it doesn't exist`)
+
+            console.log(err)
         })
 
         return this.imageModel.findOneAndDelete/*.deleteOne*/({ _id: image_id }).exec();
+    }
+
+    public async deleteAllProfileImages(images: IImage[]): Promise<any> {
+        let deletedFiles: number = 0
+
+        images.forEach(async image => {
+            await this.deleteImageById(image.id, image.imagekit_file_id)
+
+            deletedFiles++
+        })
+
+        return deletedFiles
     }
 
     public async uploadSingleImage(fileName: string, image: string): Promise<string> {
