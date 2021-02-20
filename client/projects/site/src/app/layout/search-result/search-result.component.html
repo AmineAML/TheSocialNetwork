@@ -44,29 +44,32 @@
         <!-- Users cards -->
         <div class="flex flex-col flex-wrap content-center" *ngIf="dataSource.users !== null; else noUserFound">
             <ng-container *ngFor="let user of dataSource.users">
-                <a class="md:block w-80" [routerLink]="['/profile', user.username]">
+                <a class="md:block" [routerLink]="['/profile', user.username]">
                     <!-- Two column -->
-                    <span class="p-2 text-amethyst hover:text-orange-700 mr-2 flex-wrap content-center flex">
+                    <span
+                        class="p-2 text-amethyst hover:text-orange-700 mr-2 grid grid-cols-2">
                         <!-- Avatar -->
-                        <ng-container *ngIf="user.image !== null && user.image.length > 0">
-                            <ng-container *ngFor="let image of user.image">
-                                <span class="rounded-full p-1 inline-block bg-yellow-500"
-                                    *ngIf="image.type !== 'background'">
-                                    <img src="{{image.link ? image.link : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'}}"
-                                        alt="Avatar" class="w-32 h-32 rounded-full">
-                                </span>
+                        <div class="m-auto">
+                            <ng-container *ngIf="user.image !== null && user.image.length > 0">
+                                <ng-container *ngFor="let image of user.image">
+                                    <div class="rounded-full p-1 inline-block bg-yellow-500"
+                                        *ngIf="image.type !== 'background'">
+                                        <img src="{{image.link ? image.link : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'}}"
+                                            alt="Avatar" class="w-32 h-32 rounded-full"#avatarimg (error)="avatarimg.src='../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'">
+                                </div>
+                                </ng-container>
                             </ng-container>
-                        </ng-container>
-
-                        <ng-container *ngIf="user.image === null || user.image.length === 0">
-                            <span class="rounded-full p-1 inline-block bg-yellow-500">
-                                <img src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
-                                    alt="Avatar" class="w-32 h-32 rounded-full">
-                            </span>
-                        </ng-container>
+    
+                            <ng-container *ngIf="user.image === null || user.image.length === 0">
+                                <div class="rounded-full p-1 inline-block bg-yellow-500">
+                                    <img src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
+                                        alt="Avatar" class="w-32 h-32 rounded-full">
+                                </div>
+                            </ng-container>
+                        </div>
 
                         <!-- Two row -->
-                        <div class="flex-grow p-3" style="align-self: flex-end;">
+                        <div class="m-auto">
                             <!-- First name, last name and gender -->
                             <div>
                                 <div class="font-semibold text-gray-700">
@@ -79,6 +82,7 @@
                                     <span>{{user.gender}}</span>
                                 </div>
                             </div>
+
                             <!-- Chips of top three interests and another with X more interests -->
                             <div>
                                 <mat-chip-list>
@@ -101,9 +105,9 @@
             </div>
         </ng-template>
 
-        <mat-paginator *ngIf="dataSource.meta !== null" [length]="dataSource.meta.totalItems" [pageSize]="dataSource.meta.itemsPerPage"
-            class="flex bg-transparent mx-auto" [pageSizeOptions]="[5, 10, 25, 100]" [showFirstLastButtons]="true"
-            (page)="pageEvents($event)">
+        <mat-paginator *ngIf="dataSource.meta !== null" [length]="dataSource.meta.totalItems"
+            [pageSize]="dataSource.meta.itemsPerPage" class="flex bg-transparent mx-auto"
+            [pageSizeOptions]="[5, 10, 25, 100]" [showFirstLastButtons]="true" (page)="pageEvents($event)">
         </mat-paginator>
     </div>
 </div>

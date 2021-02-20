@@ -230,6 +230,9 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
             avatar: avatar,
             background: background
           })
+
+          //Aliases shouldn't contain values before pushing new values
+          this.aliases.clear()
   
           if (userData.user.interest && userData.user.interest.length > 0) {
             userData.user.interest.forEach(interest => {
