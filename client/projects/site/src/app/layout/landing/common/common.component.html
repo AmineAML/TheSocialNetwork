@@ -14,7 +14,7 @@
 <div class="md:flex md:h-3/6 bg-orange-100 text-amethyst">
     <div class="flex flex-col m-auto my-3">
         <p class="m-auto text-xl md:text-2xl lg:text-4xl">People are looking for friends with similar hobbies</p>
-        <div class="flex flex-wrap content-center p-7">
+        <div class="flex flex-wrap content-center p-7 m-auto">
             <ng-container *ngFor="let interest of options; index as i">
                 <a [routerLink]="['/search']" [queryParams]="{ interest: interest.name }"
                     class="flex justify-center items-center m-1 font-medium py-5 px-7 rounded-full text-blue-700 bg-blue-100 border border-blue-300"

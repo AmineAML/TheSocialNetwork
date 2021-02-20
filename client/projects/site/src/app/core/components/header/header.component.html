@@ -8,7 +8,7 @@
         <a class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2" [routerLink]="['/hobbies']">Hobbies</a>
     </div>
 
-    <div class="hidden md:block" *ngIf="isServerRespondedWithData | async; else notAuthenticated">
+    <div class="block" *ngIf="isServerRespondedWithData | async; else notAuthenticated">
         <span class="p-2 text-amethyst hover:text-orange-700 mr-2 flex-wrap content-center flex">
             <ng-container *ngIf="dataSource.user.image !== null && dataSource.user.image.length > 0">
                 <ng-container *ngFor="let image of dataSource.user.image">
@@ -48,7 +48,7 @@
     </div>
 
     <ng-template #notAuthenticated>
-        <div class="hidden md:block">
+        <div class="block">
             <a class="inline-block p-2 text-amethyst hover:text-orange-700 mr-2" [routerLink]="['/login']">Login</a>
             <a class="inline-block py-2 px-4 text-amethyst bg-yellow-400 hover:bg-yellow-300 hover:text-orange-700 rounded transition ease-in duration-150"
                 [routerLink]="['/register']">Sign Up</a>
