@@ -14,7 +14,7 @@
                 <!-- Include auto complete -->
                 <!-- <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"> -->
                 <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
                         {{option.name}}
                     </mat-option>
                 </mat-autocomplete>
