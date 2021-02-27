@@ -1,0 +1,93 @@
+@startuml "architecture"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Container.puml
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+
+AddTagSupport("color", $bgColor="#888888", $borderColor="#ffffbf")
+
+LAYOUT_TOP_DOWN()
+'LAYOUT_AS_SKETCH()
+LAYOUT_WITH_LEGEND()
+
+'Person(user, User, "A non member")
+
+Person(administrator, Administrator, "An administrator")
+
+Person(member, Member, "A member")
+
+System_Boundary(c1, "Social Network") {
+
+    Container(app, "SPA", "JavaScript, Angular", "Provides all the social network functionality to members and non members via web browsers")
+
+    Container(admin_app, "SPA", "JavaScript, Angular", "Allows administrators and moderators to adrministrate the accounts")
+
+    Container(api_gateway, "API Gateway", "JavaScript, NestJS", "Single entry point for all clients that enables them to retrieve data from multiple services")
+
+    Container(message_broker, "Message Broker", "Redis", "Transport for business events")
+
+    Container(account_service, "Account Service", "JavaScript, NESTJS", "Provides user's accounts, email confirmation links and hobbies management")
+
+    Container(auth_service, "Authentication Service", "JavaScript, NESTJS", "Manages the authentication and authorization")
+
+    Container(image_service, "Image Service", "JavaScript, NESTJS", "Provides user's profile images")
+
+    Container(report_service, "Report Service", "JavaScript, NESTJS", "Manages complaints")
+
+    Container(mailer_service, "Mailer Service", "JavaScript, NESTJS", "Handles emails sending")
+
+    ContainerDb(account_db, "Account Database", "MongoDB", "Stores account information, confirmation links and hobbies")
+
+    ContainerDb(auth_db, "Authentication Database", "MongoDB", "Stores refresh tokens")
+
+    ContainerDb(image_db, "Image Database", "MongoDB", "Stores members' profile images links")
+
+    ContainerDb(report_db, "Report Database", "MongoDB", "Stores members complaints")
+}
+
+Container(email_api, "Email System", "API, Sendgrid API", "Sendgrid's email service externaly", $tags="color")
+
+Container(image_api, "CDN", "API, Imagekit API", "Imagekit's image hosting service externaly", $tags="color")
+
+'Rel(user, app, "Uses", "HTTPS")
+
+Rel(administrator, admin_app, "Visits thesocialnetwork.amineamellouk.com/admin", "HTTPS")
+
+Rel(member, app, "Visits thesocialnetwork.amineamellouk.com", "HTTPS")
+
+Rel(app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+
+Rel(admin_app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+
+Rel_R(api_gateway, message_broker, "Sends user update events to")
+
+Rel(message_broker, account_service, "Sends user update events to")
+Rel(message_broker, auth_service, "Sends user update events to")
+Rel(message_broker, report_service, "Sends user update events to")
+Rel(message_broker, image_service, "Sends user update events to")
+Rel(message_broker, mailer_service, "Sends user update events to")
+
+Rel(account_service, message_broker, "Sends user emails events to")
+
+Rel(account_service, account_db, "Reads from and writes to")
+Rel(auth_service, auth_db, "Reads from and writes to")
+Rel(image_service, image_db, "Reads from and writes to")
+Rel(report_service, report_db, "Reads from and writes to")
+
+Rel_L(mailer_service, email_api, "Sends emails", "JSON/HTTPS")
+Rel(image_service, image_api, "Stores and reads files", "JSON/HTTPS")
+
+Lay_R(account_service, auth_service)
+Lay_R(auth_service, report_service)
+Lay_R(report_service, image_service)
+Lay_R(image_service, mailer_service)
+Lay_R(administrator, member)
+Lay_R(message_broker, email_api)
+'Lay_R(admin_app, app)
+'Lay_L(email_api, member)
+
+Rel_L(email_api, member, "Sends emails to", "SMTP")
+
+@enduml

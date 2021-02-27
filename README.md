@@ -15,7 +15,7 @@
   <a href="#how-to-use">How To Use</a> •
   <a href="#api">API</a> •
   <a href="#credits">Credits</a> •
-  <!-- <a href="#architecture-diagram">Architecture Diagram</a> • -->
+  <a href="#architecture-diagram">Architecture Diagram</a> •
   <a href="#license">License</a>
 </p>
 
@@ -216,7 +216,10 @@ Also:
 - DNS [Netlify](https://www.netlify.com/)
 - [Postman](https://www.postman.com/)
 
-<!-- Architecture diagram -->
+## Architecture diagram
+
+![Architecture](./docs/diagrams/architecture.svg)
+C4 Model Diagram
 
 ## License
 This software is licensed under the [MIT](https://github.com/AmineAML/TheSocialNetwork/blob/main/LICENSE) © [Amine AMELLOUK](https://www.amineamellouk.com)
