@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="1230px" preserveAspectRatio="none" style="width:1461px;height:1230px;" version="1.1" viewBox="0 0 1461 1230" width="1461px" zoomAndPan="magnify"><defs/><g><!--MD5=[84dda40acb3410cad7262261daba2aaf]
+cluster c1--><rect fill="#FFFFFF" height="841" style="stroke:#444444;stroke-width:1.0;stroke-dasharray:7.0,7.0;" width="1250" x="7" y="223"/><text fill="#444444" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="115" x="574.5" y="241.6094">Social Network</text><text fill="#444444" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="51" x="606.5" y="257.582">[System]</text><!--MD5=[4541fb81c80c07473fe4b07432ef0971]
+entity app--><rect fill="#438DD5" height="125.6563" style="stroke:#3C7FC0;stroke-width:1.5;" width="218" x="523" y="277"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="33" x="615.5" y="303.6094">SPA</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="112" x="576" y="319.582">[JavaScript, Angular]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="634" y="336.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="190" x="537" y="354.3613">Provides all the social network</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181" x="539.5" y="371.9707">functionality to members and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="198" x="533" y="389.5801">non members via web browsers</text><!--MD5=[a9d3e7a3d5d292fcb7e2556b559b18f3]
+entity admin_app--><rect fill="#438DD5" height="125.6563" style="stroke:#3C7FC0;stroke-width:1.5;" width="218" x="248" y="277"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="33" x="340.5" y="303.6094">SPA</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="112" x="301" y="319.582">[JavaScript, Angular]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="359" y="336.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="160" x="277" y="354.3613">Allows administrators and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="198" x="258" y="371.9707">moderators to adrministrate the</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="57" x="328.5" y="389.5801">accounts</text><!--MD5=[76642c686924d2234c32dd0968779847]
+entity api_gateway--><rect fill="#438DD5" height="125.6563" style="stroke:#3C7FC0;stroke-width:1.5;" width="217" x="248.5" y="495"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="96" x="309" y="521.6094">API Gateway</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="108" x="303" y="537.582">[JavaScript, NestJS]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="359" y="554.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="193" x="262.5" y="572.3613">Single entry point for all clients</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="181" x="264.5" y="589.9707">that enables them to retrieve</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="168" x="273" y="607.5801">data from multiple services</text><!--MD5=[c4b9eab5b9d3041c22c4a07cace1f6fa]
+entity message_broker--><rect fill="#438DD5" height="90.4375" style="stroke:#3C7FC0;stroke-width:1.5;" width="213" x="664.5" y="513"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="124" x="709" y="539.6094">Message Broker</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="752" y="555.582">[Redis]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="773" y="572.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="189" x="678.5" y="590.3613">Transport for business events</text><!--MD5=[1d1b741781a6358fd60624d8ea52eed9]
+entity account_service--><rect fill="#438DD5" height="125.6563" style="stroke:#3C7FC0;stroke-width:1.5;" width="198" x="115" y="713"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="125" x="151.5" y="739.6094">Account Service</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="115" x="156.5" y="755.582">[JavaScript, NESTJS]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="216" y="772.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="162" x="133" y="790.3613">Provides user's accounts,</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="174" x="125" y="807.9707">email confirmation links and</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136" x="146" y="825.5801">hobbies management</text><!--MD5=[0c244f1ff8b51ed614320bc7fae387ac]
+entity auth_service--><rect fill="#438DD5" height="108.0469" style="stroke:#3C7FC0;stroke-width:1.5;" width="203" x="352.5" y="722"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="172" x="368" y="748.6094">Authentication Service</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="115" x="396.5" y="764.582">[JavaScript, NESTJS]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="456" y="781.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="175" x="366.5" y="799.3613">Manages the authentication</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="109" x="399.5" y="816.9707">and authorization</text><!--MD5=[fe493f706dd71598a2d8b7cfb836f3d5]
+entity image_service--><rect fill="#438DD5" height="90.4375" style="stroke:#3C7FC0;stroke-width:1.5;" width="213" x="792.5" y="731"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="107" x="845.5" y="757.6094">Image Service</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="115" x="841.5" y="773.582">[JavaScript, NESTJS]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="901" y="790.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="189" x="806.5" y="808.3613">Provides user's profile images</text><!--MD5=[a05d0323e18882582d6dd92caaeb3632]
+entity report_service--><rect fill="#438DD5" height="90.4375" style="stroke:#3C7FC0;stroke-width:1.5;" width="153" x="602.5" y="731"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="113" x="622.5" y="757.6094">Report Service</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="115" x="621.5" y="773.582">[JavaScript, NESTJS]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="681" y="790.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="129" x="616.5" y="808.3613">Manages complaints</text><!--MD5=[4b8e72a79a040f1452e08b28921684f2]
+entity mailer_service--><rect fill="#438DD5" height="90.4375" style="stroke:#3C7FC0;stroke-width:1.5;" width="173" x="1040.5" y="731"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="106" x="1074" y="757.6094">Mailer Service</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="115" x="1069.5" y="773.582">[JavaScript, NESTJS]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1129" y="790.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149" x="1054.5" y="808.3613">Handles emails sending</text><!--MD5=[f1108f023a71576b1bff52f5f253b2ec]
+entity account_db--><path d="M98.5,941 C98.5,931 204,931 204,931 C204,931 309.5,931 309.5,941 L309.5,1038.0469 C309.5,1048.0469 204,1048.0469 204,1048.0469 C204,1048.0469 98.5,1048.0469 98.5,1038.0469 L98.5,941 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M98.5,941 C98.5,951 204,951 204,951 C204,951 309.5,951 309.5,941 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="140" x="134" y="971.6094">Account Database</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="174" y="987.582">[MongoDB]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="206" y="1004.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="173" x="117.5" y="1022.3613">Stores account information,</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="191" x="108.5" y="1039.9707">confirmation links and hobbies</text><!--MD5=[378f4f46677478179380fc41bd8b14a7]
+entity auth_db--><path d="M344.5,950 C344.5,940 448,940 448,940 C448,940 551.5,940 551.5,950 L551.5,1029.4375 C551.5,1039.4375 448,1039.4375 448,1039.4375 C448,1039.4375 344.5,1039.4375 344.5,1029.4375 L344.5,950 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M344.5,950 C344.5,960 448,960 448,960 C448,960 551.5,960 551.5,950 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="187" x="354.5" y="980.6094">Authentication Database</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="418" y="996.582">[MongoDB]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="450" y="1013.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136" x="382" y="1031.3613">Stores refresh tokens</text><!--MD5=[23648a4042659f241bd86ae78ec14bb2]
+entity image_db--><path d="M820.5,941 C820.5,931 909,931 909,931 C909,931 997.5,931 997.5,941 L997.5,1038.0469 C997.5,1048.0469 909,1048.0469 909,1048.0469 C909,1048.0469 820.5,1048.0469 820.5,1038.0469 L820.5,941 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M820.5,941 C820.5,951 909,951 909,951 C909,951 997.5,951 997.5,941 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="122" x="848" y="971.6094">Image Database</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="879" y="987.582">[MongoDB]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="911" y="1004.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="149" x="834.5" y="1022.3613">Stores members' profile</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="77" x="870.5" y="1039.9707">images links</text><!--MD5=[3825938377d2a53f24f6e9d6e813135e]
+entity report_db--><path d="M587,950 C587,940 686,940 686,940 C686,940 785,940 785,950 L785,1029.4375 C785,1039.4375 686,1039.4375 686,1039.4375 C686,1039.4375 587,1039.4375 587,1029.4375 L587,950 " fill="#438DD5" style="stroke:#3C7FC0;stroke-width:1.5;"/><path d="M587,950 C587,960 686,960 686,960 C686,960 785,960 785,950 " fill="none" style="stroke:#3C7FC0;stroke-width:1.5;"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="128" x="622" y="980.6094">Report Database</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="60" x="656" y="996.582">[MongoDB]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="688" y="1013.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="174" x="601" y="1031.3613">Stores members complaints</text><!--MD5=[65a041cd1922b3dee6e64063a2213939]
+entity administrator--><rect fill="#08427B" height="123.3438" style="stroke:#073B6F;stroke-width:1.5;" width="127" x="370.5" y="7"/><image height="48" width="48" x="410" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAABuUlEQVR42u2Yv0oEMRDGp/QRfIR7BVs7Gx9AH0CwtrtKLNXSRsRSG8HCxkbQVrSykoOrzlILC9v4gwMRNptMMsnu3nHDFMcSLh/f/PsmsrY5HpTLUgHaOri8uHt+eJm8vs/wm8e38fn9aPekB0D7p7df3z+uxYC4sXfWEaD17SPIcAqDreqAQBMgpmnHV091ASm5+W8EtxYgQuCyDF7LA+JPXa5RieUBwbwzWHlAVLIFEB2rMKCk4rK0AC0gZzN9/S8soOnHpwWQvhtpATE4h5XUlrKnIKp06uxCS5poCzs6stvjzuF1XfmRVG4ZkihHMSp5SuXGJGG5LEAVPSIpb4qJfIQzQeF6OMORGXSHbCjLuAb1CYhti7whQHQ5PLrlcHh+kiAyN/RxFE0/9OYvH+dJw33gw/nB4bYa5Ltmokl4MTXqMi+sMFtSfFBEDWoD67bUkPSa+d/Gk3i7i6tvxE4LyLhgGOeu9ELPXzLFAVHJrkNrZreUFfN28S9l1x27upVSLwp5hlIYFqBm8a8ADRxQJIfszy72ZxrpeKxGR6xnltEbupkbXtkpbQsh6ozhV8kDCni1dcT8F2bsoAKLcdt7AAAAAElFTkSuQmCC" y="17"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="103" x="382.5" y="81.6094">Administrator</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="436" y="99.6582"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="103" x="384.5" y="117.2676">An administrator</text><!--MD5=[96464e485a405d94e9bd6ac3601b7b01]
+entity member--><rect fill="#08427B" height="123.3438" style="stroke:#073B6F;stroke-width:1.5;" width="88" x="610" y="7"/><image height="48" width="48" x="630" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAABuUlEQVR42u2Yv0oEMRDGp/QRfIR7BVs7Gx9AH0CwtrtKLNXSRsRSG8HCxkbQVrSykoOrzlILC9v4gwMRNptMMsnu3nHDFMcSLh/f/PsmsrY5HpTLUgHaOri8uHt+eJm8vs/wm8e38fn9aPekB0D7p7df3z+uxYC4sXfWEaD17SPIcAqDreqAQBMgpmnHV091ASm5+W8EtxYgQuCyDF7LA+JPXa5RieUBwbwzWHlAVLIFEB2rMKCk4rK0AC0gZzN9/S8soOnHpwWQvhtpATE4h5XUlrKnIKp06uxCS5poCzs6stvjzuF1XfmRVG4ZkihHMSp5SuXGJGG5LEAVPSIpb4qJfIQzQeF6OMORGXSHbCjLuAb1CYhti7whQHQ5PLrlcHh+kiAyN/RxFE0/9OYvH+dJw33gw/nB4bYa5Ltmokl4MTXqMi+sMFtSfFBEDWoD67bUkPSa+d/Gk3i7i6tvxE4LyLhgGOeu9ELPXzLFAVHJrkNrZreUFfN28S9l1x27upVSLwp5hlIYFqBm8a8ADRxQJIfszy72ZxrpeKxGR6xnltEbupkbXtkpbQsh6ozhV8kDCni1dcT8F2bsoAKLcdt7AAAAAElFTkSuQmCC" y="17"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="61" x="623.5" y="81.6094">Member</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="656" y="99.6582"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="624" y="117.2676">A member</text><!--MD5=[089cd7b947705efa6dd102b9b0fc6286]
+entity email_api--><rect fill="#888888" height="108.0469" style="stroke:#FFFFBF;stroke-width:1.5;" width="181" x="1273.5" y="504"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="103" x="1312.5" y="530.6094">Email System</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="105" x="1311.5" y="546.582">[API, Sendgrid API]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1366" y="563.752"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="153" x="1287.5" y="581.3613">Sendgrid's email service</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="57" x="1335.5" y="598.9707">externaly</text><!--MD5=[08486feae73144ef3b457856a4ec736b]
+entity image_api--><rect fill="#888888" height="108.0469" style="stroke:#FFFFBF;stroke-width:1.5;" width="182" x="1273" y="935.5"/><text fill="#FFFFFF" font-family="sans-serif" font-size="16" font-weight="bold" lengthAdjust="spacing" textLength="36" x="1346" y="962.1094">CDN</text><text fill="#FFFFFF" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="104" x="1312" y="978.082">[API, Imagekit API]</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1366" y="995.252"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="154" x="1287" y="1012.8613">Imagekit's image hosting</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="106" x="1311" y="1030.4707">service externaly</text><!--MD5=[95f1153c8afeedc3c407d34c67e10af8]
+link administrator to admin_app--><path d="M391.65,130.01 C386.33,139.7 381.53,149.88 378,160 C365.99,194.46 360.56,234.66 358.21,268.23 " fill="none" id="administrator-to-admin_app" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="357.68,276.62,361.1741,268.8231,355.1858,268.4482,357.68,276.62" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="32" x="489" y="173.457">Visits</text><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="255" x="379" y="188.5508">thesocialnetwork.amineamellouk.com/admin</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="45" x="484" y="203.6445">[HTTPS]</text><!--MD5=[26ac925cebdae9cd48e8330b2e282a65]
+link member to app--><path d="M649.04,130.32 C645.69,171.3 641.27,225.5 637.76,268.39 " fill="none" id="member-to-app" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="637.1,276.53,640.7471,268.8035,634.7674,268.3106,637.1,276.53" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="32" x="738" y="173.457">Visits</text><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="217" x="647" y="188.5508">thesocialnetwork.amineamellouk.com</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="45" x="733" y="203.6445">[HTTPS]</text><!--MD5=[43eec8b013f0e57b9a57b194867ebf56]
+link app to api_gateway--><path d="M552.83,403.19 C518.32,430.29 477.8,462.12 442.6,489.77 " fill="none" id="app-to-api_gateway" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="436.09,494.88,444.233,492.2931,440.5242,487.5767,436.09,494.88" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="104" x="511" y="446.457">Makes API calls to</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="80" x="523" y="461.5508">[JSON/HTTPS]</text><!--MD5=[79408cb370f563969a62f1238bb02bdc]
+link admin_app to api_gateway--><path d="M357,403.19 C357,429.28 357,459.75 357,486.65 " fill="none" id="admin_app-to-api_gateway" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="357,494.88,360,486.88,354,486.88,357,494.88" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="104" x="358" y="446.457">Makes API calls to</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="80" x="370" y="461.5508">[JSON/HTTPS]</text><!--MD5=[b0fd51b3391f25afe643653e36fc1640]
+link api_gateway to message_broker--><path d="M465.5,558 C524.08,558 596.38,558 655.93,558 " fill="none" id="api_gateway-to-message_broker" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="664.25,558,656.25,555,656.25,561,664.25,558" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="162" x="484" y="551.457">Sends user update events to</text><!--MD5=[9410b07578eac360e2bb98b4424733dc]
+link message_broker to account_service--><path d="M664.29,585.76 C610.29,598.33 543.51,612.41 483,621 C435.8,627.7 87.51,616.13 55,651 C25.32,682.84 61.98,713 107.55,735.61 " fill="none" id="message_broker-to-account_service" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="114.93,739.17,109.0367,732.9838,106.4222,738.3842,114.93,739.17" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="162" x="56" y="671.957">Sends user update events to</text><!--MD5=[63fb5eb211a5e758fb210b014a76216c]
+link account_service to message_broker--><path d="M241.1,712.77 C254.14,689.86 272.02,665.9 295,651 C366,604.97 399.83,636.58 483,621 C540.26,610.28 603.58,596.82 656.23,585.19 " fill="none" id="account_service-to-message_broker" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="664.26,583.41,655.8009,582.2087,657.0968,588.0671,664.26,583.41" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="161" x="296" y="671.957">Sends user emails events to</text><!--MD5=[f4a0ef1d8cc5ab39dc04fb88ec373018]
+link message_broker to auth_service--><path d="M664.48,568.35 C604.28,579.11 532.08,602.08 486,651 C470.11,667.86 461.86,691.54 457.65,713.7 " fill="none" id="message_broker-to-auth_service" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="456.28,721.77,460.5804,714.3872,454.6656,713.3799,456.28,721.77" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="162" x="487" y="671.957">Sends user update events to</text><!--MD5=[1ff085ba2be0c7a6222150e0db9f6f3a]
+link message_broker to report_service--><path d="M703.33,603.16 C688.26,616.57 674.31,632.68 666,651 C655.93,673.22 657.24,699.91 661.87,722.83 " fill="none" id="message_broker-to-report_service" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="663.64,730.76,664.838,722.3004,658.9802,723.5986,663.64,730.76" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="162" x="667" y="671.957">Sends user update events to</text><!--MD5=[33379747c133c61473b9d7396dbee37b]
+link message_broker to image_service--><path d="M802.84,603.23 C813.16,618.16 824.42,635.08 834,651 C848.08,674.4 862.32,701.14 873.87,723.78 " fill="none" id="message_broker-to-image_service" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="877.52,730.98,876.5645,722.4896,871.2174,725.2114,877.52,730.98" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="162" x="852" y="671.957">Sends user update events to</text><!--MD5=[dc4430ce844bbd5babd266bca3b43765]
+link message_broker to mailer_service--><path d="M877.77,584.48 C925.04,599.04 979.62,620.59 1023,651 C1050.88,670.54 1075.66,699.37 1094.04,724.31 " fill="none" id="message_broker-to-mailer_service" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="1098.81,730.89,1096.5362,722.6541,1091.6815,726.1799,1098.81,730.89" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="162" x="1060" y="671.957">Sends user update events to</text><!--MD5=[fe1d99346e7cc0501dbd53e3eb8ad33d]
+link account_service to account_db--><path d="M211.07,839.03 C209.82,865.32 208.37,895.98 207.11,922.67 " fill="none" id="account_service-to-account_db" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="206.73,930.82,210.0985,922.968,204.1049,922.6893,206.73,930.82" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="143" x="210" y="889.957">Reads from and writes to</text><!--MD5=[cde6dccfc1b705bb48f7b652fe919360]
+link auth_service to auth_db--><path d="M452.49,830.1 C451.62,860.99 450.51,899.92 449.62,931.46 " fill="none" id="auth_service-to-auth_db" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="449.38,939.73,452.6073,931.8189,446.6097,931.6476,449.38,939.73" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="143" x="452" y="889.957">Reads from and writes to</text><!--MD5=[2aa56e1ef3a8073e004634d1b28d302f]
+link image_service to image_db--><path d="M901.08,821.08 C902.47,850.43 904.32,889.53 905.88,922.56 " fill="none" id="image_service-to-image_db" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="906.27,930.81,908.8806,922.6746,902.8875,922.964,906.27,930.81" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="143" x="905" y="889.957">Reads from and writes to</text><!--MD5=[60fa9d3d3bee9ae7384854960f338b1a]
+link report_service to report_db--><path d="M680.46,821.08 C681.52,853.13 682.97,896.81 684.11,931.51 " fill="none" id="report_service-to-report_db" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="684.38,939.68,687.1214,931.5878,681.1245,931.7805,684.38,939.68" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="143" x="683" y="889.957">Reads from and writes to</text><!--MD5=[e376a6925526b5f9bd9cdd7299f5eaa1]
+reverse link email_api to mailer_service--><path d="M1312.79,618.45 C1293.56,639.62 1271.01,663.12 1249,683 C1230.59,699.63 1209.36,716.38 1189.81,730.95 " fill="none" id="email_api-backto-mailer_service" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="1318.39,612.25,1310.8001,616.1734,1315.2513,620.1966,1318.39,612.25" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="77" x="1281.5" y="664.457">Sends emails</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="80" x="1280" y="679.5508">[JSON/HTTPS]</text><!--MD5=[63b4d148aee0890ef829cfd59bb3c09d]
+link image_service to image_api--><path d="M984.58,821.03 C997.37,827.25 1010.47,833.42 1023,839 C1125.08,884.48 1155.6,884.02 1257,931 C1259.74,932.27 1262.52,933.58 1265.31,934.92 " fill="none" id="image_service-to-image_api" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="1272.72,938.53,1266.8366,932.3344,1264.2135,937.7306,1272.72,938.53" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="125" x="1186" y="882.457">Stores and reads files</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="80" x="1208.5" y="897.5508">[JSON/HTTPS]</text><!--MD5=[9130a335009bfd825c197b26b1260e1e]
+link account_service to auth_service--><!--MD5=[1b65e4fa977afe9fa4c17bd2d98666a3]
+link auth_service to report_service--><!--MD5=[2fbdc08763990d75b4b4ea19b1f9a715]
+link report_service to image_service--><!--MD5=[176fe82f2988a975d67d6e7a4392664c]
+link image_service to mailer_service--><!--MD5=[0aca8357238b97e2cfdb841293ff6c59]
+link administrator to member--><!--MD5=[094e5b75797cf38d53005eaf54a5ddd1]
+link message_broker to email_api--><!--MD5=[558c000f6f252215aaa6dbbb530fb16d]
+reverse link member to email_api--><path d="M706.27,75.5 C837.54,91.55 1176.32,139.51 1257,215 C1338.43,291.19 1358.29,428.36 1362.87,503.76 " fill="none" id="member-backto-email_api" style="stroke:#666666;stroke-width:1.0;"/><polygon fill="#666666" points="698.3,74.53,705.8836,78.4656,706.6015,72.5087,698.3,74.53" style="stroke:#666666;stroke-width:1.0;"/><text fill="#666666" font-family="sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacing" textLength="91" x="1350" y="337.457">Sends emails to</text><text fill="#666666" font-family="sans-serif" font-size="12" font-style="italic" lengthAdjust="spacing" textLength="38" x="1376.5" y="352.5508">[SMTP]</text><rect fill="#FFFFFF" height="137.2656" rx="5" ry="5" style="stroke:#FFFFFF;stroke-width:1.0;" width="133" x="1306" y="1077"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="53" x="1312" y="1098.5332">Legend</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="0" x="1369" y="1098.5332"/><rect fill="#08427B" height="17.6094" style="stroke:none;stroke-width:1.0;" width="121" x="1312" y="1101.6094"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="1316" y="1116.1426">person</text><rect fill="#1168BD" height="17.6094" style="stroke:none;stroke-width:1.0;" width="121" x="1312" y="1119.2188"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="1316" y="1133.752">system</text><rect fill="#438DD5" height="17.6094" style="stroke:none;stroke-width:1.0;" width="121" x="1312" y="1136.8281"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59" x="1316" y="1151.3613">container</text><rect fill="#686868" height="17.6094" style="stroke:none;stroke-width:1.0;" width="121" x="1312" y="1154.4375"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98" x="1316" y="1168.9707">external person</text><rect fill="#999999" height="17.6094" style="stroke:none;stroke-width:1.0;" width="121" x="1312" y="1172.0469"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98" x="1316" y="1186.5801">external system</text><rect fill="#B3B3B3" height="17.6094" style="stroke:none;stroke-width:1.0;" width="121" x="1312" y="1189.6563"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="113" x="1316" y="1204.1895">external container</text><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1084" y2="1084"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1101.6094" y2="1101.6094"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1119.2188" y2="1119.2188"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1136.8281" y2="1136.8281"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1154.4375" y2="1154.4375"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1172.0469" y2="1172.0469"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1189.6563" y2="1189.6563"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1433" y1="1207.2656" y2="1207.2656"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1312" x2="1312" y1="1084" y2="1207.2656"/><line style="stroke:#FFFFFF;stroke-width:1.0;" x1="1433" x2="1433" y1="1084" y2="1207.2656"/><!--MD5=[311b09974d11eafa0cfdf63277bb0742]
+@startuml "architecture"
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Container.puml
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+
+AddTagSupport("color", $bgColor="#888888", $borderColor="#ffffbf")
+
+LAYOUT_TOP_DOWN()
+'LAYOUT_AS_SKETCH()
+LAYOUT_WITH_LEGEND()
+
+'Person(user, User, "A non member")
+
+Person(administrator, Administrator, "An administrator")
+
+Person(member, Member, "A member")
+
+System_Boundary(c1, "Social Network") {
+
+    Container(app, "SPA", "JavaScript, Angular", "Provides all the social network functionality to members and non members via web browsers")
+
+    Container(admin_app, "SPA", "JavaScript, Angular", "Allows administrators and moderators to adrministrate the accounts")
+
+    Container(api_gateway, "API Gateway", "JavaScript, NestJS", "Single entry point for all clients that enables them to retrieve data from multiple services")
+
+    Container(message_broker, "Message Broker", "Redis", "Transport for business events")
+
+    Container(account_service, "Account Service", "JavaScript, NESTJS", "Provides user's accounts, email confirmation links and hobbies management")
+
+    Container(auth_service, "Authentication Service", "JavaScript, NESTJS", "Manages the authentication and authorization")
+
+    Container(image_service, "Image Service", "JavaScript, NESTJS", "Provides user's profile images")
+
+    Container(report_service, "Report Service", "JavaScript, NESTJS", "Manages complaints")
+
+    Container(mailer_service, "Mailer Service", "JavaScript, NESTJS", "Handles emails sending")
+
+    ContainerDb(account_db, "Account Database", "MongoDB", "Stores account information, confirmation links and hobbies")
+
+    ContainerDb(auth_db, "Authentication Database", "MongoDB", "Stores refresh tokens")
+
+    ContainerDb(image_db, "Image Database", "MongoDB", "Stores members' profile images links")
+
+    ContainerDb(report_db, "Report Database", "MongoDB", "Stores members complaints")
+}
+
+Container(email_api, "Email System", "API, Sendgrid API", "Sendgrid's email service externaly", $tags="color")
+
+Container(image_api, "CDN", "API, Imagekit API", "Imagekit's image hosting service externaly", $tags="color")
+
+'Rel(user, app, "Uses", "HTTPS")
+
+Rel(administrator, admin_app, "Visits thesocialnetwork.amineamellouk.com/admin", "HTTPS")
+
+Rel(member, app, "Visits thesocialnetwork.amineamellouk.com", "HTTPS")
+
+Rel(app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+
+Rel(admin_app, api_gateway, "Makes API calls to", "JSON/HTTPS")
+
+Rel_R(api_gateway, message_broker, "Sends user update events to")
+
+Rel(message_broker, account_service, "Sends user update events to")
+Rel(message_broker, auth_service, "Sends user update events to")
+Rel(message_broker, report_service, "Sends user update events to")
+Rel(message_broker, image_service, "Sends user update events to")
+Rel(message_broker, mailer_service, "Sends user update events to")
+
+Rel(account_service, message_broker, "Sends user emails events to")
+
+Rel(account_service, account_db, "Reads from and writes to")
+Rel(auth_service, auth_db, "Reads from and writes to")
+Rel(image_service, image_db, "Reads from and writes to")
+Rel(report_service, report_db, "Reads from and writes to")
+
+Rel_L(mailer_service, email_api, "Sends emails", "JSON/HTTPS")
+Rel(image_service, image_api, "Stores and reads files", "JSON/HTTPS")
+
+Lay_R(account_service, auth_service)
+Lay_R(auth_service, report_service)
+Lay_R(report_service, image_service)
+Lay_R(image_service, mailer_service)
+Lay_R(administrator, member)
+Lay_R(message_broker, email_api)
+'Lay_R(admin_app, app)
+'Lay_L(email_api, member)
+
+Rel_L(email_api, member, "Sends emails to", "SMTP")
+
+@enduml
+
+@startuml "architecture"
+
+
+
+
+
+
+
+
+skinparam defaultTextAlignment center
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 150
+
+skinparam LegendBorderColor transparent
+skinparam LegendBackgroundColor transparent
+skinparam LegendFontColor #FFFFFF
+
+skinparam rectangle {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam database {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam queue {
+    StereotypeFontSize 12
+    shadowing false
+}
+
+skinparam Arrow {
+    Color #666666
+    FontColor #666666
+    FontSize 12
+}
+
+skinparam rectangle<<boundary>> {
+    Shadowing false
+    StereotypeFontSize 0
+    FontColor #444444
+    BorderColor #444444
+    BorderStyle dashed
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam database<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+skinparam queue<<person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #08427B
+    BorderColor #073B6F
+}
+
+skinparam rectangle<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam database<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+skinparam queue<<external_person>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #686868
+    BorderColor #8A8A8A
+}
+
+skinparam rectangle<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam database<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+skinparam queue<<system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #1168BD
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam database<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+skinparam queue<<external_system>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #999999
+    BorderColor #8A8A8A
+}
+
+
+
+
+sprite $person [48x48/16] {
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+000000000000025788300000000005886410000000000000
+000000000007DFFFFFFD9643347BFFFFFFFB400000000000
+0000000004EFFFFFFFFFFFFFFFFFFFFFFFFFFB1000000000
+000000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFD200000000
+00000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE10000000
+0000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB0000000
+000000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5000000
+000003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD000000
+000009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF200000
+00000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF600000
+00000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF800000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+00001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA00000
+00000EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF700000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+0000008FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD3000000
+000000014555555555555555555555555555555300000000
+000000000000000000000000000000000000000000000000
+000000000000000000000000000000000000000000000000
+}
+
+sprite $person2 [48x48/16] {
+0000000000000000000049BCCA7200000000000000000000
+0000000000000000006EFFFFFFFFB3000000000000000000
+00000000000000001CFFFFFFFFFFFF700000000000000000
+0000000000000001EFFFFFFFFFFFFFF80000000000000000
+000000000000000CFFFFFFFFFFFFFFFF6000000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+00000000000001FFFFFFFFFFFFFFFFFFF900000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFF00000000000000
+0000000000000BFFFFFFFFFFFFFFFFFFFF40000000000000
+0000000000000EFFFFFFFFFFFFFFFFFFFF70000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000FFFFFFFFFFFFFFFFFFFFF80000000000000
+0000000000000DFFFFFFFFFFFFFFFFFFFF60000000000000
+0000000000000AFFFFFFFFFFFFFFFFFFFF40000000000000
+00000000000006FFFFFFFFFFFFFFFFFFFE00000000000000
+00000000000000EFFFFFFFFFFFFFFFFFF800000000000000
+000000000000007FFFFFFFFFFFFFFFFFF100000000000000
+000000000000000BFFFFFFFFFFFFFFFF5000000000000000
+0000000000000001DFFFFFFFFFFFFFF70000000000000000
+00000000000000000BFFFFFFFFFFFF500000000000000000
+0000000000000000005DFFFFFFFFA1000000000000000000
+0000000000000000000037ABB96100000000000000000000
+000000000002578888300000000005888864100000000000
+0000000007DFFFFFFFFD9643347BFFFFFFFFFB4000000000
+00000004EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB10000000
+0000007FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD2000000
+000006FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE100000
+00003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB00000
+0000BFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF50000
+0003FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFD0000
+0009FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2000
+000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6000
+000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB000
+001FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFA000
+000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8000
+000DFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF6000
+0009FFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFFF2000
+0003FFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFFD0000
+0000BFFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFF50000
+00003FFFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFFB00000
+000006FFFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFFE100000
+0000007FFFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFFD2000000
+00000004EFFF8FFFFFFFFFFFFFFFFFFFFFF8FFFB10000000
+0000000007DF8FFFFFFFFFFFFFFFFFFFFFF8FB4000000000
+000000000002578888888888888888888864100000000000
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam rectangle<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam database<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+skinparam queue<<container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #438DD5
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam database<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+skinparam queue<<external_container>> {
+    StereotypeFontColor #FFFFFF
+    FontColor #FFFFFF
+    BackgroundColor #B3B3B3
+    BorderColor #A6A6A6
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+skinparam wrapWidth 200
+skinparam maxMessageSize 200
+
+skinparam rectangle<<color>> {
+    BackgroundColor #888888
+    BorderColor #ffffbf
+}
+skinparam database<<color>> {
+    BackgroundColor #888888
+    BorderColor #ffffbf
+}
+skinparam queue<<color>> {
+    BackgroundColor #888888
+    BorderColor #ffffbf
+}
+
+
+top to bottom direction
+hide stereotype
+legend right
+|<color:#000000>**Legend**</color> |
+|<#08427B> person |
+|<#1168BD> system |
+|<#438DD5> container |
+|<#686868> external person |
+|<#999999> external system |
+|<#B3B3B3> external container |
+endlegend
+
+
+rectangle "<$person>\n==Administrator\n\n An administrator" <<person>> as administrator
+
+rectangle "<$person>\n==Member\n\n A member" <<person>> as member
+
+rectangle "==Social Network\n<size:12>[System]</size>" <<boundary>> as c1 {
+
+    rectangle "==SPA\n//<size:12>[JavaScript, Angular]</size>//\n\n Provides all the social network functionality to members and non members via web browsers" <<container>> as app
+
+    rectangle "==SPA\n//<size:12>[JavaScript, Angular]</size>//\n\n Allows administrators and moderators to adrministrate the accounts" <<container>> as admin_app
+
+    rectangle "==API Gateway\n//<size:12>[JavaScript, NestJS]</size>//\n\n Single entry point for all clients that enables them to retrieve data from multiple services" <<container>> as api_gateway
+
+    rectangle "==Message Broker\n//<size:12>[Redis]</size>//\n\n Transport for business events" <<container>> as message_broker
+
+    rectangle "==Account Service\n//<size:12>[JavaScript, NESTJS]</size>//\n\n Provides user's accounts, email confirmation links and hobbies management" <<container>> as account_service
+
+    rectangle "==Authentication Service\n//<size:12>[JavaScript, NESTJS]</size>//\n\n Manages the authentication and authorization" <<container>> as auth_service
+
+    rectangle "==Image Service\n//<size:12>[JavaScript, NESTJS]</size>//\n\n Provides user's profile images" <<container>> as image_service
+
+    rectangle "==Report Service\n//<size:12>[JavaScript, NESTJS]</size>//\n\n Manages complaints" <<container>> as report_service
+
+    rectangle "==Mailer Service\n//<size:12>[JavaScript, NESTJS]</size>//\n\n Handles emails sending" <<container>> as mailer_service
+
+    database "==Account Database\n//<size:12>[MongoDB]</size>//\n\n Stores account information, confirmation links and hobbies" <<container>> as account_db
+
+    database "==Authentication Database\n//<size:12>[MongoDB]</size>//\n\n Stores refresh tokens" <<container>> as auth_db
+
+    database "==Image Database\n//<size:12>[MongoDB]</size>//\n\n Stores members' profile images links" <<container>> as image_db
+
+    database "==Report Database\n//<size:12>[MongoDB]</size>//\n\n Stores members complaints" <<container>> as report_db
+}
+
+rectangle "==Email System\n//<size:12>[API, Sendgrid API]</size>//\n\n Sendgrid's email service externaly" <<color>><<container>> as email_api
+
+rectangle "==CDN\n//<size:12>[API, Imagekit API]</size>//\n\n Imagekit's image hosting service externaly" <<color>><<container>> as image_api
+
+
+administrator - ->> admin_app : **Visits thesocialnetwork.amineamellouk.com/admin**\n//<size:12>[HTTPS]</size>//
+
+member - ->> app : **Visits thesocialnetwork.amineamellouk.com**\n//<size:12>[HTTPS]</size>//
+
+app - ->> api_gateway : **Makes API calls to**\n//<size:12>[JSON/HTTPS]</size>//
+
+admin_app - ->> api_gateway : **Makes API calls to**\n//<size:12>[JSON/HTTPS]</size>//
+
+api_gateway -RIGHT->> message_broker : **Sends user update events to**
+
+message_broker - ->> account_service : **Sends user update events to**
+message_broker - ->> auth_service : **Sends user update events to**
+message_broker - ->> report_service : **Sends user update events to**
+message_broker - ->> image_service : **Sends user update events to**
+message_broker - ->> mailer_service : **Sends user update events to**
+
+account_service - ->> message_broker : **Sends user emails events to**
+
+account_service - ->> account_db : **Reads from and writes to**
+auth_service - ->> auth_db : **Reads from and writes to**
+image_service - ->> image_db : **Reads from and writes to**
+report_service - ->> report_db : **Reads from and writes to**
+
+mailer_service -LEFT->> email_api : **Sends emails**\n//<size:12>[JSON/HTTPS]</size>//
+image_service - ->> image_api : **Stores and reads files**\n//<size:12>[JSON/HTTPS]</size>//
+
+account_service -[hidden]R- auth_service
+auth_service -[hidden]R- report_service
+report_service -[hidden]R- image_service
+image_service -[hidden]R- mailer_service
+administrator -[hidden]R- member
+message_broker -[hidden]R- email_api
+
+email_api -LEFT->> member : **Sends emails to**\n//<size:12>[SMTP]</size>//
+
+@enduml
+
+PlantUML version 1.2021.00(Sun Jan 10 11:25:05 WEST 2021)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: GB
+--></g></svg>
