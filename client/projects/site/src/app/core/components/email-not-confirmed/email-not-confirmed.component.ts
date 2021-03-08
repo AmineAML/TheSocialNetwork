@@ -1,9 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { Userss } from '../../../shared/types';
+import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../services/auth.service';
-import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'app-email-not-confirmed',
@@ -16,55 +14,13 @@ export class EmailNotConfirmedComponent implements OnInit, OnDestroy {
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
-  notConfirmedEmail: boolean = false
+  //Default to true meaning confirmed and don't show confirmation request expect if modified to false
+  isConfirmedEmail: boolean = true
 
-  isServerRespondedWithData: Promise<boolean>
-
-  username: string
-
-  constructor(private authService: AuthService,
-              private dataService: DataService) { }
+  constructor(private authService: AuthService) { }
 
   close() {
     this.closeComponent.emit('close')
-  }
-
-  isAuthenicated() {
-    this.authService.loginStatusChange().pipe(
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe(async loggedIn => {
-      if (loggedIn) {
-        await this.getUser()
-      } else {
-        this.isServerRespondedWithData = Promise.resolve(false)
-      }
-    });
-  }
-
-  async getUserProfile() {
-    this.dataService.findByUsername(this.username).pipe(
-      map((userData: Userss) => {
-        this.isServerRespondedWithData = Promise.resolve(true)
-
-        if (userData.user.is_confirmed) {
-          this.notConfirmedEmail = true
-        }
-
-        //console.log(userData)
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-  }
-
-  async getUser() {
-    this.authService.authenticatedUser().pipe(
-      map(async (username: string | null) => {
-        this.username = username
-        
-        await this.getUserProfile()
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
   }
 
   confirmedEmailLink() {
@@ -72,14 +28,14 @@ export class EmailNotConfirmedComponent implements OnInit, OnDestroy {
       takeUntil(this.ngUnsubscribe)
     ).subscribe((value: boolean) => {
       if (value) {
-        this.getUserProfile()
+        this.isConfirmedEmail = true
+      } else {
+        this.isConfirmedEmail = false
       }
     })
   }
 
   ngOnInit(): void {
-    this.isAuthenicated()
-
     this.confirmedEmailLink()
   }
 
@@ -87,7 +43,5 @@ export class EmailNotConfirmedComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.next()
 
     this.ngUnsubscribe.complete()
-
-    this.authService.setConfirmedEmailLink(false)
   }
 }

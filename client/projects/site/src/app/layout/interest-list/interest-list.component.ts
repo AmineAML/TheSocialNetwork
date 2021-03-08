@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DataService } from '../../core/services/data.service';
-import { InterestData } from '../../shared/types';
+import { InterestData } from '../../shared/models';
 
 export interface Interest {
   name: string;
@@ -13,42 +13,22 @@ export interface Interest {
   templateUrl: './interest-list.component.html',
   styleUrls: ['./interest-list.component.scss']
 })
-export class InterestListComponent implements OnInit, OnDestroy {
-  //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
+export class InterestListComponent {
+  interests$: Observable<Interest[]>
 
-  interests: Interest[] = [];
-
-  isServerRespondedWithData: Promise<boolean>
-
-  constructor(private dataService: DataService) { }
-
-  async getInterests() {
-    this.dataService.findAllInterestsSorted().pipe(
-      //Display data into console log
-      // tap(interests => console.log(interests)),
+  constructor(private dataService: DataService) {
+    this.interests$ = this.dataService.findAllInterestsSorted().pipe(
       map((interestData: InterestData) => {
-        //this.dataSource = interestData
+        let interestsArray: Interest[] = []
 
         interestData.data.interests.forEach(interest => {
-          this.interests.push(
+          interestsArray.push(
             { name: interest.name }
           )
         })
 
-        this.isServerRespondedWithData = Promise.resolve(true)
+        return interestsArray
       }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-  }
-
-  async ngOnInit(): Promise<void> {
-    await this.getInterests()
-  }
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next()
-
-    this.ngUnsubscribe.complete()
+    )
   }
 }

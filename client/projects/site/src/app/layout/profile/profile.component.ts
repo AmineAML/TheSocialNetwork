@@ -3,12 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { faFacebook, faLinkedin, faTwitter, faTiktok, faDiscord, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { faEllipsisH } from '@fortawesome/free-solid-svg-icons'
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { DialogReportComponent } from '../../core/components/dialog-report/dialog-report.component';
 import { AuthService } from '../../core/services/auth.service';
 import { DataService } from '../../core/services/data.service';
-import { Userss } from '../../shared/types';
+import { UserProfileData, Userss } from '../../shared/models';
 
 
 @Component({
@@ -28,70 +28,59 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
   username: string
 
-  dataSource: Userss = null
-  
-  dataSourceOfAuthenticated: Userss = null
+  profile$: Observable<Userss>
 
   //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
+  private ngUnsubscribe$ = new Subject()
 
-  isServerRespondedWithData: Promise<boolean>
-
-  similarInterests: number = 0
+  similarInterests$: Observable<number>
 
   constructor(private dataService: DataService,
               private activatedRoute: ActivatedRoute,
               private dialog: MatDialog,
               private authService: AuthService) { }
 
-  async getUser() {
-    this.dataService.findByUsername(this.username).pipe(
-      //Display data into console log
-      //tap(users => console.log(users)),
+  getUser() {
+    this.profile$ = this.dataService.findByUsername(this.username).pipe(
       map((userData: Userss) => {
-        this.dataSource = userData
-
-        this.isServerRespondedWithData = Promise.resolve(true)
-
         if (userData.user !== null) {
-          this.getAuthenticatedUser()
+          this.getAuthenticatedUser(userData)
         }
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
+
+        return userData
+      })
+    )
   }
 
-  async getAuthenticatedUser() {
-    this.dataService.findByUsername(this.authService.loggedUsername).pipe(
-      //Display data into console log
-      //tap(users => console.log('ree' + users)),
-      map((userData: Userss) => {
-        if (this.dataSource.user.interest && this.dataSource.user.interest.length > 0 && userData.user.interest && userData.user.interest.length > 0) {
-          this.similarInterests = this.count_similarities(this.dataSource.user.interest, userData.user.interest)
+  getAuthenticatedUser(user: Userss) {
+    this.similarInterests$ = this.dataService.findByUsernameData(this.authService.loggedUsername).pipe(
+      map((userData: UserProfileData) => {
+        if (user.user.interest && user.user.interest.length > 0 && userData.data.user.interest && userData.data.user.interest.length > 0) {
+          return this.count_similarities(user.user.interest, userData.data.user.interest)
         }
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
+
+        return 0
+      })
+    )
   }
 
-  reportByDialog(): void {
+  reportByDialog(username: string, id: string): void {
     const dialogRef = this.dialog.open(DialogReportComponent, {
       width: '50vw',
       data: {
-        //reported_user_id: this.dataSource.user.id,
-        username: this.dataSource.user.username
+        username: username
       }
     });
 
     dialogRef.afterClosed().subscribe(description => {
       if (description) {
         let reportForm = {
-          reported_user_id: this.dataSource.user.id,
+          reported_user_id: id,
           description
         }
   
         this.dataService.reportUserProfile(reportForm).pipe(
-          takeUntil(this.ngUnsubscribe)
+          takeUntil(this.ngUnsubscribe$)
         ).subscribe()
       }
     })
@@ -106,15 +95,15 @@ export class ProfileComponent implements OnInit, OnDestroy {
     return matches;
   }
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit() {
     this.username = this.activatedRoute.snapshot.paramMap.get('username')
 
-    await this.getUser()
+    this.getUser()
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next()
+    this.ngUnsubscribe$.next()
 
-    this.ngUnsubscribe.complete()
+    this.ngUnsubscribe$.complete()
   }
 }

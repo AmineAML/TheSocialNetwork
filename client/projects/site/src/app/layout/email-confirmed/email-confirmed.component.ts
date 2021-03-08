@@ -17,7 +17,7 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
   isEmailConfirmed: boolean
 
   //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
+  private ngUnsubscribe$ = new Subject()
 
   isServerRespondedWithData: Promise<boolean>
 
@@ -27,8 +27,6 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
 
   async confirmEmail() {
     this.dataService.confirmEmailByLink(this.link).pipe(
-      //Display data into console log
-      //tap(users => console.log('ree' + users)),
       map((value) => {
         console.log(value)
         
@@ -53,14 +51,8 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
 
         this.isServerRespondedWithData = Promise.resolve(true)
       }),
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
-
-    //console.log(this.dataSource)
-
-    //setTimeout(() => console.log(this.dataSource), 7000)
-
-    //console.log(this.username)
   }
 
   async ngOnInit(): Promise<void> {
@@ -74,8 +66,8 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next()
+    this.ngUnsubscribe$.next()
 
-    this.ngUnsubscribe.complete()
+    this.ngUnsubscribe$.complete()
   }
 }

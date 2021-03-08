@@ -2,10 +2,10 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 import { MessageSnackBarComponent } from '../../../shared/components/message-snack-bar/message-snack-bar.component';
-import { Userss } from '../../../shared/types';
+import { Userss } from '../../../shared/models';
 import { AuthService } from '../../services/auth.service';
 import { DataService } from '../../services/data.service';
 
@@ -23,12 +23,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   username: string
 
-  dataSource: Userss = null
+  profile$: Observable<Userss>
 
   //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
-
-  isServerRespondedWithData: Promise<boolean>
+  private ngUnsubscribe$ = new Subject()
 
   constructor(private authService: AuthService,
     private router: Router,
@@ -44,44 +42,45 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
         this.authService.loggedUsername = this.username
       }),
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
   }
 
   async getUserProfile() {
-    this.dataService.findByUsername(this.username).pipe(
+    this.profile$ = this.dataService.findByUsername(this.username).pipe(
       map((userData: Userss) => {
-        this.dataSource = userData
-
-        this.isServerRespondedWithData = Promise.resolve(true)
-
-        this.authService.loggedUsername = this.dataSource.user.username
+        this.authService.loggedUsername = userData.user.username
 
         this.authService.setLoggedInUsername(true);
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
+
+        if (userData.user.is_confirmed) {
+          this.authService.setConfirmedEmailLink(true)
+        } else {
+          this.authService.setConfirmedEmailLink(false)
+        }
+
+        return userData
+      })
+    )
   }
 
   isAuthenicated() {
     this.authService.loginStatusChange().pipe(
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe(async loggedIn => {
       if (loggedIn) {
         await this.getUser()
       } else {
-        this.isServerRespondedWithData = Promise.resolve(false)
-        
         this.username = null
 
-        this.dataSource = null
+        this.profile$ = null
       }
     });
   }
 
   editedAvatarLink() {
     this.authService.getAvatarLink().pipe(
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe((value: boolean) => {
       if (value) {
         this.getUserProfile()
@@ -91,10 +90,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.authService.logout().pipe(
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
 
-    this.isServerRespondedWithData = Promise.resolve(false)
+    this.profile$ = null
 
     this.router.navigate(['/'])
 
@@ -116,8 +115,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next()
+    this.ngUnsubscribe$.next()
 
-    this.ngUnsubscribe.complete()
+    this.ngUnsubscribe$.complete()
   }
 }

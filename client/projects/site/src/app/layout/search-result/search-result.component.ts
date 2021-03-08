@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { map, startWith, takeUntil } from 'rxjs/operators';
 import { DataService } from '../../core/services/data.service';
-import { User, Link, InterestData, Image, Meta } from '../../shared/types';
+import { User, Link, InterestData, Image, Meta } from '../../shared/models';
 
 export interface Users extends User {
   image: Image[]

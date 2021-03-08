@@ -12,7 +12,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { HttpErrorResponse, HttpEventType } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MessageSnackBarComponent } from '../../shared/components/message-snack-bar/message-snack-bar.component';
-import { File, User, Userss } from '../../shared/types';
+import { File, User, Userss } from '../../shared/models';
 import { ComponentCanDeactivate } from '../../core/guards/form-can-deactivate.guard';
 
 class CustomValidators {
@@ -57,7 +57,7 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
 
   username: string
 
-  dataSource: Userss = null
+  profile$: Observable<Userss>
 
   form: FormGroup
   
@@ -77,9 +77,7 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
   }
 
   //Handle unsubscriptions
-  private ngUnsubscribe = new Subject()
-
-  isServerRespondedWithData: Promise<boolean>
+  private ngUnsubscribe$ = new Subject()
 
   showAvatarSpinner = false
 
@@ -173,7 +171,7 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
             }
         }
       }),
-      takeUntil(this.ngUnsubscribe),
+      takeUntil(this.ngUnsubscribe$),
       catchError((error: HttpErrorResponse) => {
         this.file.inProgress = false
 
@@ -200,13 +198,9 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
     })
   }
 
-  async getUser() {
-    this.dataService.findByUsername(this.username).pipe(
-      //Display data into console log
-      //tap(users => console.log('ree' + users)),
+  getUser() {
+    this.profile$ = this.dataService.findByUsername(this.username).pipe(
       map((userData: Userss) => {
-        this.dataSource = userData
-
         if (userData.user !== null) {
           let avatar, background
 
@@ -242,18 +236,19 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
   
           this.interests = userData.user.interest
   
-          this.isServerRespondedWithData = Promise.resolve(true)
-  
           this.originalFormValue = this.form.getRawValue();
+
+          return userData
         }
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
+
+        return null
+      })
+    )
   }
 
   update() {
     this.dataService.updateUser(this.form.getRawValue()).pipe(
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
 
     this.snackBar.openFromComponent(MessageSnackBarComponent, {
@@ -295,14 +290,14 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
           }
         })
       }),
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
   }
 
   // Delete user's account
   deleteAccount(id: string) {
     this.authService.delete(id).pipe(
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
   }
 
@@ -333,7 +328,7 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
           }
         })
       }),
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe()
   }
 
@@ -384,7 +379,7 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
 
   loggedInUsername() {
     this.authService.getLoggedInUsername().pipe(
-      takeUntil(this.ngUnsubscribe)
+      takeUntil(this.ngUnsubscribe$)
     ).subscribe((value: boolean) => {
       if (value) {
         this.username = this.authService.loggedUsername
@@ -437,9 +432,9 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
   }
 
   ngOnDestroy() {
-    this.ngUnsubscribe.next()
+    this.ngUnsubscribe$.next()
 
-    this.ngUnsubscribe.complete()
+    this.ngUnsubscribe$.complete()
   }
 
   //Handles warning on unsaved form on refresh page

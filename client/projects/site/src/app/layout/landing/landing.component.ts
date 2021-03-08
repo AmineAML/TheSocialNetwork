@@ -1,12 +1,12 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { catchError, map, takeUntil } from 'rxjs/operators';
 import { ComponentCanDeactivate } from '../../core/guards/form-can-deactivate.guard';
 import { DataService } from '../../core/services/data.service';
 import { MessageSnackBarComponent } from '../../shared/components/message-snack-bar/message-snack-bar.component';
-import { InterestData } from '../../shared/types';
+import { InterestData } from '../../shared/models';
 import { ContactComponent } from './contact/contact.component';
 
 export interface Interest {
@@ -18,39 +18,32 @@ export interface Interest {
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements OnInit, ComponentCanDeactivate {
+export class LandingComponent implements ComponentCanDeactivate {
   @ViewChild(ContactComponent) contactComponent: ContactComponent
-  
+
   //Handle unsubscriptions
   private ngUnsubscribe = new Subject()
 
-  interests: Interest[] = [];
+  interests$: Observable<Interest[]>
 
   isServerRespondedWithData: Promise<boolean>
 
   isContactUsEmailSent: boolean
 
-  constructor(private router: Router,
-              private dataService: DataService,
-              private snackBar: MatSnackBar) { }
-
-  async getInterests() {
-    this.dataService.findAllInterestsSorted().pipe(
-      //Display data into console log
-      // tap(interests => console.log(interests)),
+  constructor(private router: Router, private dataService: DataService, private snackBar: MatSnackBar) {
+    this.interests$ = this.dataService.findAllInterestsSorted().pipe(
       map((interestData: InterestData) => {
-        //this.dataSource = interestData
+        let interestsArray: Interest[] = []
 
         interestData.data.interests.forEach(interest => {
-          this.interests.push(
+          interestsArray.push(
             { name: interest.name }
           )
         })
 
-        this.isServerRespondedWithData = Promise.resolve(true)
-      }),
-      takeUntil(this.ngUnsubscribe)
-    ).subscribe()
+        return interestsArray
+      })
+    )
   }
 
   getUsers(query: string) {
@@ -59,22 +52,18 @@ export class LandingComponent implements OnInit, ComponentCanDeactivate {
 
   submitContactEmail(contactFormValue) {
     this.dataService.sendContactEmail(contactFormValue).pipe(
-      map((value) => {
-        //console.log(value)
-        
-        if (value) {
-          this.isContactUsEmailSent = true
-
-          this.snackBar.openFromComponent(MessageSnackBarComponent, {
-            duration: 7000,
-            data: {
-              message: "You message is sent",
-              hasError: false
-            }
-          })
-
-          this.contactComponent.contactForm.reset(this.contactComponent.originalContactFormValue)
-        }
+      map(sent => {
+        this.isContactUsEmailSent = true
+  
+        this.snackBar.openFromComponent(MessageSnackBarComponent, {
+          duration: 7000,
+          data: {
+            message: "You message is sent",
+            hasError: false
+          }
+        })
+  
+        this.contactComponent.contactForm.reset(this.contactComponent.originalContactFormValue)
       }),
       catchError(async (err) => {
         // console.log(err)
@@ -90,11 +79,11 @@ export class LandingComponent implements OnInit, ComponentCanDeactivate {
         })
       }),
       takeUntil(this.ngUnsubscribe)
-    ).subscribe()
-  }
-
-  async ngOnInit(): Promise<void> {
-    await this.getInterests()
+    ).subscribe({
+      error: (err: Error): void => {
+        console.error('LandingComponent#subscribe#error', err)
+      }
+    })
   }
 
   ngOnDestroy() {

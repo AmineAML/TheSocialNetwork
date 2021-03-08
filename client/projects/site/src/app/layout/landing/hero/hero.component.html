@@ -1,4 +1,4 @@
-<div class="md:flex md:h-screen bg-bedrock text-amethyst relative">
+<div class="md:flex md:h-screen/custom bg-bedrock text-amethyst relative">
 
     <div class="justify-between py-20 px-10 z-10 flex flex-wrap content-center">
         <div class="md:w-3/4">
@@ -7,26 +7,21 @@
             </p>
 
             <div class="flex">
-                <!-- <input type="text" placeholder="Your interest here, eg drawing, hiking, basketball.."
-                    class="w-full rounded-l py-3 px-4 outline-none focus:bg-indigo-200" [formControl]="myControl" [matAutocomplete]="auto" #query (keyup.enter)="getUsers(query.value)"> -->
                 <input type="text" placeholder="Your interest here, eg drawing, hiking, basketball.."
                     class="w-full rounded-l py-3 px-4 outline-none focus:bg-indigo-200" [formControl]="myControl" [matAutocomplete]="auto" #query (keyup.enter)="getUsers.emit(query.value)">
-                <!-- Include auto complete -->
-                <!-- <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"> -->
                 <mat-autocomplete #auto="matAutocomplete">
                     <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
                         {{option.name}}
                     </mat-option>
                 </mat-autocomplete>
-                <!-- <button class="bg-red-300 hover:bg-red-400 text-red-800 rounded-r px-4" (click)="getUsers(query.value)">Search</button> -->
                 <button class="bg-red-300 hover:bg-red-400 text-red-800 rounded-r px-4" (click)="getUsers.emit(query.value)">Search</button>
             </div>
         </div>
     </div>
 
-    <svg class="flex absolute right-0 invisible md:visible" id="03e1230c-83b1-446f-8c84-17d4af0f793a"
+    <svg class="flex absolute right-0 invisible md:visible bottom-0" id="03e1230c-83b1-446f-8c84-17d4af0f793a"
         data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="1142.23" height="781.11" viewBox="0 0 1142.23 781.11">
+        height="80%" viewBox="0 0 1142.23 781.11">
         <defs>
             <linearGradient id="d91c7811-87ec-4fc8-aa52-46c2543d8327" x1="380.12" y1="690.08" x2="530.06" y2="690.08"
                 gradientTransform="matrix(-1, 0, 0, 1, 967, 0)" gradientUnits="userSpaceOnUse">
@@ -35,7 +30,6 @@
                 <stop offset="1" stop-color="gray" stop-opacity="0.1" />
             </linearGradient>
         </defs>
-        <title>friendship</title>
         <path
             d="M1169.87,387.2c-6.95,28.15-42.63,42.26-62.62,63.26-37.67,39.58-23,97.38.9,143.67,8,15.5,17.08,31.91,13.69,48.53-4.13,20.33-26.08,35.19-49.13,43.07-42,14.35-92.3,10.93-130.91-8.92-33.36-17.15-57.26-45-91.19-61.42-56.79-27.39-129.07-17-190.74,1.83C616.25,630.57,568.55,647.94,525.2,634c-30.5-9.82-51.59-33.72-63.08-59-5.54-12.23-9.57-25.47-20.16-35.16-6.3-5.77-14.52-9.86-22.93-13.3-76.88-31.5-174-14.63-248.63-49.57-50.42-23.59-82.71-68.09-97-114.5s-12.63-95.07-9-142.87c2.58-34,7.21-70.22,33.47-96.44,27.78-27.73,75.45-38,118.55-32.77s82.15,24.06,116.52,46.18c43,27.66,82.78,62.09,135.51,73.29,35.91,7.63,73.68,3.45,110.72,2,61.92-2.41,123.86,3,185.43,8.84,30,2.87,60.1,5.88,89.84,10.24q10,1.46,20,3.15c3.34.57,6.68,1.16,10,1.77,2.6.47,5.19,1,7.78,1.47q6.13,1.19,12.22,2.5c11.66,2.5,23.21,5.33,34.64,8.55,39.74,11.21,71.6,31.57,109.13,45.79,24.46,9.27,51.13,11.83,74.29,23.63C1151,332.29,1177.18,357.6,1169.87,387.2Z"
             transform="translate(-28.88 -59.45)" fill="#f9a826" opacity="0.1" />

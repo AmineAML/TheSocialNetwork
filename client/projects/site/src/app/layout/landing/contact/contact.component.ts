@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { ContactForm } from '../../../shared/types';
+import { ContactForm } from '../../../shared/models';
 
 @Component({
   selector: 'app-contact',
@@ -8,7 +8,7 @@ import { ContactForm } from '../../../shared/types';
   styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
-  @Output() submit = new EventEmitter<ContactForm>()
+  @Output() submitEmail = new EventEmitter<ContactForm>()
   
   contactForm: FormGroup
 

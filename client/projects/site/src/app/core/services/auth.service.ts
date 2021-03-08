@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
 import { catchError, map, mapTo, tap } from 'rxjs/operators'
-import { LoginForm, RegisterForm, UserProfileData, Tokens } from '../../shared/types';
+import { LoginForm, RegisterForm, UserProfileData, Tokens } from '../../shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -104,6 +104,8 @@ export class AuthService {
           this.storeAccessToken(tokens.data.access_token);
 
           this.startRefreshTokenTimer()
+
+          this.loggedIn.next(true)
         } else {
           this.loggedIn.next(false)
         }
@@ -119,6 +121,7 @@ export class AuthService {
   }
 
   authenticatedUser() {
+    // console.log('ree')
     if (this.isLoggedIn) {
       return this.http.get<any>('/api/v1/users/user', { headers: { 'authorization': this.getAccessToken() } }).pipe(
         map((user: UserProfileData) => {
@@ -182,8 +185,10 @@ export class AuthService {
 
     loggedIn = !!this.getAccessToken();
 
+    // console.log('ree')
+
     if (loggedIn) {
-      this.loggedIn.next(true)
+      //this.loggedIn.next(true)
 
       return true
     }

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, mapTo, mergeMap, tap } from 'rxjs/operators';
-import { ContactForm, ImageData, InterestData, PasswordForm, ReportForm, User, UserData, UserProfileData } from '../../shared/types';
+import { ContactForm, ImageData, InterestData, PasswordForm, ReportForm, User, UserData, UserProfileData } from '../../shared/models';
 
 
 @Injectable({
@@ -113,6 +113,14 @@ export class DataService {
     );
   }
 
+  //This is specific for interests comparaison from the profile route without requesting avatar and background images
+  findByUsernameData(username: string): Observable<any> {
+    return this.http.get(`/api/v1/users/user/username/${username}`).pipe(
+      map((userData: UserProfileData) => userData),
+      catchError(err => throwError(err))
+    );
+  }
+
   findAllImagesByUsersIds(users: User | User[]): Observable<ImageData> {
     if (users !== null) {
       let payload = new HttpParams()
@@ -218,11 +226,6 @@ export class DataService {
 
   sendContactEmail(contactForm: ContactForm) {
     return this.http.post<any>('/api/v1/mailer/contact', contactForm).pipe(
-      tap(contactEmailSent => {
-        //console.log(contactEmailSent)
-
-        return true
-      }),
       catchError(error => {
         return throwError(error)
       }));

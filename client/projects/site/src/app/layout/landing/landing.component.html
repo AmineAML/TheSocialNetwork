@@ -1,6 +1,6 @@
-<app-hero [options]="interests" (getUsers)="getUsers($event)"></app-hero>
-<ng-container *ngIf="isServerRespondedWithData | async">
+<ng-container *ngIf="interests$ | async as interests">
+    <app-hero [options]="interests" (getUsers)="getUsers($event)"></app-hero>
     <app-common [options]="interests"></app-common>
+    <app-features></app-features>
+    <app-contact (submitEmail)="submitContactEmail($event)"></app-contact>
 </ng-container>
-<app-features></app-features>
-<app-contact (submit)="submitContactEmail($event)"></app-contact>
