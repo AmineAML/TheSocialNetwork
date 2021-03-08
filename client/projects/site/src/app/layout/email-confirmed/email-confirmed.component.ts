@@ -1,73 +1,78 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
-import { catchError, map, takeUntil } from 'rxjs/operators';
-import { AuthService } from '../../core/services/auth.service';
-import { DataService } from '../../core/services/data.service';
+import { HttpErrorResponse } from '@angular/common/http'
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { ActivatedRoute } from '@angular/router'
+import { Subject } from 'rxjs'
+import { catchError, map, takeUntil } from 'rxjs/operators'
+import { AuthService } from '../../core/services/auth.service'
+import { DataService } from '../../core/services/data.service'
 
 @Component({
-  selector: 'app-email-confirmed',
-  templateUrl: './email-confirmed.component.html',
-  styleUrls: ['./email-confirmed.component.scss']
+    selector: 'app-email-confirmed',
+    templateUrl: './email-confirmed.component.html',
+    styleUrls: ['./email-confirmed.component.scss']
 })
 export class EmailConfirmedComponent implements OnInit, OnDestroy {
-  link: string
+    link: string
 
-  isEmailConfirmed: boolean
+    isEmailConfirmed: boolean
 
-  //Handle unsubscriptions
-  private ngUnsubscribe$ = new Subject()
+    //Handle unsubscriptions
+    private ngUnsubscribe$ = new Subject()
 
-  isServerRespondedWithData: Promise<boolean>
+    isServerRespondedWithData: Promise<boolean>
 
-  constructor(private dataService: DataService,
-              private activatedRoute: ActivatedRoute,
-              private authService: AuthService) { }
+    constructor(
+        private dataService: DataService,
+        private activatedRoute: ActivatedRoute,
+        private authService: AuthService
+    ) {}
 
-  async confirmEmail() {
-    this.dataService.confirmEmailByLink(this.link).pipe(
-      map((value) => {
-        console.log(value)
-        
-        if (value) {
-          this.isEmailConfirmed = true
+    async confirmEmail() {
+        this.dataService
+            .confirmEmailByLink(this.link)
+            .pipe(
+                map(value => {
+                    console.log(value)
 
-          console.log('Email confirmed')
+                    if (value) {
+                        this.isEmailConfirmed = true
 
-          this.authService.setConfirmedEmailLink(true);
-        }
+                        console.log('Email confirmed')
 
-        this.isServerRespondedWithData = Promise.resolve(true)
-      }),
-      catchError(async (err) => {
-        console.log(err)
+                        this.authService.setConfirmedEmailLink(true)
+                    }
 
-        if (err instanceof HttpErrorResponse && err.status === 404) {
-          console.log("Email not confirmed")
+                    this.isServerRespondedWithData = Promise.resolve(true)
+                }),
+                catchError(async err => {
+                    console.log(err)
 
-          this.isEmailConfirmed = false
-        }
+                    if (err instanceof HttpErrorResponse && err.status === 404) {
+                        console.log('Email not confirmed')
 
-        this.isServerRespondedWithData = Promise.resolve(true)
-      }),
-      takeUntil(this.ngUnsubscribe$)
-    ).subscribe()
-  }
+                        this.isEmailConfirmed = false
+                    }
 
-  async ngOnInit(): Promise<void> {
-    this.link = this.activatedRoute.snapshot.paramMap.get('link')
-
-    console.log(`Link ${this.link}`)
-
-    if (this.link) {
-      await this.confirmEmail()
+                    this.isServerRespondedWithData = Promise.resolve(true)
+                }),
+                takeUntil(this.ngUnsubscribe$)
+            )
+            .subscribe()
     }
-  }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe$.next()
+    async ngOnInit(): Promise<void> {
+        this.link = this.activatedRoute.snapshot.paramMap.get('link')
 
-    this.ngUnsubscribe$.complete()
-  }
+        console.log(`Link ${this.link}`)
+
+        if (this.link) {
+            await this.confirmEmail()
+        }
+    }
+
+    ngOnDestroy() {
+        this.ngUnsubscribe$.next()
+
+        this.ngUnsubscribe$.complete()
+    }
 }

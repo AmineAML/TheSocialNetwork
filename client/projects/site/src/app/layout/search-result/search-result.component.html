@@ -1,8 +1,11 @@
-<div class="h-full flex-col md:flex text-amethyst bg-bedrock" *ngIf="isServerRespondedWithData | async">
+<div
+    class="h-full flex-col md:flex text-amethyst bg-bedrock"
+    *ngIf="isServerRespondedWithData | async"
+>
     <!-- Motivation section full width -->
-    <div class="flex relative" style="height: 80vh;">
+    <div class="flex relative" style="height: 80vh">
         <div class="flex z-10 md:w-3/4">
-            <div class="pl-20" style="align-self: center;">
+            <div class="pl-20" style="align-self: center">
                 <!-- Friendships are formed here -->
                 <h2 class="text-2xl md:text-4xl lg:text-6xl text-gray-100 mb-6">Friendships are</h2>
                 <!-- New relationships are based on common hobbies. People like to hangout with whom they share a thing -->
@@ -10,60 +13,96 @@
             </div>
         </div>
         <!-- Background image -->
-        <img class="absolute object-fit-cover" src="./../../../assets/img/pexels-dids-1447473.jpg" alt="">
+        <img
+            class="absolute object-fit-cover"
+            src="./../../../assets/img/pexels-dids-1447473.jpg"
+            alt=""
+        />
         <!-- <span class="absolute right-3 bottom-3 text-xs text-gray-100">Photo by <a href="https://www.pexels.com/@didsss?utm_content=attributionCopyText&utm_medium=referral&utm_source=pexels">Dids</a> from <a href="https://www.pexels.com/photo/two-man-near-white-wooden-fence-1447473/?utm_content=attributionCopyText&utm_medium=referral&utm_source=pexels">Pexels</a></span> -->
     </div>
-    <br>
+    <br />
     <!-- Section in center of the screen -->
     <div class="gap-x-3 flex flex-col">
         <!-- Search bar overlaping the previous section -->
         <div class="md:px-40 transform -translate-y-14">
             <div class="flex">
-                <input type="text" placeholder="Your interest here, eg drawing, hiking, basketball.."
-                    class="w-full rounded-l py-3 px-4 outline-none focus:bg-indigo-200" [formControl]="myControl"
-                    [matAutocomplete]="auto" #query (keyup.enter)="getUsers()">
+                <input
+                    type="text"
+                    placeholder="Your interest here, eg drawing, hiking, basketball.."
+                    class="w-full rounded-l py-3 px-4 outline-none focus:bg-indigo-200"
+                    [formControl]="myControl"
+                    [matAutocomplete]="auto"
+                    #query
+                    (keyup.enter)="getUsers()"
+                />
                 <!-- Include auto complete -->
                 <ng-container>
                     <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
-                            {{option.name}}
+                        <mat-option
+                            *ngFor="let option of filteredOptions | async"
+                            [value]="option.name"
+                        >
+                            {{ option.name }}
                         </mat-option>
                     </mat-autocomplete>
                 </ng-container>
-                <button class="bg-red-300 hover:bg-red-400 text-red-800 rounded-r px-4"
-                    (click)="getUsers()">Search</button>
+                <button
+                    class="bg-red-300 hover:bg-red-400 text-red-800 rounded-r px-4"
+                    (click)="getUsers()"
+                >
+                    Search
+                </button>
             </div>
 
             <p *ngIf="dataSource.meta !== null" [ngPlural]="dataSource.meta.totalItems">
-                {{dataSource.meta.totalItems}}
+                {{ dataSource.meta.totalItems }}
                 <ng-template ngPluralCase="=1">result</ng-template>
                 <ng-template ngPluralCase="other">results</ng-template>
             </p>
         </div>
 
         <!-- Users cards -->
-        <div class="flex flex-col flex-wrap content-center" *ngIf="dataSource.users !== null; else noUserFound">
+        <div
+            class="flex flex-col flex-wrap content-center"
+            *ngIf="dataSource.users !== null; else noUserFound"
+        >
             <ng-container *ngFor="let user of dataSource.users">
                 <a class="md:block" [routerLink]="['/profile', user.username]">
                     <!-- Two column -->
-                    <span
-                        class="p-2 text-amethyst hover:text-orange-700 mr-2 grid grid-cols-2">
+                    <span class="p-2 text-amethyst hover:text-orange-700 mr-2 grid grid-cols-2">
                         <!-- Avatar -->
                         <div class="m-auto">
                             <ng-container *ngIf="user.image !== null && user.image.length > 0">
                                 <ng-container *ngFor="let image of user.image">
-                                    <div class="rounded-full p-1 inline-block bg-yellow-500"
-                                        *ngIf="image.type !== 'background'">
-                                        <img src="{{image.link ? image.link : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'}}"
-                                            alt="Avatar" class="w-32 h-32 rounded-full"#avatarimg (error)="avatarimg.src='../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'">
-                                </div>
+                                    <div
+                                        class="rounded-full p-1 inline-block bg-yellow-500"
+                                        *ngIf="image.type !== 'background'"
+                                    >
+                                        <img
+                                            src="{{
+                                                image.link
+                                                    ? image.link
+                                                    : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'
+                                            }}"
+                                            alt="Avatar"
+                                            class="w-32 h-32 rounded-full"
+                                            #avatarimg
+                                            (error)="
+                                                avatarimg.src =
+                                                    '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'
+                                            "
+                                        />
+                                    </div>
                                 </ng-container>
                             </ng-container>
-    
+
                             <ng-container *ngIf="user.image === null || user.image.length === 0">
                                 <div class="rounded-full p-1 inline-block bg-yellow-500">
-                                    <img src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
-                                        alt="Avatar" class="w-32 h-32 rounded-full">
+                                    <img
+                                        src="../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg"
+                                        alt="Avatar"
+                                        class="w-32 h-32 rounded-full"
+                                    />
                                 </div>
                             </ng-container>
                         </div>
@@ -73,24 +112,30 @@
                             <!-- First name, last name and gender -->
                             <div>
                                 <div class="font-semibold text-gray-700">
-                                    <span>{{user.first_name}} </span> <span>{{user.last_name}}</span>
+                                    <span>{{ user.first_name }} </span>
+                                    <span>{{ user.last_name }}</span>
                                 </div>
                                 <div class="text-sm text-gray-500">
-                                    <span>{{user.username}}</span>
+                                    <span>{{ user.username }}</span>
                                 </div>
                                 <div class="text-sm text-gray-500">
-                                    <span>{{user.gender}}</span>
+                                    <span>{{ user.gender }}</span>
                                 </div>
                             </div>
 
                             <!-- Chips of top three interests and another with X more interests -->
                             <div>
                                 <mat-chip-list>
-                                    <ng-container *ngFor="let interest of user.interest; index as i">
-                                        <mat-chip class="mt-3" *ngIf="i < 2">{{interest}}</mat-chip>
+                                    <ng-container
+                                        *ngFor="let interest of user.interest; index as i"
+                                    >
+                                        <mat-chip class="mt-3" *ngIf="i < 2">{{
+                                            interest
+                                        }}</mat-chip>
                                     </ng-container>
-                                    <mat-chip class="mt-3" *ngIf="user.interest.length > 2">{{user.interest.length - 2}}
-                                        more hobbies</mat-chip>
+                                    <mat-chip class="mt-3" *ngIf="user.interest.length > 2"
+                                        >{{ user.interest.length - 2 }} more hobbies</mat-chip
+                                    >
                                 </mat-chip-list>
                             </div>
                         </div>
@@ -100,14 +145,18 @@
         </div>
 
         <ng-template #noUserFound>
-            <div class="flex flex-col flex-wrap content-center">
-                No user was found
-            </div>
+            <div class="flex flex-col flex-wrap content-center">No user was found</div>
         </ng-template>
 
-        <mat-paginator *ngIf="dataSource.meta !== null" [length]="dataSource.meta.totalItems"
-            [pageSize]="dataSource.meta.itemsPerPage" class="flex bg-transparent mx-auto"
-            [pageSizeOptions]="[5, 10, 25, 100]" [showFirstLastButtons]="true" (page)="pageEvents($event)">
+        <mat-paginator
+            *ngIf="dataSource.meta !== null"
+            [length]="dataSource.meta.totalItems"
+            [pageSize]="dataSource.meta.itemsPerPage"
+            class="flex bg-transparent mx-auto"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            [showFirstLastButtons]="true"
+            (page)="pageEvents($event)"
+        >
         </mat-paginator>
     </div>
 </div>

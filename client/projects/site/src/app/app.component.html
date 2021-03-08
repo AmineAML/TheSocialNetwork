@@ -1,6 +1,9 @@
 <app-header></app-header>
 <div class="min-h-screen">
-    <app-email-not-confirmed *ngIf='emailNotConfirmedComponentRemove' (closeComponent)="close($event)">
+    <app-email-not-confirmed
+        *ngIf="emailNotConfirmedComponentRemove"
+        (closeComponent)="close($event)"
+    >
     </app-email-not-confirmed>
     <router-outlet></router-outlet>
 </div>

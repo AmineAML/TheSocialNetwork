@@ -1,33 +1,30 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { ContactForm } from '../../../shared/models';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core'
+import { Validators, FormGroup, FormBuilder } from '@angular/forms'
+import { ContactForm } from '../../../shared/models'
 
 @Component({
-  selector: 'app-contact',
-  templateUrl: './contact.component.html',
-  styleUrls: ['./contact.component.scss']
+    selector: 'app-contact',
+    templateUrl: './contact.component.html',
+    styleUrls: ['./contact.component.scss']
 })
 export class ContactComponent implements OnInit {
-  @Output() submitEmail = new EventEmitter<ContactForm>()
-  
-  contactForm: FormGroup
+    @Output() submitEmail = new EventEmitter<ContactForm>()
 
-  originalContactFormValue: any
+    contactForm: FormGroup
 
-  constructor(private formBuilder: FormBuilder) { }
+    originalContactFormValue: any
 
-  ngOnInit(): void {
-    this.contactForm = this.formBuilder.group({
-      name: ["", [Validators.required]],
-      email: ["", [
-        Validators.required,
-        Validators.email
-      ]],
-      subject: ["", [Validators.required]],
-      message: ["", [Validators.required]]
-    })
+    constructor(private formBuilder: FormBuilder) {}
 
-    /*
+    ngOnInit(): void {
+        this.contactForm = this.formBuilder.group({
+            name: ['', [Validators.required]],
+            email: ['', [Validators.required, Validators.email]],
+            subject: ['', [Validators.required]],
+            message: ['', [Validators.required]]
+        })
+
+        /*
       Difference between this.contactForm.getRawValue() vs this.contactForm.value
         this.contactForm.getRawValue() does get this values initialized on the FormBuilder (in this case: null)
         this.contactForm.value doesn't get the values initialized on the FormBuilder (in this case it does set the values as: "")
@@ -37,6 +34,6 @@ export class ContactComponent implements OnInit {
       
       Thus this works better preventing the user from not saving their form data by comparing both initial values and values that were reset
     */
-    this.originalContactFormValue = this.contactForm.getRawValue()//.value;
-  }
+        this.originalContactFormValue = this.contactForm.getRawValue() //.value;
+    }
 }

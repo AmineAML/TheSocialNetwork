@@ -1,4 +1,4 @@
-import { SocialMedia } from ".";
+import { SocialMedia } from '.'
 
 export interface User {
     username?: string

@@ -1,20 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core'
 
 export interface Interest {
-  name: string;
+    name: string
 }
 
 @Component({
-  selector: 'app-common',
-  templateUrl: './common.component.html',
-  styleUrls: ['./common.component.scss']
+    selector: 'app-common',
+    templateUrl: './common.component.html',
+    styleUrls: ['./common.component.scss']
 })
 export class CommonComponent implements OnInit {
-  @Input() options: Interest[]
+    @Input() options: Interest[]
 
-  constructor() { }
+    constructor() {}
 
-  async ngOnInit(): Promise<void> {
-    
-  }
+    async ngOnInit(): Promise<void> {}
 }

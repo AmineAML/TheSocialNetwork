@@ -1,20 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
 
-import { EditProfileRoutingModule } from './edit-profile-routing.module';
-import { MaterialModule } from '../../shared/material.module';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
+import { EditProfileRoutingModule } from './edit-profile-routing.module'
+import { MaterialModule } from '../../shared/material.module'
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 
 @NgModule({
-  declarations: [
-    EditProfileRoutingModule.components
-  ],
-  imports: [
-    CommonModule,
-    EditProfileRoutingModule,
-    MaterialModule,
-    FontAwesomeModule
-  ]
+    declarations: [EditProfileRoutingModule.components],
+    imports: [CommonModule, EditProfileRoutingModule, MaterialModule, FontAwesomeModule]
 })
-export class EditProfileModule { }
+export class EditProfileModule {}

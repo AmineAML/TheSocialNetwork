@@ -1,29 +1,93 @@
 <div class="md:flex h-screen text-amethyst bg-bedrock">
-
     <div class="m-auto md:w-2/4">
-        <form class="flex flex-col gap-3 p-5" [formGroup]="contactForm" name="contact" id='contact-form' method="post"
-        (ngSubmit)="submitEmail.emit(this.contactForm.getRawValue())">
-        <div class="mb-3">
-            <h3>Do you have any questions? <br/>You want some enqueries on something? <br/><span class="border-b-8 border-purple-300">Or you just want to
-                say "Hi"</span></h3>
-        </div>
-        <label>My name is</label>
-        <input type="text" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" id="name" name="name" formControlName="name" placeholder="Name">
-        <small *ngIf="contactForm.controls.name.errors && contactForm.controls.name.errors.required">Name is required</small>
-        <label>You can reply to me at</label>
-        <input type="email" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" name="email" formControlName="email" placeholder="eg: yourname@email.com">
-        <small *ngIf="contactForm.controls.email.errors && contactForm.controls.email.errors.required">Email is required</small>
-        <small *ngIf="contactForm.controls.email.errors && contactForm.controls.email.errors.email">Email is not valid</small>
-        <label>I'm contacting you because</label>
-        <input type="text" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" name="subject" formControlName="subject" placeholder="eg: I have some questions">
-        <small *ngIf="contactForm.controls.subject.errors && contactForm.controls.subject.errors.required">Subject is required</small>
-        <label>Message</label>
-        <textarea type="password" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" name="message" formControlName="message" placeholder="Your message"></textarea>
-        <small *ngIf="contactForm.controls.message.errors && contactForm.controls.message.errors.required">Message is required</small>
-        <div class="m-auto">
-            <button type="submit" class="bg-red-300 hover:bg-red-400 text-red-800 rounded-full py-3 px-6" [disabled]="contactForm.invalid">Send</button>
-        </div>
-    </form>
+        <form
+            class="flex flex-col gap-3 p-5"
+            [formGroup]="contactForm"
+            name="contact"
+            id="contact-form"
+            method="post"
+            (ngSubmit)="submitEmail.emit(this.contactForm.getRawValue())"
+        >
+            <div class="mb-3">
+                <h3>
+                    Do you have any questions? <br />You want some enqueries on something?
+                    <br /><span class="border-b-8 border-purple-300"
+                        >Or you just want to say "Hi"</span
+                    >
+                </h3>
+            </div>
+            <label>My name is</label>
+            <input
+                type="text"
+                class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                id="name"
+                name="name"
+                formControlName="name"
+                placeholder="Name"
+            />
+            <small
+                *ngIf="
+                    contactForm.controls.name.errors && contactForm.controls.name.errors.required
+                "
+                >Name is required</small
+            >
+            <label>You can reply to me at</label>
+            <input
+                type="email"
+                class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                name="email"
+                formControlName="email"
+                placeholder="eg: yourname@email.com"
+            />
+            <small
+                *ngIf="
+                    contactForm.controls.email.errors && contactForm.controls.email.errors.required
+                "
+                >Email is required</small
+            >
+            <small
+                *ngIf="contactForm.controls.email.errors && contactForm.controls.email.errors.email"
+                >Email is not valid</small
+            >
+            <label>I'm contacting you because</label>
+            <input
+                type="text"
+                class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                name="subject"
+                formControlName="subject"
+                placeholder="eg: I have some questions"
+            />
+            <small
+                *ngIf="
+                    contactForm.controls.subject.errors &&
+                    contactForm.controls.subject.errors.required
+                "
+                >Subject is required</small
+            >
+            <label>Message</label>
+            <textarea
+                type="password"
+                class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                name="message"
+                formControlName="message"
+                placeholder="Your message"
+            ></textarea>
+            <small
+                *ngIf="
+                    contactForm.controls.message.errors &&
+                    contactForm.controls.message.errors.required
+                "
+                >Message is required</small
+            >
+            <div class="m-auto">
+                <button
+                    type="submit"
+                    class="bg-red-300 hover:bg-red-400 text-red-800 rounded-full py-3 px-6"
+                    [disabled]="contactForm.invalid"
+                >
+                    Send
+                </button>
+            </div>
+        </form>
     </div>
-
 </div>

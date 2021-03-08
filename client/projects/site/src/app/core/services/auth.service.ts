@@ -1,247 +1,266 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, of, ReplaySubject, Subject, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http'
+import { Injectable } from '@angular/core'
+import { Router } from '@angular/router'
+import { Observable, of, ReplaySubject, Subject, throwError } from 'rxjs'
 import { catchError, map, mapTo, tap } from 'rxjs/operators'
-import { LoginForm, RegisterForm, UserProfileData, Tokens } from '../../shared/models';
+import { LoginForm, RegisterForm, UserProfileData, Tokens } from '../../shared/models'
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root'
 })
 export class AuthService {
-  //private readonly ACCESS_TOKEN = 'THE_SOCIAL_NETWORK_ACCESS_TOKEN';
+    //private readonly ACCESS_TOKEN = 'THE_SOCIAL_NETWORK_ACCESS_TOKEN';
 
-  //private readonly REFRESH_TOKEN = 'THE_SOCIAL_NETWORK_REFRESH_TOKEN';
+    //private readonly REFRESH_TOKEN = 'THE_SOCIAL_NETWORK_REFRESH_TOKEN';
 
-  public loggedUsername: string;
+    public loggedUsername: string
 
-  private loggedIn: Subject<boolean> = new ReplaySubject<boolean>(1);
+    private loggedIn: Subject<boolean> = new ReplaySubject<boolean>(1)
 
-  private modifyAvatarLink: Subject<boolean> = new ReplaySubject<boolean>(1);
-  
-  private confirmedEmailLink: Subject<boolean> = new ReplaySubject<boolean>(1);
+    private modifyAvatarLink: Subject<boolean> = new ReplaySubject<boolean>(1)
 
-  private accessToken: string = null
+    private confirmedEmailLink: Subject<boolean> = new ReplaySubject<boolean>(1)
 
-  private modifyLoggedInUsername: Subject<boolean> = new ReplaySubject<boolean>(1);
+    private accessToken: string = null
 
-  constructor(private http: HttpClient,
-    private router: Router) { }
+    private modifyLoggedInUsername: Subject<boolean> = new ReplaySubject<boolean>(1)
 
-  login(loginForm: LoginForm): Observable<boolean> {
-    return this.http.post<any>('/api/v1/users/login', { email: loginForm.email, password: loginForm.password }).pipe(
-      tap(tokens => {
-        this.doLoginUser(tokens.data)
+    constructor(private http: HttpClient, private router: Router) {}
 
-        this.loggedIn.next(true)
+    login(loginForm: LoginForm): Observable<boolean> {
+        return this.http
+            .post<any>('/api/v1/users/login', {
+                email: loginForm.email,
+                password: loginForm.password
+            })
+            .pipe(
+                tap(tokens => {
+                    this.doLoginUser(tokens.data)
 
-        this.startRefreshTokenTimer()
-      }),
-      mapTo(true),
-      catchError(error => {
-        //alert(error.error);
-        return of(false);
-      }));
-  }
+                    this.loggedIn.next(true)
 
-  logout() {
-    return this.http.put<any>('/api/v1/users/logout', { /*headers: { 'authorization': this.getRefreshToken() }*/ }).pipe(
-      tap(() => {
-        this.doLogoutUser()
-
-        this.stopRefreshTokenTimer()
-      }),
-      mapTo(true),
-      catchError(error => {
-        //alert(error.error);
-        return of(false);
-      }));
-  }
-
-  register(registerForm: RegisterForm) {
-    return this.http.post<any>('/api/v1/users/user', registerForm).pipe(
-      tap(tokens => {
-        const t = {
-          access_token: tokens.data.access_token,
-          refresh_token: tokens.data.refresh_token
-        }
-        this.doLoginUser(t)
-
-        this.loggedIn.next(true)
-
-        this.startRefreshTokenTimer()
-
-        this.router.navigate(['edit-profile'])
-      }),
-      mapTo(true),
-      catchError(error => {
-        const err = JSON.stringify(error.error.errors)
-        alert(err);
-        return of(false);
-      }));
-  }
-
-  delete(id: string) {
-    return this.http.delete<any>(`/api/v1/users/user/${id}`).pipe(
-      tap(account => {
-        this.doLogoutUser()
-
-        this.stopRefreshTokenTimer()
-      }),
-      mapTo(true),
-      catchError(error => {
-        return of(false)
-      })
-    )
-  }
-
-  refreshToken() {
-    //Apply withCredential meaning allow sending cookies which contain the refresh token
-    return this.http.post<any>('/api/v1/users/refresh_token', { /*refresh_token: this.getRefreshToken()*/ }, { withCredentials: true }).pipe(
-      tap((tokens) => {
-        //If refresh token cookie was sent empty meaning client is not authenticated and the server response is an empty access token
-        if (tokens.data.access_token) {
-          this.storeAccessToken(tokens.data.access_token);
-
-          this.startRefreshTokenTimer()
-
-          this.loggedIn.next(true)
-        } else {
-          this.loggedIn.next(false)
-        }
-      }),
-      catchError(error => {
-        this.invalidRefreshToken()
-
-        throwError(error)
-
-        return of(error)
-      })
-    );
-  }
-
-  authenticatedUser() {
-    // console.log('ree')
-    if (this.isLoggedIn) {
-      return this.http.get<any>('/api/v1/users/user', { headers: { 'authorization': this.getAccessToken() } }).pipe(
-        map((user: UserProfileData) => {
-          return user.data.user.username
-        }),
-        catchError(error => {
-          //alert(error.error);
-          return of(false);
-        }));
+                    this.startRefreshTokenTimer()
+                }),
+                mapTo(true),
+                catchError(error => {
+                    //alert(error.error);
+                    return of(false)
+                })
+            )
     }
 
-    return null
-  }
+    logout() {
+        return this.http
+            .put<any>('/api/v1/users/logout', {
+                /*headers: { 'authorization': this.getRefreshToken() }*/
+            })
+            .pipe(
+                tap(() => {
+                    this.doLogoutUser()
 
-  private refreshTokenTimeout
-
-  private startRefreshTokenTimer() {
-    //Refresh access token before it expires as the backend has it valid for 15 minutes thus refresh it each 14 minutes meanning a minute before token expires
-    this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), 14 * 60 * 1000)
-  }
-
-  private stopRefreshTokenTimer() {
-    clearTimeout(this.refreshTokenTimeout)
-  }
-
-  public loginStatusChange(): Observable<boolean> {
-    return this.loggedIn.asObservable();
-  }
-
-  public getAvatarLink(): Observable<boolean> {
-
-    return this.modifyAvatarLink.asObservable();
-  }
-
-  public setAvatarLink(value: boolean): void {
-
-    this.modifyAvatarLink.next(value);
-  }
-
-  public getLoggedInUsername(): Observable<boolean> {
-
-    return this.modifyLoggedInUsername.asObservable();
-  }
-
-  public setLoggedInUsername(value: boolean): void {
-
-    this.modifyLoggedInUsername.next(value);
-  }
-
-  public getConfirmedEmailLink(): Observable<boolean> {
-    return this.confirmedEmailLink.asObservable();
-  }
-
-  public setConfirmedEmailLink(value: boolean): void {
-
-    this.confirmedEmailLink.next(value);
-  }
-
-  public isLoggedIn() {
-    let loggedIn
-
-    loggedIn = !!this.getAccessToken();
-
-    // console.log('ree')
-
-    if (loggedIn) {
-      //this.loggedIn.next(true)
-
-      return true
+                    this.stopRefreshTokenTimer()
+                }),
+                mapTo(true),
+                catchError(error => {
+                    //alert(error.error);
+                    return of(false)
+                })
+            )
     }
 
-    return false
-  }
+    register(registerForm: RegisterForm) {
+        return this.http.post<any>('/api/v1/users/user', registerForm).pipe(
+            tap(tokens => {
+                const t = {
+                    access_token: tokens.data.access_token,
+                    refresh_token: tokens.data.refresh_token
+                }
+                this.doLoginUser(t)
 
-  private storeAccessToken(access_token: string) {
-    //localStorage.setItem(this.ACCESS_TOKEN, access_token);
+                this.loggedIn.next(true)
 
-    this.accessToken = access_token
-  }
+                this.startRefreshTokenTimer()
 
-  public getAccessToken() {
-    //return localStorage.getItem(this.ACCESS_TOKEN);
+                this.router.navigate(['edit-profile'])
+            }),
+            mapTo(true),
+            catchError(error => {
+                const err = JSON.stringify(error.error.errors)
+                alert(err)
+                return of(false)
+            })
+        )
+    }
 
-    return this.accessToken
-  }
+    delete(id: string) {
+        return this.http.delete<any>(`/api/v1/users/user/${id}`).pipe(
+            tap(account => {
+                this.doLogoutUser()
 
-  public invalidRefreshToken() {
-    this.doLogoutUser()
-  }
+                this.stopRefreshTokenTimer()
+            }),
+            mapTo(true),
+            catchError(error => {
+                return of(false)
+            })
+        )
+    }
 
-  /*private getRefreshToken() {
+    refreshToken() {
+        //Apply withCredential meaning allow sending cookies which contain the refresh token
+        return this.http
+            .post<any>(
+                '/api/v1/users/refresh_token',
+                {
+                    /*refresh_token: this.getRefreshToken()*/
+                },
+                { withCredentials: true }
+            )
+            .pipe(
+                tap(tokens => {
+                    //If refresh token cookie was sent empty meaning client is not authenticated and the server response is an empty access token
+                    if (tokens.data.access_token) {
+                        this.storeAccessToken(tokens.data.access_token)
+
+                        this.startRefreshTokenTimer()
+
+                        this.loggedIn.next(true)
+                    } else {
+                        this.loggedIn.next(false)
+                    }
+                }),
+                catchError(error => {
+                    this.invalidRefreshToken()
+
+                    throwError(error)
+
+                    return of(error)
+                })
+            )
+    }
+
+    authenticatedUser() {
+        // console.log('ree')
+        if (this.isLoggedIn) {
+            return this.http
+                .get<any>('/api/v1/users/user', {
+                    headers: { authorization: this.getAccessToken() }
+                })
+                .pipe(
+                    map((user: UserProfileData) => {
+                        return user.data.user.username
+                    }),
+                    catchError(error => {
+                        //alert(error.error);
+                        return of(false)
+                    })
+                )
+        }
+
+        return null
+    }
+
+    private refreshTokenTimeout
+
+    private startRefreshTokenTimer() {
+        //Refresh access token before it expires as the backend has it valid for 15 minutes thus refresh it each 14 minutes meanning a minute before token expires
+        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), 14 * 60 * 1000)
+    }
+
+    private stopRefreshTokenTimer() {
+        clearTimeout(this.refreshTokenTimeout)
+    }
+
+    public loginStatusChange(): Observable<boolean> {
+        return this.loggedIn.asObservable()
+    }
+
+    public getAvatarLink(): Observable<boolean> {
+        return this.modifyAvatarLink.asObservable()
+    }
+
+    public setAvatarLink(value: boolean): void {
+        this.modifyAvatarLink.next(value)
+    }
+
+    public getLoggedInUsername(): Observable<boolean> {
+        return this.modifyLoggedInUsername.asObservable()
+    }
+
+    public setLoggedInUsername(value: boolean): void {
+        this.modifyLoggedInUsername.next(value)
+    }
+
+    public getConfirmedEmailLink(): Observable<boolean> {
+        return this.confirmedEmailLink.asObservable()
+    }
+
+    public setConfirmedEmailLink(value: boolean): void {
+        this.confirmedEmailLink.next(value)
+    }
+
+    public isLoggedIn() {
+        let loggedIn
+
+        loggedIn = !!this.getAccessToken()
+
+        // console.log('ree')
+
+        if (loggedIn) {
+            //this.loggedIn.next(true)
+
+            return true
+        }
+
+        return false
+    }
+
+    private storeAccessToken(access_token: string) {
+        //localStorage.setItem(this.ACCESS_TOKEN, access_token);
+
+        this.accessToken = access_token
+    }
+
+    public getAccessToken() {
+        //return localStorage.getItem(this.ACCESS_TOKEN);
+
+        return this.accessToken
+    }
+
+    public invalidRefreshToken() {
+        this.doLogoutUser()
+    }
+
+    /*private getRefreshToken() {
     return localStorage.getItem(this.REFRESH_TOKEN);
   }
   */
 
-  private doLogoutUser() {
-    this.loggedUsername = null;
-    this.loggedIn.next(false)
-    this.removeTokens();
-  }
+    private doLogoutUser() {
+        this.loggedUsername = null
+        this.loggedIn.next(false)
+        this.removeTokens()
+    }
 
-  private removeTokens() {
-    //localStorage.removeItem(this.ACCESS_TOKEN);
-    //localStorage.removeItem(this.REFRESH_TOKEN);
-    this.accessToken = null
-    this.redirectToLoginPage()
-  }
+    private removeTokens() {
+        //localStorage.removeItem(this.ACCESS_TOKEN);
+        //localStorage.removeItem(this.REFRESH_TOKEN);
+        this.accessToken = null
+        this.redirectToLoginPage()
+    }
 
-  private redirectToLoginPage() {
-    this.router.navigate(['/login'])
-  }
+    private redirectToLoginPage() {
+        this.router.navigate(['/login'])
+    }
 
-  private doLoginUser(tokens: Tokens) {
-    this.storeTokens(tokens);
-  }
+    private doLoginUser(tokens: Tokens) {
+        this.storeTokens(tokens)
+    }
 
-  private storeTokens(tokens: Tokens) {
-    //localStorage.setItem(this.ACCESS_TOKEN, tokens.access_token);
-    //localStorage.setItem(this.REFRESH_TOKEN, tokens.refresh_token);
+    private storeTokens(tokens: Tokens) {
+        //localStorage.setItem(this.ACCESS_TOKEN, tokens.access_token);
+        //localStorage.setItem(this.REFRESH_TOKEN, tokens.refresh_token);
 
-    this.accessToken = tokens.access_token
-  }
+        this.accessToken = tokens.access_token
+    }
 }

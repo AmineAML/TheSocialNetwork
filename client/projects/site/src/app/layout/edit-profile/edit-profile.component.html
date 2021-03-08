@@ -4,41 +4,82 @@
         <div class="p-10">
             <h3 class="flex text-3xl">Avatar</h3>
             <figure class="md:flex rounded-xl p-8 w-96">
-                <img class="w-32 h-32 rounded-full mx-auto"
-                    [src]="form.get('avatar').value ? form.get('avatar').value : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'"
-                    alt="Avatar" *ngIf="!showAvatarSpinner" #avatarimg (error)="avatarimg.src='../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'">
+                <img
+                    class="w-32 h-32 rounded-full mx-auto"
+                    [src]="
+                        form.get('avatar').value
+                            ? form.get('avatar').value
+                            : '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'
+                    "
+                    alt="Avatar"
+                    *ngIf="!showAvatarSpinner"
+                    #avatarimg
+                    (error)="
+                        avatarimg.src =
+                            '../../../assets/img/united-states-avatar-organization-information-png-favpng-J9DvUE98TmbHSUqsmAgu3FpGw.jpg'
+                    "
+                />
                 <mat-spinner *ngIf="showAvatarSpinner"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
-                    <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
-                        (click)="uploadProfileAvatar()">Upload
-                        picture</button>
+                    <button
+                        class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
+                        (click)="uploadProfileAvatar()"
+                    >
+                        Upload picture
+                    </button>
                 </div>
-                <input type="file" #fileUploadAvatar id="fileUploadAvatar" name="fileUploadAvatar" accept="image/*"
-                    style="display:none">
+                <input
+                    type="file"
+                    #fileUploadAvatar
+                    id="fileUploadAvatar"
+                    name="fileUploadAvatar"
+                    accept="image/*"
+                    style="display: none"
+                />
             </figure>
             <mat-progress-bar mode="determinate" [value]="file.avatar_progress"></mat-progress-bar>
 
             <mat-divider></mat-divider>
         </div>
 
-
         <!-- Background image with upload your background image button -->
         <div class="p-10">
             <h3 class="flex text-3xl">Background</h3>
             <figure class="md:flex rounded-xl p-8 flex-col">
-                <img class="mx-auto max-h-32"
-                    [src]="form.get('background').value ? form.get('background').value : './../../../assets/img/860x394.jpg'"
-                    alt="Background" *ngIf="!showBackgroundSpinner" #bgimg (error)="bgimg.src='./../../../assets/img/860x394.jpg'">
+                <img
+                    class="mx-auto max-h-32"
+                    [src]="
+                        form.get('background').value
+                            ? form.get('background').value
+                            : './../../../assets/img/860x394.jpg'
+                    "
+                    alt="Background"
+                    *ngIf="!showBackgroundSpinner"
+                    #bgimg
+                    (error)="bgimg.src = './../../../assets/img/860x394.jpg'"
+                />
                 <mat-spinner *ngIf="showBackgroundSpinner" class="mx-auto"></mat-spinner>
                 <div class="pt-6 text-center space-y-4 m-auto">
-                    <button class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
-                        (click)="uploadProfileBackground()">Upload
-                        picture</button>
+                    <button
+                        class="bg-orange-300 hover:bg-red-400 text-red-800 rounded-full px-10 py-3"
+                        (click)="uploadProfileBackground()"
+                    >
+                        Upload picture
+                    </button>
                 </div>
             </figure>
-            <input type="file" #fileUploadBackground id="fileUploadBackground" name="fileUploadBackground" accept="image/*"
-                style="display:none">
-            <mat-progress-bar mode="determinate" [value]="file.background_progress"></mat-progress-bar>
+            <input
+                type="file"
+                #fileUploadBackground
+                id="fileUploadBackground"
+                name="fileUploadBackground"
+                accept="image/*"
+                style="display: none"
+            />
+            <mat-progress-bar
+                mode="determinate"
+                [value]="file.background_progress"
+            ></mat-progress-bar>
 
             <mat-divider></mat-divider>
         </div>
@@ -48,22 +89,37 @@
 
             <!-- Two column sections -->
             <div class="md:flex justify-between p-10 gap-x-3">
-
                 <!-- Basic information of first name, last name, description, gender, interests, social media and save button -->
                 <form class="md:w-1/2" [formGroup]="form" (ngSubmit)="update()">
                     <h3 class="mb-7 text-xl">Basic information</h3>
                     <label>First name</label>
-                    <input type="text" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
-                        name="name" placeholder="Name" formControlName="first_name">
+                    <input
+                        type="text"
+                        class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
+                        name="name"
+                        placeholder="Name"
+                        formControlName="first_name"
+                    />
                     <label>Last name</label>
-                    <input type="text" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
-                        name="name" placeholder="Name" formControlName="last_name">
+                    <input
+                        type="text"
+                        class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
+                        name="name"
+                        placeholder="Name"
+                        formControlName="last_name"
+                    />
                     <label>Description</label>
-                    <textarea class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7" name="name"
-                        placeholder="Name" formControlName="description"></textarea>
+                    <textarea
+                        class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
+                        name="name"
+                        placeholder="Name"
+                        formControlName="description"
+                    ></textarea>
                     <label>Gender</label>
-                    <mat-select class="w-full rounded py-4 px-4 outline-none focus:bg-indigo-200 mb-7 mat-select-panel"
-                        formControlName="gender">
+                    <mat-select
+                        class="w-full rounded py-4 px-4 outline-none focus:bg-indigo-200 mb-7 mat-select-panel"
+                        formControlName="gender"
+                    >
                         <mat-option value="none">None</mat-option>
                         <mat-option value="male">Male</mat-option>
                         <mat-option value="female">Female</mat-option>
@@ -71,110 +127,180 @@
                     </mat-select>
                     <label>Interests</label>
                     <div class="flex mb-7">
-                        <input placeholder="Type your hobby and press enter" [matChipInputFor]="chipList"
-                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="add($event)"
+                        <input
+                            placeholder="Type your hobby and press enter"
+                            [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="add($event)"
                             [matChipInputAddOnBlur]="addOnBlur"
-                            class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200">
-                        <mat-chip-list #chipList>
-                        </mat-chip-list>
+                            class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                        />
+                        <mat-chip-list #chipList> </mat-chip-list>
                     </div>
                     <ng-container formArrayName="interest">
-                        <mat-chip *ngFor="let interest of form.get('interest')['controls']; let i = index" [selectable]="selectable" [removable]="removable"
-                        (removed)="remove(i)" class="mt-3">
-                        {{interest.value}}
-                        <fa-icon [icon]="faTimes" *ngIf="removable" matChipRemove></fa-icon>
-                    </mat-chip>
+                        <mat-chip
+                            *ngFor="let interest of form.get('interest')['controls']; let i = index"
+                            [selectable]="selectable"
+                            [removable]="removable"
+                            (removed)="remove(i)"
+                            class="mt-3"
+                        >
+                            {{ interest.value }}
+                            <fa-icon [icon]="faTimes" *ngIf="removable" matChipRemove></fa-icon>
+                        </mat-chip>
                     </ng-container>
                     <p>Social media</p>
                     <div class="mb-7" formGroupName="social_media">
                         <div class="flex">
-                            <button class="bg-gray-100 text-blue-500 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-blue-500 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faFacebook"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your facebook"
+                            <input
+                                type="text"
+                                placeholder="Your facebook"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="facebook">
+                                formControlName="facebook"
+                            />
                         </div>
                         <div class="flex">
-                            <button class="bg-gray-100 text-blue-500 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-blue-500 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faLinkedin"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your linkedin"
+                            <input
+                                type="text"
+                                placeholder="Your linkedin"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="linkedin">
+                                formControlName="linkedin"
+                            />
                         </div>
                         <div class="flex">
-                            <button class="bg-gray-100 text-blue-500 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-blue-500 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faTwitter"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your twitter"
+                            <input
+                                type="text"
+                                placeholder="Your twitter"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="twitter">
+                                formControlName="twitter"
+                            />
                         </div>
                         <div class="flex">
-                            <button class="bg-gray-100 text-gray-800 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-gray-800 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faTiktok"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your tiktok"
+                            <input
+                                type="text"
+                                placeholder="Your tiktok"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="tiktok">
+                                formControlName="tiktok"
+                            />
                         </div>
                         <div class="flex">
-                            <button class="bg-gray-100 text-blue-300 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-blue-300 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faDiscord"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your discord"
+                            <input
+                                type="text"
+                                placeholder="Your discord"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="discord">
+                                formControlName="discord"
+                            />
                         </div>
                         <div class="flex">
-                            <button class="bg-gray-100 text-purple-400 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-purple-400 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faInstagram"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your instagram"
+                            <input
+                                type="text"
+                                placeholder="Your instagram"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="instagram">
+                                formControlName="instagram"
+                            />
                         </div>
                         <div class="flex">
-                            <button class="bg-gray-100 text-red-800 border-2 rounded-l px-4 w-1/5 btn-social-media"
-                                disabled>
+                            <button
+                                class="bg-gray-100 text-red-800 border-2 rounded-l px-4 w-1/5 btn-social-media"
+                                disabled
+                            >
                                 <fa-icon [icon]="faYoutube"></fa-icon>
                             </button>
-                            <input type="text" placeholder="Your youtube channel"
+                            <input
+                                type="text"
+                                placeholder="Your youtube channel"
                                 class="rounded-r py-3 px-4 outline-none focus:bg-indigo-200 w-4/5 text-gray-800"
-                                formControlName="youtube">
+                                formControlName="youtube"
+                            />
                         </div>
                     </div>
                     <div class="flex">
                         <button
                             class="py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded m-auto"
-                            type="submit" [disabled]="!form.dirty">Save</button>
+                            type="submit"
+                            [disabled]="!form.dirty"
+                        >
+                            Save
+                        </button>
                     </div>
                 </form>
 
                 <!-- Password of verify current password, new password, confirm new password and update button -->
-                <form class="md:w-1/2" [formGroup]="changePasswordform" (ngSubmit)="changePassword()">
+                <form
+                    class="md:w-1/2"
+                    [formGroup]="changePasswordform"
+                    (ngSubmit)="changePassword()"
+                >
                     <h3 class="mb-7 text-xl">Change password</h3>
                     <label>Current password</label>
-                    <input type="password" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
-                        name="name" placeholder="Current password"  formControlName="password">
+                    <input
+                        type="password"
+                        class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
+                        name="name"
+                        placeholder="Current password"
+                        formControlName="password"
+                    />
                     <label>New password</label>
-                    <input type="password" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
-                        name="name" placeholder="New password" formControlName="new_password">
+                    <input
+                        type="password"
+                        class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
+                        name="name"
+                        placeholder="New password"
+                        formControlName="new_password"
+                    />
                     <label>Confirm new password</label>
-                    <input type="password" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
-                        name="name" placeholder="Confirm new password" formControlName="confirm_new_password">
+                    <input
+                        type="password"
+                        class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200 mb-7"
+                        name="name"
+                        placeholder="Confirm new password"
+                        formControlName="confirm_new_password"
+                    />
 
                     <div class="flex">
                         <button
                             class="py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded m-auto"
-                            type="submit" [disabled]="changePasswordform.invalid">Update</button>
+                            type="submit"
+                            [disabled]="changePasswordform.invalid"
+                        >
+                            Update
+                        </button>
                     </div>
                 </form>
             </div>
@@ -185,8 +311,15 @@
         <!-- Resend email confirmation link (displayed if email not confirmed) -->
         <div class="p-10">
             <h3 class="flex text-2xl">Email confirmation</h3>
-            <p>Haven't you received your confirmation link, click this button to resend a new one</p>
-            <button class="inline-block py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded mb-7" (click)="resend()">Resend link</button>
+            <p>
+                Haven't you received your confirmation link, click this button to resend a new one
+            </p>
+            <button
+                class="inline-block py-3 px-6 text-lg bg-orange-400 text-orange-800 hover:bg-orange-300 rounded mb-7"
+                (click)="resend()"
+            >
+                Resend link
+            </button>
 
             <mat-divider></mat-divider>
         </div>
@@ -204,8 +337,16 @@
         <!-- Delete account -->
         <div class="p-10">
             <h3 class="flex text-2xl">Delete your account</h3>
-            <p>Once you delete your account, <strong>there's no going back. Please be certain.</strong></p>
-            <button class="inline-block py-3 px-6 text-lg bg-red-700 text-red-100 hover:bg-red-300 hover:text-red-700 rounded" (click)="deleteAccount(profile.user.id)">Delete account</button>
+            <p>
+                Once you delete your account,
+                <strong>there's no going back. Please be certain.</strong>
+            </p>
+            <button
+                class="inline-block py-3 px-6 text-lg bg-red-700 text-red-100 hover:bg-red-300 hover:text-red-700 rounded"
+                (click)="deleteAccount(profile.user.id)"
+            >
+                Delete account
+            </button>
         </div>
     </div>
 </div>

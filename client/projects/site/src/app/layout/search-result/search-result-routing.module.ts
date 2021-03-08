@@ -1,17 +1,13 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { SearchResultComponent } from './search-result.component';
+import { NgModule } from '@angular/core'
+import { Routes, RouterModule } from '@angular/router'
+import { SearchResultComponent } from './search-result.component'
 
-const routes: Routes = [
-  { path: '',
-    component: SearchResultComponent
-  }
-];
+const routes: Routes = [{ path: '', component: SearchResultComponent }]
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
 })
 export class SearchResultRoutingModule {
-  static components = [ SearchResultComponent ];
+    static components = [SearchResultComponent]
 }

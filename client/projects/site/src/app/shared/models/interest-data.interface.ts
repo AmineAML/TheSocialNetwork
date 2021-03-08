@@ -1,9 +1,9 @@
-import { Interest } from ".";
+import { Interest } from '.'
 
 export interface InterestData {
-    message: string,
+    message: string
     data: {
         interests: Interest[]
-    },
+    }
     errors: any
 }

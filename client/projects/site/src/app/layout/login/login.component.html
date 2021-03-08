@@ -1,24 +1,42 @@
 <div class="md:flex h-screen bg-gray-300 text-indigo-100">
-
     <div class="m-auto border-8 border-solid rounded shadow">
-        <form class="flex flex-col gap-3 p-5 text-amethyst bg-bedrock" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <form
+            class="flex flex-col gap-3 p-5 text-amethyst bg-bedrock"
+            [formGroup]="loginForm"
+            (ngSubmit)="onSubmit()"
+        >
             <div class="m-auto">
                 <h3 class="py-3 px-6">Login</h3>
             </div>
             <span *ngIf="unauthorizedCredentialsError">Email and/or password incorrect</span>
             <label>Email</label>
-            <input type="email" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" formControlName="email">
+            <input
+                type="email"
+                class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                formControlName="email"
+            />
             <mat-hint *ngIf="loginForm.controls.email.errors">Email is required</mat-hint>
             <label>Password</label>
-            <input type="password" class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200" formControlName="password">
+            <input
+                type="password"
+                class="w-full rounded py-3 px-4 outline-none focus:bg-indigo-200"
+                formControlName="password"
+            />
             <mat-hint *ngIf="loginForm.controls.password.errors">Password is required</mat-hint>
             <div class="m-auto">
-                <button type="submit" class="bg-red-300 hover:bg-red-400 text-red-800 rounded py-3 px-6" [disabled]="!loginForm.valid">Login</button>
+                <button
+                    type="submit"
+                    class="bg-red-300 hover:bg-red-400 text-red-800 rounded py-3 px-6"
+                    [disabled]="!loginForm.valid"
+                >
+                    Login
+                </button>
             </div>
-            <h2 class="text-lg md:text-2xl lg:text-3xl mb-6">Don't have an account? <a [routerLink]="['/register']">Sign Up</a></h2>
+            <h2 class="text-lg md:text-2xl lg:text-3xl mb-6">
+                Don't have an account? <a [routerLink]="['/register']">Sign Up</a>
+            </h2>
         </form>
     </div>
-
 </div>
 
 <!-- <div class="md:flex h-screen bg-gray-300 text-indigo-100">

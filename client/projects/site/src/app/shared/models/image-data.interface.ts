@@ -1,9 +1,9 @@
 import { Image } from '.'
 
 export interface ImageData {
-    message: string,
+    message: string
     data: {
         images: Image[]
-    },
+    }
     errors: any
 }

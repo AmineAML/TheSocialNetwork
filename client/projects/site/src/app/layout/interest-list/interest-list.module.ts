@@ -1,15 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core'
+import { CommonModule } from '@angular/common'
 
-import { InterestListRoutingModule } from './interest-list-routing.module';
-import { InterestListComponent } from './interest-list.component';
-
+import { InterestListRoutingModule } from './interest-list-routing.module'
+import { InterestListComponent } from './interest-list.component'
 
 @NgModule({
-  declarations: [InterestListComponent],
-  imports: [
-    CommonModule,
-    InterestListRoutingModule
-  ]
+    declarations: [InterestListComponent],
+    imports: [CommonModule, InterestListRoutingModule]
 })
-export class InterestListModule { }
+export class InterestListModule {}

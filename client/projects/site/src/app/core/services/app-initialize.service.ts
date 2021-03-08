@@ -1,27 +1,24 @@
-import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
+import { Injectable } from '@angular/core'
+import { AuthService } from './auth.service'
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class AppInitializeService {
+    constructor(private authService: AuthService) {}
 
-  constructor(private authService: AuthService) { }
+    init() {
+        return new Promise<void>(resolve => {
+            // attempt to refresh token on app start up to auto authenticate
+            // if (!this.authService.isLoggedIn()) {
+            //   resolve()
 
-  init() {
-    return new Promise<void>(resolve => {
-      // attempt to refresh token on app start up to auto authenticate
-      // if (!this.authService.isLoggedIn()) {
-      //   resolve()
+            //   return;
+            // }
 
-      //   return;
-      // }
+            //console.log('Refresh token')
 
-      //console.log('Refresh token')
-
-      this.authService.refreshToken()
-        .subscribe()
-        .add(resolve);
-  });
-  }
+            this.authService.refreshToken().subscribe().add(resolve)
+        })
+    }
 }

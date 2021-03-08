@@ -1,11 +1,11 @@
-import { Link, Meta, User } from ".";
+import { Link, Meta, User } from '.'
 
 export interface UserProfileData {
-    message: string,
+    message: string
     data: {
-        user: User,
-        meta: Meta,
+        user: User
+        meta: Meta
         link: Link
-    },
+    }
     errors: any
 }
