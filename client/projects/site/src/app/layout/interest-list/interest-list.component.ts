@@ -19,7 +19,7 @@ export class InterestListComponent {
     constructor(private dataService: DataService) {
         this.interests$ = this.dataService.findAllInterestsSorted().pipe(
             map((interestData: InterestData) => {
-                let interestsArray: Interest[] = []
+                const interestsArray: Interest[] = []
 
                 interestData.data.interests.forEach(interest => {
                     interestsArray.push({ name: interest.name })

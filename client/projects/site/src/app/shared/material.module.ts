@@ -18,7 +18,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-const Material = [
+const material = [
     FormsModule,
     ReactiveFormsModule,
 
@@ -43,6 +43,6 @@ const Material = [
 @NgModule({
     declarations: [],
     imports: [],
-    exports: [Material]
+    exports: [material]
 })
 export class MaterialModule {}

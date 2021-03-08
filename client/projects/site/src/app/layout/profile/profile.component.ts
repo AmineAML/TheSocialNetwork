@@ -37,10 +37,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     profile$: Observable<Userss>
 
+    similarInterests$: Observable<number>
+
     //Handle unsubscriptions
     private ngUnsubscribe$ = new Subject()
-
-    similarInterests$: Observable<number>
 
     constructor(
         private dataService: DataService,
@@ -72,7 +72,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
                         userData.data.user.interest &&
                         userData.data.user.interest.length > 0
                     ) {
-                        return this.count_similarities(
+                        return this.countSimilarities(
                             user.user.interest,
                             userData.data.user.interest
                         )
@@ -87,13 +87,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(DialogReportComponent, {
             width: '50vw',
             data: {
-                username: username
+                username
             }
         })
 
         dialogRef.afterClosed().subscribe(description => {
             if (description) {
-                let reportForm = {
+                const reportForm = {
+                    // eslint-disable-next-line @typescript-eslint/naming-convention
                     reported_user_id: id,
                     description
                 }
@@ -106,11 +107,13 @@ export class ProfileComponent implements OnInit, OnDestroy {
         })
     }
 
-    count_similarities(profileUserInterests: Array<string>, authUserInterests: Array<string>) {
-        var matches = 0
-        for (let i = 0; i < profileUserInterests.length; i++) {
-            if (authUserInterests.indexOf(profileUserInterests[i]) != -1) matches++
+    countSimilarities(profileUserInterests: Array<string>, authUserInterests: Array<string>) {
+        let matches = 0
+
+        for (const profileUserInterest of profileUserInterests) {
+            if (authUserInterests.indexOf(profileUserInterest) !== -1) matches++
         }
+
         return matches
     }
 

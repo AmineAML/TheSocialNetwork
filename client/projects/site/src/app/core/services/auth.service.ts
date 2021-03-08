@@ -25,6 +25,8 @@ export class AuthService {
 
     private modifyLoggedInUsername: Subject<boolean> = new ReplaySubject<boolean>(1)
 
+    private refreshTokenTimeout
+
     constructor(private http: HttpClient, private router: Router) {}
 
     login(loginForm: LoginForm): Observable<boolean> {
@@ -42,10 +44,10 @@ export class AuthService {
                     this.startRefreshTokenTimer()
                 }),
                 mapTo(true),
-                catchError(error => {
+                catchError(error =>
                     //alert(error.error);
-                    return of(false)
-                })
+                    of(false)
+                )
             )
     }
 
@@ -61,10 +63,10 @@ export class AuthService {
                     this.stopRefreshTokenTimer()
                 }),
                 mapTo(true),
-                catchError(error => {
+                catchError(error =>
                     //alert(error.error);
-                    return of(false)
-                })
+                    of(false)
+                )
             )
     }
 
@@ -72,8 +74,8 @@ export class AuthService {
         return this.http.post<any>('/api/v1/users/user', registerForm).pipe(
             tap(tokens => {
                 const t = {
-                    access_token: tokens.data.access_token,
-                    refresh_token: tokens.data.refresh_token
+                    accessToken: tokens.data.access_token,
+                    refreshToken: tokens.data.refresh_token
                 }
                 this.doLoginUser(t)
 
@@ -100,9 +102,7 @@ export class AuthService {
                 this.stopRefreshTokenTimer()
             }),
             mapTo(true),
-            catchError(error => {
-                return of(false)
-            })
+            catchError(error => of(false))
         )
     }
 
@@ -147,28 +147,15 @@ export class AuthService {
                     headers: { authorization: this.getAccessToken() }
                 })
                 .pipe(
-                    map((user: UserProfileData) => {
-                        return user.data.user.username
-                    }),
-                    catchError(error => {
+                    map((user: UserProfileData) => user.data.user.username),
+                    catchError(error =>
                         //alert(error.error);
-                        return of(false)
-                    })
+                        of(false)
+                    )
                 )
         }
 
         return null
-    }
-
-    private refreshTokenTimeout
-
-    private startRefreshTokenTimer() {
-        //Refresh access token before it expires as the backend has it valid for 15 minutes thus refresh it each 14 minutes meanning a minute before token expires
-        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), 14 * 60 * 1000)
-    }
-
-    private stopRefreshTokenTimer() {
-        clearTimeout(this.refreshTokenTimeout)
     }
 
     public loginStatusChange(): Observable<boolean> {
@@ -200,9 +187,7 @@ export class AuthService {
     }
 
     public isLoggedIn() {
-        let loggedIn
-
-        loggedIn = !!this.getAccessToken()
+        const loggedIn = !!this.getAccessToken()
 
         // console.log('ree')
 
@@ -215,12 +200,6 @@ export class AuthService {
         return false
     }
 
-    private storeAccessToken(access_token: string) {
-        //localStorage.setItem(this.ACCESS_TOKEN, access_token);
-
-        this.accessToken = access_token
-    }
-
     public getAccessToken() {
         //return localStorage.getItem(this.ACCESS_TOKEN);
 
@@ -231,10 +210,25 @@ export class AuthService {
         this.doLogoutUser()
     }
 
+    private startRefreshTokenTimer() {
+        //Refresh access token before it expires as the backend has it valid for 15 minutes thus refresh it each 14 minutes meanning a minute before token expires
+        this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), 14 * 60 * 1000)
+    }
+
+    private stopRefreshTokenTimer() {
+        clearTimeout(this.refreshTokenTimeout)
+    }
+
+    private storeAccessToken(accessToken: string) {
+        //localStorage.setItem(this.ACCESS_TOKEN, access_token);
+
+        this.accessToken = accessToken
+    }
+
     /*private getRefreshToken() {
-    return localStorage.getItem(this.REFRESH_TOKEN);
-  }
-  */
+        return localStorage.getItem(this.REFRESH_TOKEN);
+    }
+    */
 
     private doLogoutUser() {
         this.loggedUsername = null
@@ -261,6 +255,6 @@ export class AuthService {
         //localStorage.setItem(this.ACCESS_TOKEN, tokens.access_token);
         //localStorage.setItem(this.REFRESH_TOKEN, tokens.refresh_token);
 
-        this.accessToken = tokens.access_token
+        this.accessToken = tokens.accessToken
     }
 }

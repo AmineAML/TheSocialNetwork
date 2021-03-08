@@ -1,5 +1,5 @@
 import { Location } from '@angular/common'
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'
 import { FormControl } from '@angular/forms'
 import { MatPaginator, PageEvent } from '@angular/material/paginator'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -27,7 +27,7 @@ export interface Interest {
     templateUrl: './search-result.component.html',
     styleUrls: ['./search-result.component.scss']
 })
-export class SearchResultComponent implements OnInit {
+export class SearchResultComponent implements OnInit, OnDestroy {
     @Input() paginator: MatPaginator
 
     interest: string
@@ -46,10 +46,10 @@ export class SearchResultComponent implements OnInit {
 
     interestSource: InterestData = null
 
+    isServerRespondedWithData: Promise<boolean>
+
     //Handle unsubscriptions
     private ngUnsubscribe = new Subject()
-
-    isServerRespondedWithData: Promise<boolean>
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -58,9 +58,9 @@ export class SearchResultComponent implements OnInit {
         private location: Location
     ) {}
 
-    async getUsers() {
+    getUsers() {
         this.dataService
-            .findByQuery(/*this.interest*/ this.myControl.value, this.page, this.size)
+            .findByQuery(this.myControl.value, this.page, this.size)
             .pipe(
                 //Display data into console log
                 //tap(users => console.log(users)),
@@ -84,57 +84,45 @@ export class SearchResultComponent implements OnInit {
         this.location.go(url)
     }
 
-    async pageEvents(event: PageEvent) {
+    pageEvents(event: PageEvent) {
         //Last page
         if (event.pageIndex + 1 === this.dataSource.meta.totalPages) {
             this.page = this.dataSource.meta.totalPages
 
-            this.size
-
-            await this.getUsers()
+            this.getUsers()
         }
 
         //First page
         else if (event.pageIndex + 1 === 1) {
             this.page = 1
 
-            this.size
-
-            await this.getUsers()
+            this.getUsers()
         }
 
         //Next page
         else if (event.pageIndex + 1 > this.dataSource.meta.currentPage) {
             this.page = this.dataSource.meta.currentPage + 1
 
-            this.size
-
-            await this.getUsers()
+            this.getUsers()
         }
 
         //Previous page
         else {
             this.page = this.dataSource.meta.currentPage - 1
 
-            this.size
-
-            await this.getUsers()
+            this.getUsers()
         }
 
-        if (event.pageSize != this.size) {
+        if (event.pageSize !== this.size) {
             this.page = this.dataSource.meta.currentPage
 
             this.size = event.pageSize
 
-            console.log(this.page)
-
-            console.log(this.size)
-
-            await this.getUsers()
+            this.getUsers()
         }
     }
 
-    async getInterests() {
+    getInterests() {
         this.dataService
             .findAllInterestsSorted()
             .pipe(
@@ -160,25 +148,15 @@ export class SearchResultComponent implements OnInit {
         return interest && interest.name ? interest.name : ''
     }
 
-    private _filter(name: string): Interest[] {
-        const filterValue = name.toLowerCase()
-
-        if (this.options === null) {
-            return null
-        }
-
-        return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0)
-    }
-
     filterInterests() {
         this.filteredOptions = this.myControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'string' ? value : value.name)),
-            map(name => (name ? this._filter(name) : this.options.slice()))
+            map(name => (name ? this.filter(name) : this.options.slice()))
         )
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit() {
         this.activatedRoute.queryParams.subscribe(params => {
             this.interest = params.interest
             this.page = params.page || 1
@@ -186,12 +164,22 @@ export class SearchResultComponent implements OnInit {
             this.myControl.setValue(params.interest)
         })
 
-        await this.getUsers()
+        this.getUsers()
     }
 
     ngOnDestroy() {
         this.ngUnsubscribe.next()
 
         this.ngUnsubscribe.complete()
+    }
+
+    private filter(name: string): Interest[] {
+        const filterValue = name.toLowerCase()
+
+        if (this.options === null) {
+            return null
+        }
+
+        return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0)
     }
 }

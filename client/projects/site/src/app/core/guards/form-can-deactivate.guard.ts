@@ -9,7 +9,7 @@ export interface ComponentCanDeactivate {
     canDeactivate(): boolean | Observable<boolean>
 }
 
-export const CanDeactivateState = {
+export const canDeactivateState = {
     defendAgainstBrowserBackButton: false
 }
 
@@ -31,7 +31,7 @@ export class FormCanDeactivateGuard implements CanDeactivate<ComponentCanDeactiv
                 .afterClosed()
                 .pipe(
                     tap(confirmed => {
-                        if (!confirmed && CanDeactivateState.defendAgainstBrowserBackButton) {
+                        if (!confirmed && canDeactivateState.defendAgainstBrowserBackButton) {
                             history.pushState(null, '', '')
                         }
                     })

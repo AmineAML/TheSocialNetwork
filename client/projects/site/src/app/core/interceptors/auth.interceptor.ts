@@ -37,7 +37,7 @@ export class AuthInterceptor implements HttpInterceptor {
     private addToken(request: HttpRequest<any>, token: string) {
         return request.clone({
             setHeaders: {
-                Authorization: `Bearer ${token}`
+                authorization: `Bearer ${token}`
             }
         })
     }
@@ -67,9 +67,7 @@ export class AuthInterceptor implements HttpInterceptor {
             return this.refreshTokenSubject.pipe(
                 filter(token => token != null),
                 take(1),
-                switchMap(access_token => {
-                    return next.handle(this.addToken(request, access_token))
-                })
+                switchMap(accessToken => next.handle(this.addToken(request, accessToken)))
             )
         }
     }

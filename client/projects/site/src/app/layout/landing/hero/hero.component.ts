@@ -22,17 +22,17 @@ export class HeroComponent implements OnInit {
 
     constructor() {}
 
-    private _filter(name: string): Interest[] {
-        const filterValue = name.toLowerCase()
-
-        return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0)
-    }
-
     ngOnInit() {
         this.filteredOptions = this.myControl.valueChanges.pipe(
             startWith(''),
             map(value => (typeof value === 'string' ? value : value.name)),
-            map(name => (name ? this._filter(name) : this.options.slice()))
+            map(name => (name ? this.filter(name) : this.options.slice()))
         )
+    }
+
+    private filter(name: string): Interest[] {
+        const filterValue = name.toLowerCase()
+
+        return this.options.filter(option => option.name.toLowerCase().indexOf(filterValue) === 0)
     }
 }

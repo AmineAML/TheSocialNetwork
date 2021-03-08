@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
 import { AuthService } from '../../core/services/auth.service'
@@ -10,13 +10,13 @@ import { of, Subject } from 'rxjs'
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
     loginForm: FormGroup
 
+    unauthorizedCredentialsError: boolean
+    
     //Handle unsubscriptions
     private ngUnsubscribe = new Subject()
-
-    unauthorizedCredentialsError: boolean
 
     constructor(private authService: AuthService, private router: Router) {}
 
@@ -35,9 +35,7 @@ export class LoginComponent implements OnInit {
                         this.unauthorizedCredentialsError = true
                     }
                 }),
-                catchError(error => {
-                    return of(false)
-                }),
+                catchError(error => of(false)),
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe()

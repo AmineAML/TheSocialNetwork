@@ -34,9 +34,9 @@ import { ComponentCanDeactivate } from '../../core/guards/form-can-deactivate.gu
 class CustomValidators {
     static passwordMatch(control: AbstractControl): ValidationErrors {
         const password = control.get('new_password').value
-        const confirm_password = control.get('confirm_new_password').value
+        const confirmPassword = control.get('confirm_new_password').value
 
-        if (password !== null && confirm_password !== null && password == confirm_password) {
+        if (password !== null && confirmPassword !== null && password === confirmPassword) {
             return null
         } else {
             return {
@@ -52,6 +52,12 @@ class CustomValidators {
     styleUrls: ['./edit-profile.component.scss']
 })
 export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeactivate {
+    @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>
+    @ViewChild('auto') matAutocomplete: MatAutocomplete
+
+    @ViewChild('fileUploadAvatar', { static: false }) fileUploadAvatar: ElementRef
+    @ViewChild('fileUploadBackground', { static: false }) fileUploadBackground: ElementRef
+
     faTimes = faTimes
     faFacebook = faFacebook
     faLinkedin = faLinkedin
@@ -79,21 +85,12 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
 
     changePasswordform: FormGroup
 
-    @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>
-    @ViewChild('auto') matAutocomplete: MatAutocomplete
-
-    @ViewChild('fileUploadAvatar', { static: false }) fileUploadAvatar: ElementRef
-    @ViewChild('fileUploadBackground', { static: false }) fileUploadBackground: ElementRef
-
     file: File = {
         data: null,
         inProgress: false,
-        avatar_progress: 0,
-        background_progress: 0
+        avatarProgress: 0,
+        backgroundProgress: 0
     }
-
-    //Handle unsubscriptions
-    private ngUnsubscribe$ = new Subject()
 
     showAvatarSpinner = false
 
@@ -103,6 +100,9 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
 
     originalPasswordFormValue: any
 
+    //Handle unsubscriptions
+    private ngUnsubscribe$ = new Subject()
+
     constructor(
         private dataService: DataService,
         private authService: AuthService,
@@ -111,8 +111,21 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
     ) {
         this.filteredInterests = this.interestCtrl.valueChanges.pipe(
             startWith(null),
-            map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allInterests.slice()))
+            map((fruit: string | null) => (fruit ? this.filter(fruit) : this.allInterests.slice()))
         )
+    }
+
+    //Handles warning on unsaved form on refresh page
+    @HostListener('window:beforeunload')
+    //Handles warning on unsaved form on routing
+    canDeactivate() {
+        //Compare initial form value with its value on navigation
+        return JSON.stringify(this.originalFormValue) !== JSON.stringify(this.form.getRawValue())
+            ? false
+            : JSON.stringify(this.originalPasswordFormValue) !==
+              JSON.stringify(this.changePasswordform.getRawValue())
+            ? false
+            : true
     }
 
     uploadProfileAvatar() {
@@ -124,12 +137,12 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
             this.file = {
                 data: fileInput.files[0],
                 inProgress: false,
-                avatar_progress: 0,
-                background_progress: 0
+                avatarProgress: 0,
+                backgroundProgress: 0
             }
             this.fileUploadAvatar.nativeElement.value = ''
 
-            let type = 'avatar'
+            const type = 'avatar'
 
             this.uploadFile(type)
         }
@@ -144,12 +157,12 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
             this.file = {
                 data: fileInput.files[0],
                 inProgress: false,
-                avatar_progress: 0,
-                background_progress: 0
+                avatarProgress: 0,
+                backgroundProgress: 0
             }
             this.fileUploadBackground.nativeElement.value = ''
 
-            let type = 'background'
+            const type = 'background'
 
             this.uploadFile(type)
         }
@@ -169,12 +182,12 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
                     switch (event.type) {
                         case HttpEventType.UploadProgress:
                             if (type === 'avatar') {
-                                this.file.avatar_progress = Math.round(
+                                this.file.avatarProgress = Math.round(
                                     (event.loaded * 100) / event.total
                                 )
                             }
                             if (type === 'background') {
-                                this.file.background_progress = Math.round(
+                                this.file.backgroundProgress = Math.round(
                                     (event.loaded * 100) / event.total
                                 )
                             }
@@ -187,11 +200,11 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
                             break
                         case HttpEventType.Response:
                             if (type === 'avatar') {
-                                this.file.avatar_progress = 0
+                                this.file.avatarProgress = 0
                                 return event
                             }
                             if (type === 'background') {
-                                this.file.background_progress = 0
+                                this.file.backgroundProgress = 0
                                 return event
                             }
                     }
@@ -228,7 +241,8 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
         this.profile$ = this.dataService.findByUsername(this.username).pipe(
             map((userData: Userss) => {
                 if (userData.user !== null) {
-                    let avatar, background
+                    let avatar
+                    let background
 
                     if (userData.user.image !== null) {
                         userData.user.image.forEach(image => {
@@ -242,13 +256,16 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
 
                     this.form.patchValue({
                         id: userData.user.id,
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
                         first_name: userData.user.first_name,
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
                         last_name: userData.user.last_name,
                         description: userData.user.description,
                         gender: userData.user.gender,
-                        social_media: userData.user.social_media || {},
-                        avatar: avatar,
-                        background: background
+                        // eslint-disable-next-line @typescript-eslint/naming-convention
+                        social_nedia: userData.user.social_media || {},
+                        avatar,
+                        background
                     })
 
                     //Aliases shouldn't contain values before pushing new values
@@ -394,18 +411,6 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
         this.interestCtrl.setValue(null)
     }
 
-    private _filter(value: string): string[] {
-        const filterValue = value.toLowerCase()
-
-        return this.allInterests.filter(
-            interest => interest.toLowerCase().indexOf(filterValue) === 0
-        )
-    }
-
-    get aliases() {
-        return this.form.get('interest') as FormArray
-    }
-
     addAlias() {
         this.aliases.push(this.formBuilder.control(''))
     }
@@ -428,11 +433,14 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
 
         this.form = this.formBuilder.group({
             id: [{ value: '', disabled: true }, [Validators.required]],
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             first_name: ['', [Validators.required]],
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             last_name: ['', [Validators.required]],
             description: ['', [Validators.required]],
             gender: ['', [Validators.required]],
             interest: this.formBuilder.array([]),
+            // eslint-disable-next-line @typescript-eslint/naming-convention
             social_media: this.formBuilder.group({
                 facebook: ['', [Validators.required]],
                 linkedin: ['', [Validators.required]],
@@ -449,7 +457,9 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
         this.changePasswordform = this.formBuilder.group(
             {
                 password: ['', [Validators.required]],
+                // eslint-disable-next-line @typescript-eslint/naming-convention
                 new_password: ['', [Validators.required]],
+                // eslint-disable-next-line @typescript-eslint/naming-convention
                 confirm_new_password: ['', [Validators.required]]
             },
             {
@@ -468,16 +478,15 @@ export class EditProfileComponent implements OnInit, OnDestroy, ComponentCanDeac
         this.ngUnsubscribe$.complete()
     }
 
-    //Handles warning on unsaved form on refresh page
-    @HostListener('window:beforeunload')
-    //Handles warning on unsaved form on routing
-    canDeactivate() {
-        //Compare initial form value with its value on navigation
-        return JSON.stringify(this.originalFormValue) !== JSON.stringify(this.form.getRawValue())
-            ? false
-            : JSON.stringify(this.originalPasswordFormValue) !==
-              JSON.stringify(this.changePasswordform.getRawValue())
-            ? false
-            : true
+    private filter(value: string): string[] {
+        const filterValue = value.toLowerCase()
+
+        return this.allInterests.filter(
+            interest => interest.toLowerCase().indexOf(filterValue) === 0
+        )
+    }
+
+    get aliases() {
+        return this.form.get('interest') as FormArray
     }
 }

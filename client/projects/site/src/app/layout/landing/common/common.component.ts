@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core'
+import { Component, Input } from '@angular/core'
 
 export interface Interest {
     name: string
@@ -9,10 +9,8 @@ export interface Interest {
     templateUrl: './common.component.html',
     styleUrls: ['./common.component.scss']
 })
-export class CommonComponent implements OnInit {
+export class CommonComponent {
     @Input() options: Interest[]
 
     constructor() {}
-
-    async ngOnInit(): Promise<void> {}
 }

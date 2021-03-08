@@ -154,11 +154,11 @@ export class DataService {
         }
     }
 
-    findImagesByUsersIds(users_ids: Array<string>): Observable<ImageData> {
-        let payload = new HttpParams()
+    findImagesByUsersIds(usersIds: Array<string>): Observable<ImageData> {
+        const payload = new HttpParams()
 
-        users_ids.forEach(user_id => {
-            payload.append('usersIds', user_id)
+        usersIds.forEach(userId => {
+            payload.append('usersIds', userId)
         })
         return this.http.get(`/api/v1/images/images`).pipe(
             map((imageData: ImageData) => imageData),
@@ -166,8 +166,8 @@ export class DataService {
         )
     }
 
-    findImagesByUserId(user_id: string): Observable<ImageData> {
-        return this.http.get(`/api/v1/images/image/${user_id}`).pipe(
+    findImagesByUserId(userId: string): Observable<ImageData> {
+        return this.http.get(`/api/v1/images/image/${userId}`).pipe(
             map((imageData: ImageData) => imageData),
             catchError(err => throwError(err))
         )
@@ -212,14 +212,12 @@ export class DataService {
 
     resendEmailConfirmationLink(): Observable<User> {
         return this.http.put('/api/v1/users/user/confirm/email', {}).pipe(
-            tap(confirmationEmailSent => {
+            tap(confirmationEmailSent => 
                 //console.log(confirmationEmailSent)
 
-                return true
-            }),
-            catchError(error => {
-                return throwError(error)
-            })
+                 true
+            ),
+            catchError(error => throwError(error))
         )
     }
 
@@ -239,22 +237,16 @@ export class DataService {
 
     sendContactEmail(contactForm: ContactForm) {
         return this.http.post<any>('/api/v1/mailer/contact', contactForm).pipe(
-            catchError(error => {
-                return throwError(error)
-            })
+            catchError(error => throwError(error))
         )
     }
 
     changePassword(passwordForm: PasswordForm) {
         return this.http.put<any>('/api/v1/users/user/change/password', passwordForm).pipe(
             tap(passwordModified => {
-                console.log(passwordModified)
-
                 return true
             }),
-            catchError(error => {
-                return throwError(error)
-            })
+            catchError(error => throwError(error))
         )
     }
 }

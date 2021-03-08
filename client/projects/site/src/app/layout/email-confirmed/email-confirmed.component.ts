@@ -16,10 +16,10 @@ export class EmailConfirmedComponent implements OnInit, OnDestroy {
 
     isEmailConfirmed: boolean
 
+    isServerRespondedWithData: Promise<boolean>
+
     //Handle unsubscriptions
     private ngUnsubscribe$ = new Subject()
-
-    isServerRespondedWithData: Promise<boolean>
 
     constructor(
         private dataService: DataService,

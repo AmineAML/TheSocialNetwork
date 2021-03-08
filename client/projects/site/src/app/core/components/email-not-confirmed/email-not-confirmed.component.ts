@@ -11,11 +11,11 @@ import { AuthService } from '../../services/auth.service'
 export class EmailNotConfirmedComponent implements OnInit, OnDestroy {
     @Output() closeComponent = new EventEmitter()
 
+    //Default to true meaning confirmed and don't show confirmation request expect if modified to false
+    isConfirmedEmail = true
+
     //Handle unsubscriptions
     private ngUnsubscribe = new Subject()
-
-    //Default to true meaning confirmed and don't show confirmation request expect if modified to false
-    isConfirmedEmail: boolean = true
 
     constructor(private authService: AuthService) {}
 

@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core'
+import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Router } from '@angular/router'
 import { Observable, Subject } from 'rxjs'
@@ -18,17 +18,17 @@ export interface Interest {
     templateUrl: './landing.component.html',
     styleUrls: ['./landing.component.scss']
 })
-export class LandingComponent implements ComponentCanDeactivate {
+export class LandingComponent implements ComponentCanDeactivate, OnDestroy {
     @ViewChild(ContactComponent) contactComponent: ContactComponent
-
-    //Handle unsubscriptions
-    private ngUnsubscribe = new Subject()
 
     interests$: Observable<Interest[]>
 
     isServerRespondedWithData: Promise<boolean>
 
     isContactUsEmailSent: boolean
+
+    //Handle unsubscriptions
+    private ngUnsubscribe = new Subject()
 
     constructor(
         private router: Router,
@@ -37,7 +37,7 @@ export class LandingComponent implements ComponentCanDeactivate {
     ) {
         this.interests$ = this.dataService.findAllInterestsSorted().pipe(
             map((interestData: InterestData) => {
-                let interestsArray: Interest[] = []
+                const interestsArray: Interest[] = []
 
                 interestData.data.interests.forEach(interest => {
                     interestsArray.push({ name: interest.name })
@@ -45,6 +45,17 @@ export class LandingComponent implements ComponentCanDeactivate {
 
                 return interestsArray
             })
+        )
+    }
+
+    //Handles warning on unsaved form on refresh page
+    @HostListener('window:beforeunload')
+    //Handles warning on unsaved form on routing
+    canDeactivate() {
+        //Compare initial form value with its value on navigation
+        return !(
+            JSON.stringify(this.contactComponent.originalContactFormValue) !==
+            JSON.stringify(this.contactComponent.contactForm.getRawValue())
         )
     }
 
@@ -97,16 +108,5 @@ export class LandingComponent implements ComponentCanDeactivate {
         this.ngUnsubscribe.next()
 
         this.ngUnsubscribe.complete()
-    }
-
-    //Handles warning on unsaved form on refresh page
-    @HostListener('window:beforeunload')
-    //Handles warning on unsaved form on routing
-    canDeactivate() {
-        //Compare initial form value with its value on navigation
-        return !(
-            JSON.stringify(this.contactComponent.originalContactFormValue) !==
-            JSON.stringify(this.contactComponent.contactForm.getRawValue())
-        )
     }
 }

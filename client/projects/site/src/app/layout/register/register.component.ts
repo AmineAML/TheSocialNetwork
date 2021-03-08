@@ -25,9 +25,9 @@ class CustomValidators {
 
     static passwordMatch(control: AbstractControl): ValidationErrors {
         const password = control.get('password').value
-        const confirm_password = control.get('confirm_password').value
+        const confirmPassword = control.get('confirm_password').value
 
-        if (password !== null && confirm_password !== null && password == confirm_password) {
+        if (password !== null && confirmPassword !== null && password === confirmPassword) {
             return null
         } else {
             return {
@@ -75,6 +75,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
                         //CustormValidators.passwordContainsNumber
                     ]
                 ],
+                // eslint-disable-next-line @typescript-eslint/naming-convention
                 confirm_password: [null, [Validators.required]]
             },
             {

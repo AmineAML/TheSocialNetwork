@@ -16,11 +16,7 @@ import { CustomPreloadingStrategyService } from './services/custom-preloading-st
 import { AppInitializeService } from './services/app-initialize.service'
 import { DialogConfirmationComponent } from './components/dialog-confirmation/dialog-confirmation.component'
 
-export function initializeApp1(appInitializeService: AppInitializeService) {
-    return (): Promise<any> => {
-        return appInitializeService.init()
-    }
-}
+export const initializeApp1 = (appInitializeService: AppInitializeService) => (): Promise<any> => appInitializeService.init()
 
 @NgModule({
     declarations: [

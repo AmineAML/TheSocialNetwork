@@ -15,7 +15,7 @@ import { DataService } from '../../services/data.service'
     styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    loggedIn: boolean = false
+    loggedIn = false
 
     faCaretDown = faCaretDown
 
@@ -35,14 +35,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
         private snackBar: MatSnackBar
     ) {}
 
-    async getUser() {
+    getUser() {
         this.authService
             .authenticatedUser()
             .pipe(
                 map(async (username: string | null) => {
                     this.username = username
 
-                    await this.getUserProfile()
+                    this.getUserProfile()
 
                     this.authService.loggedUsername = this.username
                 }),
@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             .subscribe()
     }
 
-    async getUserProfile() {
+    getUserProfile() {
         this.profile$ = this.dataService.findByUsername(this.username).pipe(
             map((userData: Userss) => {
                 this.authService.loggedUsername = userData.user.username
@@ -75,7 +75,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.ngUnsubscribe$))
             .subscribe(async loggedIn => {
                 if (loggedIn) {
-                    await this.getUser()
+                    this.getUser()
                 } else {
                     this.username = null
 
