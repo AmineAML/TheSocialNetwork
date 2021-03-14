@@ -212,10 +212,11 @@ export class DataService {
 
     resendEmailConfirmationLink(): Observable<User> {
         return this.http.put('/api/v1/users/user/confirm/email', {}).pipe(
-            tap(confirmationEmailSent => 
-                //console.log(confirmationEmailSent)
+            tap(
+                confirmationEmailSent =>
+                    //console.log(confirmationEmailSent)
 
-                 true
+                    true
             ),
             catchError(error => throwError(error))
         )
@@ -236,16 +237,14 @@ export class DataService {
     }
 
     sendContactEmail(contactForm: ContactForm) {
-        return this.http.post<any>('/api/v1/mailer/contact', contactForm).pipe(
-            catchError(error => throwError(error))
-        )
+        return this.http
+            .post<any>('/api/v1/mailer/contact', contactForm)
+            .pipe(catchError(error => throwError(error)))
     }
 
     changePassword(passwordForm: PasswordForm) {
         return this.http.put<any>('/api/v1/users/user/change/password', passwordForm).pipe(
-            tap(passwordModified => {
-                return true
-            }),
+            tap(passwordModified => true),
             catchError(error => throwError(error))
         )
     }

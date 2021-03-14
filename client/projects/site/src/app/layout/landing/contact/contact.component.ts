@@ -16,6 +16,10 @@ export class ContactComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder) {}
 
+    sendEmail() {
+        this.submitEmail.emit(this.contactForm.getRawValue())
+    }
+
     ngOnInit() {
         this.contactForm = this.formBuilder.group({
             name: ['', [Validators.required]],

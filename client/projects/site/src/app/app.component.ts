@@ -10,7 +10,7 @@ import { canDeactivateState } from './core/guards/form-can-deactivate.guard'
 })
 export class AppComponent {
     emailNotConfirmedComponentRemove = true
-    
+
     constructor(private router: Router) {
         // Clicks the back button, ask the CanDeactivateGuard to defend against this.
         window.onpopstate = () => (canDeactivateState.defendAgainstBrowserBackButton = true)

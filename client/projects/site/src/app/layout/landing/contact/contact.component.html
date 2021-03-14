@@ -6,7 +6,7 @@
             name="contact"
             id="contact-form"
             method="post"
-            (ngSubmit)="submitEmail.emit(this.contactForm.getRawValue())"
+            (ngSubmit)="sendEmail()"
         >
             <div class="mb-3">
                 <h3>

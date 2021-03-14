@@ -20,5 +20,10 @@
   "bugs": {
     "url": "https://github.com/AmineAML/TheSocialNetwork/issues"
   },
-  "homepage": "https://github.com/AmineAML/TheSocialNetwork#readme"
+  "homepage": "https://github.com/AmineAML/TheSocialNetwork#readme",
+  "husky": {
+    "hooks": {
+      "pre-commit": "cd client && lint-staged"
+    }
+  }
 }

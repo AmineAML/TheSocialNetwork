@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { SocialMedia } from '.'
 
 export interface User {

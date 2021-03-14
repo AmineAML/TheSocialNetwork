@@ -7,7 +7,8 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --prod site",
-    "test": "ng test",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -23,6 +24,7 @@
     "@angular/platform-browser": "~11.0.5",
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
+    "@briebug/jest-schematic": "^3.1.0",
     "@fortawesome/angular-fontawesome": "^0.8.1",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-brands-svg-icons": "^5.15.2",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@angular-builders/custom-webpack": "11.0.0",
+    "@angular-builders/jest": "11.1.1",
     "@angular-devkit/build-angular": "~0.1100.5",
     "@angular-eslint/builder": "1.2.0",
     "@angular-eslint/eslint-plugin": "1.2.0",
@@ -45,6 +48,7 @@
     "@angular/compiler-cli": "~11.0.5",
     "@schuchard/prettier": "^5.0.0",
     "@types/jasmine": "~3.6.0",
+    "@types/jest": "26.0.20",
     "@types/node": "^12.11.1",
     "@typescript-eslint/eslint-plugin": "4.3.0",
     "@typescript-eslint/parser": "4.3.0",
@@ -57,11 +61,9 @@
     "husky": "5.1.3",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
-    "karma": "~5.1.0",
-    "karma-chrome-launcher": "~3.1.0",
+    "jest": "^26.6.3",
+    "jest-preset-angular": "^8.4.0",
     "karma-coverage": "~2.0.3",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "^1.5.0",
     "lint-staged": "10.5.4",
     "postcss": "8.2.4",
     "prettier": "2.2.1",
@@ -78,6 +80,9 @@
   "lint-staged": {
     "*.{js,json,css,scss,less,md,ts,html,component.html}": [
       "prettier --write"
+    ],
+    "*.{ts,html}": [
+      "eslint --fix"
     ]
   }
 }

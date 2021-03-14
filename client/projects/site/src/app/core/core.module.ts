@@ -2,7 +2,6 @@ import { APP_INITIALIZER, NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { HeaderComponent } from './components/header/header.component'
 import { FooterComponent } from './components/footer/footer.component'
-import { MaterialModule } from 'projects/admin/src/app/shared/material.module'
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome'
 import { RouterModule } from '@angular/router'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
@@ -15,8 +14,10 @@ import { DialogReportComponent } from './components/dialog-report/dialog-report.
 import { CustomPreloadingStrategyService } from './services/custom-preloading-strategy.service'
 import { AppInitializeService } from './services/app-initialize.service'
 import { DialogConfirmationComponent } from './components/dialog-confirmation/dialog-confirmation.component'
+import { MaterialModule } from '../shared/material.module'
 
-export const initializeApp1 = (appInitializeService: AppInitializeService) => (): Promise<any> => appInitializeService.init()
+export const initializeApp1 = (appInitializeService: AppInitializeService) => (): Promise<any> =>
+    appInitializeService.init()
 
 @NgModule({
     declarations: [

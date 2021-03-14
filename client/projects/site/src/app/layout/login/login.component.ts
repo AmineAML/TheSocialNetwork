@@ -14,7 +14,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     loginForm: FormGroup
 
     unauthorizedCredentialsError: boolean
-    
+
     //Handle unsubscriptions
     private ngUnsubscribe = new Subject()
 

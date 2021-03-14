@@ -22,6 +22,12 @@ export class HeroComponent implements OnInit {
 
     constructor() {}
 
+    searchUsersWithHobby(value: string) {
+        if (value && value.trim()) {
+            this.getUsers.emit(value)
+        }
+    }
+
     ngOnInit() {
         this.filteredOptions = this.myControl.valueChanges.pipe(
             startWith(''),
