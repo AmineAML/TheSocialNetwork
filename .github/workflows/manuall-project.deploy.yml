@@ -1,0 +1,120 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on: [workflow_dispatch]
+
+jobs:
+  build_client:
+    
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+      
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: sudo npm install -g @angular/cli
+    - run: |
+        cd client
+        npm install
+    - run: npm run prod:build:client
+    - name: client/dist
+      uses: actions/upload-artifact@v2
+      with:
+        name: client
+        path: client/dist
+  
+  build_backend:
+    
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+      
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: sudo npm install -g @nestjs/cli
+    - run: |
+        cd backend
+        npm install
+    - run: npm run prod:build:backend
+    - name: backend/dist
+      uses: actions/upload-artifact@v2
+      with:
+        name: backend
+        path: backend/dist
+  
+  build:
+    needs: 
+      - build_client
+      - build_backend
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Create env file
+      run: |
+        cd backend
+        touch .env
+        echo MONGO_ACCOUNT_PROD=${{ secrets.MONGO_ACCOUNT_PROD }} >> .env
+        echo MONGO_REPORTS_PROD=${{ secrets.MONGO_REPORTS_PROD }} >> .env
+        echo MONGO_IMAGE_PROD=${{ secrets.MONGO_IMAGE_PROD }} >> .env
+        echo MONGO_AUTH_PROD=${{ secrets.MONGO_AUTH_PROD }} >> .env
+        echo REDIS_PROD=${{ secrets.REDIS_PROD }} >> .env
+        echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> .env
+        echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> .env
+        echo IMAGEKIT_PUBLIC_KEY=${{ secrets.IMAGEKIT_PUBLIC_KEY }} >> .env
+        echo IMAGEKIT_PRIVATE_KEY=${{ secrets.IMAGEKIT_PRIVATE_KEY }} >> .env
+        echo IMAGEKIT_URL_ENDPOINT=${{ secrets.IMAGEKIT_URL_ENDPOINT }} >> .env
+        echo APP_NAME=${{ secrets.APP_NAME }} >> .env
+        echo BASE_URL=${{ secrets.BASE_URL }} >> .env
+        echo ENABLE_MAILER=${{ secrets.ENABLE_MAILER }} >> .env
+        echo BCRYPT_SALT_ROUNDS=${{ secrets.BCRYPT_SALT_ROUNDS }} >> .env
+        echo API_GATEWAY_PORT=${{ secrets.API_GATEWAY_PORT }} >> .env
+        echo SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }} >> .env
+        echo CONTACT_EMAIL=${{ secrets.CONTACT_EMAIL }} >> .env
+        echo APP_EMAIL=${{ secrets.APP_EMAIL }} >> .env
+        cat .env
+    - run: npm run docker:down
+    - run: docker image prune -a -f
+    - run: |
+        cd client
+        mkdir dist
+    - run: |
+        cd backend
+        mkdir dist
+    - name: Download dist from build_client
+      uses: actions/download-artifact@v2
+      with:
+        name: client
+        path: client/dist
+    - name: Download dist from build_backend
+      uses: actions/download-artifact@v2
+      with:
+        name: backend
+        path: backend/dist
+    - run: npm run prod
+    - run: docker image prune -a -f
